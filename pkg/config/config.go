@@ -13,6 +13,12 @@ type Config struct {
 	ImageDir   string
 	MachineDir string
 }
+func (c *Config) GetImageDir() string {
+	return c.ImageDir
+}
+func (c *Config) GetMachineDir() string {
+	return c.MachineDir
+}
 
 func getHomeDir() string {
 	home, err := os.UserHomeDir()

@@ -1,15 +1,9 @@
 package runner
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/fs"
-	"io/ioutil"
+	"bytes"
 	"log"
 	"os/exec"
-	"path/filepath"
-
-	"github.com/pspiagicw/lazyqemu/pkg/config"
 )
 
 type Runner struct {
@@ -17,45 +11,55 @@ type Runner struct {
 	DrivePath     string `json:"drivePath"`
 	SystemCommand string `json:"systemCommand"`
 	MemSize       string `json:"memSize"`
-	IsoPath       string `json:"isoPath"`
+	CpuCores      string `json:"cpuCores"`
+	Iso           string `json:"-"`
 }
 
-func getFileName(machineDir string, file fs.FileInfo) string {
-	path := filepath.Join(machineDir, file.Name())
-	return path
-}
-
-func RunMachine(config *config.Config, file fs.FileInfo) {
-	runner := Runner{}
-	fileName := getFileName(config.MachineDir, file)
-	filecontents := readFile(fileName)
-	err := json.Unmarshal([]byte(filecontents), &runner)
-	if err != nil {
-		log.Fatalf("Cannot stored machine in %s", file.Name())
-	}
-	startMachine(&runner)
+func RunMachine(runner *Runner) {
+	startMachine(runner)
 }
 func startMachine(runner *Runner) {
-	cmd := exec.Command(runner.SystemCommand, runner.DrivePath, getMemOptions(runner), getCpuOptions(runner), getMiscOptions(runner), getBoolOptions(runner))
-	fmt.Println(cmd)
-}
-func getMemOptions(runner *Runner) string {
-	return "-m 4G"
-}
-func getCpuOptions(runner *Runner) string {
-	return ""
-}
-func getMiscOptions(runner *Runner) string {
-	return ""
-}
-func getBoolOptions(runner *Runner) string {
-	return ""
-}
-func readFile(file string) string {
-	contents, err := ioutil.ReadFile(file)
-	if err != nil {
-		log.Fatalf("Cannot read file %s , %v", file, err)
-	}
-	return string(contents)
+	options := constructOptions(runner)
+	cmd := exec.Command(runner.SystemCommand, options... )
 
+	var out bytes.Buffer
+	cmd.Stderr = &out
+
+	err := cmd.Run()
+	if err != nil {
+		log.Printf("Some error occured %v", err)
+		log.Fatalf("The err %s", out.String())
+	}
+}
+func constructOptions(runner *Runner) []string {
+	options := []string{
+	}
+	options = append(options , getMemOptions(runner)...)
+	options = append(options,getMiscOptions(runner)...)
+	options = append(options,getIsoOptions(runner)...)
+	options = append(options , getDriveOptions(runner)...)
+	return options
+}
+func getIsoOptions(runner *Runner) []string {
+	// fmt.Println("-cdrom " + runner.Iso)
+	option := []string{"-cdrom" , runner.Iso}
+	return option
+
+}
+func getDriveOptions(runner *Runner) []string {
+	option := []string{ "-hda" , runner.DrivePath  , }
+	return option
+}
+func getMemOptions(runner *Runner) []string {
+	option := []string{ "-m", runner.MemSize }
+	return option
+}
+func getCpuOptions(runner *Runner) []string {
+	return []string{""}
+}
+func getMiscOptions(runner *Runner) []string {
+	return []string{"-enable-kvm"}
+}
+func getBootOptions(runner *Runner) string {
+	return ""
 }

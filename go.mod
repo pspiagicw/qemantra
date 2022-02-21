@@ -1,4 +1,4 @@
-module github.com/pspiagicw/lazyqemu
+module github.com/pspiagicw/qemantra
 
 go 1.17
 

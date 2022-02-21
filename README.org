@@ -1,50 +1,25 @@
-* Options to add
-The options to add to our software qemuntra are
-** TODO List All Machines
-#+begin_src shell
-qemuntra list
-#+end_src
-** TODO List All machines by name
-#+begin_src shell
-qemantra list --name
-#+end_src
-** TODO List All Images
-#+begin_src shell
-qemantra list-images
-#+end_src
-** TODO Run a single Machine (Most Recent)
-#+begin_src shell
-qemantra run 
-#+end_src
-** TODO Run a machine by name
-#+begin_src shell
-qemantra run --name "Arch Linux"
-#+end_src
-** TODO Run a machine with iso
-#+begin_src shell
-qemantra run --name "Arch Linux" --iso archlinux-x86_64.iso
-#+end_src
-** TODO Run a machine with given disk
-#+begin_src shell
-qemantra run --name "Arch Linux" --disk harddrive.img
-#+end_src
-** TODO Create a image(With prompts)
-#+begin_src sh
-qemantra create-machine 
-#+end_src
-** TODO Create a image(Without prompts , without disk)
-#+begin_src shell
-qemantra create-machine --name "Arch Linux" --no-disk --mem-size 4G --cpu-cores 2  --iso archlinux-86_64.iso
-#+end_src
-** TODO Create a image(Without prompts , with disk)
-#+begin_src shell
-qemantra create-machine --name "Arch Linux" --disk-name "archLinux.img" --disk-format raw  --mem-size=4G
-#+end_src
-** TODO Create a image(With Prompt)
-#+begin_src shell
-qemantra create-img 
-#+end_src
-** TODO Create a image(Without prompt)
-#+begin_src shell
-qemantra create-img --name "archlinux.img" --format raw
-#+end_src
+* Qemantra
+Qemantra is a cli for creating and running QEMU Virtual Machines.
+
+** Motivation ?
+Virtualbox is good, but it has a QT interface and it's command line inteface is hectic at best.
+QEMU has no official (or good) frontend , the command line interface is mature , but has no central managing solution.
+
+Qemantra aims to become a simple and convinient way to manage Virtual Machines. It is designed for the casual Virtualizer
+who struggles to control their VM's using the command line.
+
+** Installation ?
+Currently you can only build from source.
+- Clone the repository
+- ~make build~ to build the binary.
+- Move the binary to a folder in your $PATH variable.
+
+** Features
+- Create , list and run virtual machines.
+- Create configurations to run on demand.
+- Use features of QEMU like KVM , multiple architecture support etc.
+
+** Contributing
+Anybody is welcome to contribute , check out the ~contribution guide~ for more information.
+For bugs and feature requests , open a issue.
+
