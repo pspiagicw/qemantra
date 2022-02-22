@@ -2,7 +2,6 @@
 package argparser
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/pspiagicw/qemantra/pkg/creator"
@@ -15,14 +14,15 @@ import (
 // The input is Options which contains all the options passed.
 func ParseAndRun(globalOptions *Options , version string) {
 	if globalOptions.CreateMachineCommand.Used {
-		fmt.Println("Create Machine Command")
+		log.Println("Creating a new machine!")
 		cr := globalOptionsToMachineCreator(globalOptions)
 		creator.CreateNewMachine(cr)
 	} else if globalOptions.CreateImgCommand.Used {
+		log.Println("Creating a new image!")
 		im := globalOptionsToImage(globalOptions)
 		image.CreateImage(im)
 	} else if globalOptions.RunOptionCommand.Used {
-		fmt.Println("Run Machine Command")
+		log.Println("Finding the given machine!")
 		machine := runner.FindMachine(globalOptions.RunOptions.name)
 		if machine == nil {
 			log.Fatalf("Machine %s not found", globalOptions.RunOptions.name)

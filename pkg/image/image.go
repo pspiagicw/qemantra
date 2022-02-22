@@ -3,6 +3,8 @@ package image
 import (
 	"bytes"
 	"fmt"
+	"log"
+	"os"
 	"os/exec"
 	"path/filepath"
 
@@ -20,9 +22,9 @@ type Image struct {
 
 func CreateImage(image *Image) (string, error) {
 	imagepath := getImagePath(image.Name)
+	confirmImagePath(imagepath)
 	command := exec.Command(QEMU_IMAGE_CREATE_COMMMAND, QEMU_IMAGE_CREATE_OPTIONS, imagepath, image.Size)
 	var out bytes.Buffer
-	fmt.Println(command)
 	command.Stderr = &out
 	err := command.Run()
 	if err != nil {
@@ -38,4 +40,10 @@ func getImagePath(name string) string {
 }
 func appendPath(dir string, name string) string {
 	return filepath.Join(dir, name)
+}
+func confirmImagePath(imagepath string) {
+	_, err := os.Stat(imagepath)
+	if os.IsNotExist(err) == false {
+		log.Fatalf("Disk %s already exists", imagepath)
+	}
 }
