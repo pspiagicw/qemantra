@@ -14,5 +14,4 @@ func ShowBanner(name string) {
 	fmt.Println("Control QEMU like magic!")
 	fmt.Println("Welcome to Qemantra")
 	fmt.Println("Run `qemantra -h` for help")
-	
 }

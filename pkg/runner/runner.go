@@ -22,6 +22,7 @@ func startMachine(runner *Runner) {
 	options := constructOptions(runner)
 	cmd := exec.Command(runner.SystemCommand, options... )
 
+	log.Printf("Executing '%s' command on your system" , cmd)
 	var out bytes.Buffer
 	cmd.Stderr = &out
 
@@ -41,9 +42,11 @@ func constructOptions(runner *Runner) []string {
 	return options
 }
 func getIsoOptions(runner *Runner) []string {
-	// fmt.Println("-cdrom " + runner.Iso)
-	option := []string{"-cdrom" , runner.Iso}
-	return option
+	if runner.Iso != "" {
+	    option := []string{"-cdrom" , runner.Iso}
+	    return option
+	}
+	return []string{}
 
 }
 func getDriveOptions(runner *Runner) []string {
