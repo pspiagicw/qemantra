@@ -19,7 +19,14 @@ func FindMachine(name string) *Runner {
 	}
 	return nil
 }
-func ListMachines() {
+func ListMachines(image bool) {
+	if image {
+		images := getImageList()
+		for i , image := range images {
+			fmt.Printf("%d) Path: %s\n" , i , image)
+		}
+		return
+	}
 	machines := getMachineList()
 	for i , runner := range machines {
 		fmt.Printf("%d) Name: %s\n" , i , runner.Name)
@@ -38,4 +45,15 @@ func getMachineList() []Runner {
 
 	}
 	return runners
+}
+
+func getImageList() []string {
+	paths := make([]string , 0)
+	config := config.GetConfig()
+	for _ , file := range dirs.ListDirs(config.GetImageDir()) {
+		filepath := getFileName(file)
+		paths = append(paths , filepath)
+	}
+	return paths
+	
 }

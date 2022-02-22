@@ -31,7 +31,7 @@ func ParseAndRun(globalOptions *Options , version string) {
 		runner.RunMachine(machine)
 
 	} else if globalOptions.ListCommand.Used {
-		runner.ListMachines()
+		runner.ListMachines(globalOptions.ListOptions.Img)
 	} else {
 		prompt.ShowBanner(version)
 	}
