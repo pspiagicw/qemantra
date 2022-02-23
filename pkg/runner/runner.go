@@ -47,8 +47,11 @@ func getIsoOptions(runner *Runner) []string {
 
 }
 func getDriveOptions(runner *Runner) []string {
-	option := []string{ "-hda" , runner.DrivePath  , }
-	return option
+	if runner.DrivePath != "" {
+	    option := []string{ "-hda" , runner.DrivePath  , }
+	    return option
+	}
+	return []string{}
 }
 func getMemOptions(runner *Runner) []string {
 	option := []string{ "-m", runner.MemSize }
