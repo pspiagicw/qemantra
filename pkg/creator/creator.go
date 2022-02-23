@@ -25,11 +25,18 @@ type MachineCreator struct {
 }
 
 func CreateNewMachine(machine *MachineCreator) {
+	checkIfMachineExists(machine)
 	imagepath := createImage(machine)
 	runner := constructRunner(imagepath , machine)
 	err := encodeJsonToFile(runner)
 	if err != nil {
 		log.Fatalf("Could not create new machine %v" , err)
+	}
+}
+func checkIfMachineExists(machine *MachineCreator) {
+	runner := runner.FindMachine(machine.Name)
+	if runner != nil {
+		log.Fatalf("Machine %s already exists!" , machine.Name)
 	}
 }
 func createImage(machine *MachineCreator) string {
