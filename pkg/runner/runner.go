@@ -57,11 +57,16 @@ func getDriveOptions(runner *Runner) []string {
 	return []string{}
 }
 func getMemOptions(runner *Runner) []string {
-	option := []string{ "-m", runner.MemSize }
-	return option
+	if runner.MemSize != "" {
+	    return []string{ "-m", runner.MemSize }
+	}
+	return []string{}
 }
 func getCpuOptions(runner *Runner) []string {
-	return []string{""}
+	if runner.CpuCores  != ""{
+	    return []string{"-smp" , runner.CpuCores }
+	}
+	return []string{}
 }
 func getMiscOptions(runner *Runner) []string {
 	return []string{"-enable-kvm"}

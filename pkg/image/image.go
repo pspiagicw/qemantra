@@ -34,7 +34,7 @@ func CreateImage(image *Image) (string, error) {
 }
 
 func getImagePath(name string) string {
-	imagesdir := config.GetConfig().ImageDir
+	imagesdir := config.GetConfig().GetImageDir()
 	imagepath := appendPath(imagesdir, name)
 	return imagepath
 }
