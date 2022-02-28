@@ -1,6 +1,8 @@
 * Qemantra
 Qemantra is a cli for creating and running QEMU Virtual Machines.
 
+[[./assets/gif/intro.gif]]
+
 ** Motivation ?
 Virtualbox is good, but it has a QT interface and it's command line inteface is hectic at best.
 QEMU has no official (or good) frontend , the command line interface is mature , but has no central managing solution.
