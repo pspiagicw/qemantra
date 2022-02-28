@@ -13,6 +13,7 @@ type Config struct {
 	ImageDir   string
 	MachineDir string
 }
+
 func (c *Config) GetImageDir() string {
 	return c.ImageDir
 }

@@ -16,7 +16,7 @@ const SYSTEM_COMMAND string = "qemu-system-x86_64"
 
 type MachineCreator struct {
 	Name       string
-	NoDisk       bool
+	NoDisk     bool
 	DiskName   string
 	DiskFormat string
 	DiskSize   string
@@ -27,16 +27,16 @@ type MachineCreator struct {
 func CreateNewMachine(machine *MachineCreator) {
 	checkIfMachineExists(machine)
 	imagepath := createImage(machine)
-	runner := constructRunner(imagepath , machine)
+	runner := constructRunner(imagepath, machine)
 	err := encodeJsonToFile(runner)
 	if err != nil {
-		log.Fatalf("Could not create new machine %v" , err)
+		log.Fatalf("Could not create new machine %v", err)
 	}
 }
 func checkIfMachineExists(machine *MachineCreator) {
 	runner := runner.FindMachine(machine.Name)
 	if runner != nil {
-		log.Fatalf("Machine %s already exists!" , machine.Name)
+		log.Fatalf("Machine %s already exists!", machine.Name)
 	}
 }
 func createImage(machine *MachineCreator) string {
@@ -75,7 +75,7 @@ func encodeJsonToFile(runner *runner.Runner) error {
 
 }
 func writeFile(contents []byte, filepath string) error {
-	err := ioutil.WriteFile(filepath, contents, 0644 )
+	err := ioutil.WriteFile(filepath, contents, 0644)
 	if err != nil {
 		return err
 	}

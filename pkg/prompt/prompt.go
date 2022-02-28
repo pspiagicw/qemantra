@@ -2,12 +2,12 @@ package prompt
 
 import "fmt"
 
-
 const BANNER string = `
 ░▄▀▄░█▀▀░█▄█░█▀█░█▀█░▀█▀░█▀▄░█▀█
 ░█\█░█▀▀░█░█░█▀█░█░█░░█░░█▀▄░█▀█
 ░░▀\░▀▀▀░▀░▀░▀░▀░▀░▀░░▀░░▀░▀░▀░▀
 `
+
 func ShowBanner(name string) {
 	fmt.Println(BANNER)
 	fmt.Println("Version 0.0.1")

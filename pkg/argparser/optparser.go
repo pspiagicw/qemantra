@@ -12,7 +12,7 @@ import (
 
 // Check the parsed arguments and run corresponding actions
 // The input is Options which contains all the options passed.
-func ParseAndRun(globalOptions *Options , version string) {
+func ParseAndRun(globalOptions *Options, version string) {
 	if globalOptions.CreateMachineCommand.Used {
 		log.Println("Creating a new machine!")
 		cr := globalOptionsToMachineCreator(globalOptions)
@@ -27,7 +27,7 @@ func ParseAndRun(globalOptions *Options , version string) {
 		if machine == nil {
 			log.Fatalf("Machine %s not found", globalOptions.RunOptions.name)
 		}
-		addRunnerOptions(globalOptions.RunOptions , machine)
+		addRunnerOptions(globalOptions.RunOptions, machine)
 		runner.RunMachine(machine)
 
 	} else if globalOptions.ListCommand.Used {
@@ -36,12 +36,15 @@ func ParseAndRun(globalOptions *Options , version string) {
 		prompt.ShowBanner(version)
 	}
 }
-func addRunnerOptions(option *RunCommandOptions , runner *runner.Runner) {
+func addRunnerOptions(option *RunCommandOptions, runner *runner.Runner) {
 	if option.iso != "" {
 		runner.Iso = option.iso
 	}
 	if option.externaldisk != "" {
 		runner.ExternalDisk = option.externaldisk
+	}
+	if option.boot != "" {
+		runner.Boot = option.boot
 	}
 }
 
