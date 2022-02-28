@@ -40,6 +40,9 @@ func addRunnerOptions(option *RunCommandOptions , runner *runner.Runner) {
 	if option.iso != "" {
 		runner.Iso = option.iso
 	}
+	if option.externaldisk != "" {
+		runner.ExternalDisk = option.externaldisk
+	}
 }
 
 // Convert given arguments(as options) to instance of MachineCreator

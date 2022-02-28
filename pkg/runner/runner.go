@@ -13,6 +13,7 @@ type Runner struct {
 	MemSize       string `json:"memSize"`
 	CpuCores      string `json:"cpuCores"`
 	Iso           string `json:"-"`
+	ExternalDisk  string `json:"-"`
 }
 
 func RunMachine(runner *Runner) {
@@ -66,6 +67,13 @@ func getCpuOptions(runner *Runner) []string {
 func getMiscOptions(runner *Runner) []string {
 	return []string{"-enable-kvm"}
 }
-func getBootOptions(runner *Runner) string {
-	return ""
+func getBootOptions(runner *Runner) []string {
+	return []string{}
+}
+func getExternalDiskOption(runner *Runner) []string {
+	if runner.ExternalDisk != "" {
+		return []string{"-hdb" , runner.ExternalDisk}
+		
+	}
+	return []string{}
 }
