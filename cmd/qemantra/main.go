@@ -4,6 +4,7 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/argparser"
 	"github.com/pspiagicw/qemantra/pkg/config"
 )
+
 const VERSION = "0.0.1"
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 	// runner.CreateMachine(template)
 	config.EnsureSystemReady()
 	options := argparser.ParseArguments(VERSION)
-	argparser.ParseAndRun(options , VERSION)
+	argparser.ParseAndRun(options, VERSION)
 	// example := &image.Image{
 	// 	Type: "raw",
 	// 	Name: "gentoo.img",

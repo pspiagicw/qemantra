@@ -60,13 +60,13 @@ type RunCommandOptions struct {
 	iso          string
 	diskname     string
 	externaldisk string
+	boot         string
 }
 
 // String function for RunCommandOptions
 func (r *RunCommandOptions) String() string {
 	return fmt.Sprintf("Name: %s , iso: %s , diskname: %s , externaldisk: %s", r.name, r.iso, r.diskname, r.externaldisk)
 }
-
 
 // Helper function to create a instance of RunCommandOptions
 func newRunCommandOptions() *RunCommandOptions {
@@ -75,8 +75,10 @@ func newRunCommandOptions() *RunCommandOptions {
 		diskname:     "",
 		iso:          "",
 		externaldisk: "",
+		boot:         "",
 	}
 }
+
 // Function to add logic for parsing the `run` command
 func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
 	options := newRunCommandOptions()
@@ -85,6 +87,7 @@ func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
 	run.String(&options.iso, "i", "iso", "Name of the ISO")
 	run.String(&options.diskname, "d", "disk", "Add disk to boot order")
 	run.String(&options.externaldisk, "e", "externaldisk", "Add external disk to boot order")
+	run.String(&options.boot, "b", "boot", "Boot options")
 	return run, options
 }
 
@@ -92,12 +95,12 @@ func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
 type CreateImgOptions struct {
 	Name   string
 	Format string
-	Size string
+	Size   string
 }
 
 // String fucntion to create a instance of CreateImgOptions
 func (c *CreateImgOptions) String() string {
-	return fmt.Sprintf("Name: %s , format: %s , size: %s", c.Name, c.Format , c.Size)
+	return fmt.Sprintf("Name: %s , format: %s , size: %s", c.Name, c.Format, c.Size)
 }
 
 // Helper function to create instance of CreateImgOptions
@@ -105,16 +108,17 @@ func newCreateImgOptions() *CreateImgOptions {
 	return &CreateImgOptions{
 		Name:   "",
 		Format: "",
-		Size: "",
+		Size:   "",
 	}
 }
+
 // Function to add logic for `create-img` command
 func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgOptions) {
 	options := newCreateImgOptions()
 	create_img := flaggy.NewSubcommand("create-img")
 	create_img.String(&options.Name, "n", "name", "Name of the disk")
 	create_img.String(&options.Format, "f", "format", "Format of the disk")
-	create_img.String(&options.Size , "s" , "size"  , "Size of the disk")
+	create_img.String(&options.Size, "s", "size", "Size of the disk")
 	return create_img, options
 }
 

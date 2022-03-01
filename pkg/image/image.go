@@ -23,7 +23,7 @@ func CreateImage(image *Image) (string, error) {
 	imagepath := getImagePath(image.Name)
 	confirmImagePath(imagepath)
 	command := exec.Command(QEMU_IMAGE_CREATE_COMMMAND, QEMU_IMAGE_CREATE_OPTIONS, imagepath, image.Size)
-	log.Printf("Executing '%s' on your operating system" , command.String())
+	log.Printf("Executing '%s' on your operating system", command.String())
 	var out bytes.Buffer
 	command.Stderr = &out
 	err := command.Run()

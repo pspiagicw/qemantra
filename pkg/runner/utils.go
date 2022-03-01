@@ -10,14 +10,12 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/config"
 )
 
-
-
-func readFile(file string) ( []byte  , error) {
+func readFile(file string) ([]byte, error) {
 	contents, err := ioutil.ReadFile(file)
 	if err != nil {
-		return []byte("") , err
+		return []byte(""), err
 	}
-	return contents , nil
+	return contents, nil
 }
 func getFileName(file fs.FileInfo) string {
 	machineDir := config.GetConfig().MachineDir
@@ -25,16 +23,16 @@ func getFileName(file fs.FileInfo) string {
 	return path
 }
 
-func checkName(filepath string, name string) (*Runner , bool) {
+func checkName(filepath string, name string) (*Runner, bool) {
 	runner, err := decodeFileToRunner(filepath)
 	if err != nil {
 		log.Fatalf("Can't decode file %s , %v", filepath, err)
 	}
 
 	if runner.Name == name {
-		return runner , true
+		return runner, true
 	}
-	return nil , false
+	return nil, false
 }
 func decodeByteToRunner(contents []byte) (*Runner, error) {
 	var runner Runner
