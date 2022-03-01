@@ -44,6 +44,7 @@ func constructOptions(runner *Runner) []string {
 	options = append(options, getIsoOptions(runner)...)
 	options = append(options, getDriveOptions(runner)...)
 	options = append(options, getBootOptions(runner)...)
+	options = append(options ,getCpuOptions(runner)...)
 	options = append(options, getExternalDiskOption(runner)...)
 	return options
 }
