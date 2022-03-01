@@ -1,12 +1,14 @@
 
 # Qemantra
-![QEMantra Icon](./assets/qemantra_icon_128.png)
-<a id="orgd792ca5"></a>
-
 ![GitHub issues](https://img.shields.io/github/issues-raw/pspiagicw/qemantra?logoColor=%23ffb86c&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/pspiagicw/qemantra?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pspiagicw/qemantra?style=for-the-badge)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/pspiagicw/qemantra?style=for-the-badge)
+
+![QEMantra Icon](./assets/qemantra_icon_128.png)
+<a id="orgd792ca5"></a>
+
+
 
 
 Qemantra is a tool for creating and running QEMU Virtual Machines.
