@@ -8,6 +8,7 @@ import (
 
 const IMAGE_DIR_NAME = "images"
 const MACHINE_DIR_NAME = "machines"
+const QEMANTRA_DIR = ".qemantra"
 
 type Config struct {
 	ImageDir   string
@@ -36,8 +37,8 @@ func appendPath(path1 string, path2 string) string {
 }
 func getConfigDir() string {
 	homedir := getHomeDir()
-
-	configdir := appendPath(homedir, ".lazyqemu")
+	configdir := appendPath(homedir, QEMANTRA_DIR)
+	ensureExists(configdir)
 	return configdir
 }
 
@@ -45,8 +46,10 @@ func getUserDirs() (string, string) {
 	configdir := getConfigDir()
 
 	imagedir := appendPath(configdir, IMAGE_DIR_NAME)
+	ensureExists(imagedir)
 
 	machinedir := appendPath(configdir, MACHINE_DIR_NAME)
+	ensureExists(machinedir)
 
 	return imagedir, machinedir
 
@@ -57,4 +60,24 @@ func GetConfig() *Config {
 		ImageDir:   imagedir,
 		MachineDir: machinedir,
 	}
+}
+func ensureExists(dir string) {
+	if !dirExists(dir) {
+		log.Printf("Creating %s as it does not exists!" , dir)
+		err := os.Mkdir(dir, 0755)
+		if err != nil {
+			log.Fatalf("Error creating %s,%v", dir, err)
+
+		}
+	}
+}
+
+func dirExists(dir string) bool {
+	_, err := os.Stat(dir)
+
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+
 }
