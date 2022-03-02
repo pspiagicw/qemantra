@@ -14,6 +14,7 @@ import (
 
 const SYSTEM_COMMAND string = "qemu-system-x86_64"
 
+var ConfigProvider = config.GetConfig()
 type MachineCreator struct {
 	Name       string
 	NoDisk     bool
@@ -82,7 +83,7 @@ func writeFile(contents []byte, filepath string) error {
 	return nil
 }
 func getFileName(name string) string {
-	machineDir := config.GetConfig().MachineDir
+	machineDir := ConfigProvider.GetMachineDir()
 	shortName := getShortName(name)
 	return filepath.Join(machineDir, shortName)
 }

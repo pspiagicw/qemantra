@@ -9,6 +9,7 @@ import (
 
 	"github.com/pspiagicw/qemantra/pkg/config"
 )
+var ConfigProvider = config.GetConfig()
 
 func readFile(file string) ([]byte, error) {
 	contents, err := ioutil.ReadFile(file)
@@ -18,7 +19,7 @@ func readFile(file string) ([]byte, error) {
 	return contents, nil
 }
 func getFileName(file fs.FileInfo) string {
-	machineDir := config.GetConfig().MachineDir
+	machineDir := ConfigProvider.GetMachineDir()
 	path := filepath.Join(machineDir, file.Name())
 	return path
 }

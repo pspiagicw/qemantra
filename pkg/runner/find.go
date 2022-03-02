@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/dirs"
 )
 
 func FindMachine(name string) *Runner {
-	config := config.GetConfig()
-	for _, file := range dirs.ListDirs(config.MachineDir) {
+	for _, file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {
 		filepath := getFileName(file)
 		runner, ok := checkName(filepath, name)
 		if ok {
@@ -33,9 +31,8 @@ func ListMachines(image bool) {
 	}
 }
 func getMachineList() []Runner {
-	config := config.GetConfig()
 	runners := make([]Runner, 0)
-	for _, file := range dirs.ListDirs(config.MachineDir) {
+	for _, file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {
 		filepath := getFileName(file)
 		runner, err := decodeFileToRunner(filepath)
 		if err != nil {
@@ -49,8 +46,7 @@ func getMachineList() []Runner {
 
 func getImageList() []string {
 	paths := make([]string, 0)
-	config := config.GetConfig()
-	for _, file := range dirs.ListDirs(config.GetImageDir()) {
+	for _, file := range dirs.ListDirs(ConfigProvider.GetImageDir()) {
 		filepath := getFileName(file)
 		paths = append(paths, filepath)
 	}

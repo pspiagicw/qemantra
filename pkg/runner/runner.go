@@ -1,13 +1,14 @@
 package runner
 
 import (
-	"bytes"
 	"log"
-	"os/exec"
+
+	"github.com/pspiagicw/qemantra/pkg/executor"
 )
 
 const menuBoot string = "menu=on"
 const isoBoot string = "d"
+var ExecProvider = executor.GetExecutor()
 
 type Runner struct {
 	Name          string `json:"name"`
@@ -25,16 +26,16 @@ func RunMachine(runner *Runner) {
 }
 func startMachine(runner *Runner) {
 	options := constructOptions(runner)
-	cmd := exec.Command(runner.SystemCommand, options...)
+	// cmd := exec.Command(runner.SystemCommand, options...)
 
-	log.Printf("Executing '%s' command on your system", cmd)
-	var out bytes.Buffer
-	cmd.Stderr = &out
+	// log.Printf("Executing '%s' command on your system", cmd)
+	// var out bytes.Buffer
+	// cmd.Stderr = &out
 
-	err := cmd.Run()
+	// err := cmd.Run()
+	err := ExecProvider.Execute(runner.SystemCommand , options)
 	if err != nil {
 		log.Printf("Some error occured %v", err)
-		log.Fatalf("The err %s", out.String())
 	}
 }
 func constructOptions(runner *Runner) []string {

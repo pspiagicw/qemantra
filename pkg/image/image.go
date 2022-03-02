@@ -1,17 +1,20 @@
 package image
 
 import (
-	"bytes"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
+	"github.com/pspiagicw/qemantra/pkg/executor"
 )
 
 const QEMU_IMAGE_CREATE_COMMMAND = "qemu-img"
 const QEMU_IMAGE_CREATE_OPTIONS = "create"
+const QEMU_IMAGE_CREATE_FORMAT_OPTION = "-f"
+
+var ConfigProvider = config.GetConfig()
+var ExecProvider = executor.GetExecutor()
 
 type Image struct {
 	Type string
@@ -20,22 +23,34 @@ type Image struct {
 }
 
 func CreateImage(image *Image) (string, error) {
-	imagepath := getImagePath(image.Name)
+	imagepath := getImagePath(image)
 	confirmImagePath(imagepath)
-	command := exec.Command(QEMU_IMAGE_CREATE_COMMMAND, QEMU_IMAGE_CREATE_OPTIONS, imagepath, image.Size)
-	log.Printf("Executing '%s' on your operating system", command.String())
-	var out bytes.Buffer
-	command.Stderr = &out
-	err := command.Run()
+	options := getOptions(image)
+	err := ExecProvider.Execute(QEMU_IMAGE_CREATE_COMMMAND , options)
 	if err != nil {
 		return "", err
 	}
 	return imagepath, nil
 }
 
-func getImagePath(name string) string {
-	imagesdir := config.GetConfig().GetImageDir()
-	imagepath := appendPath(imagesdir, name)
+func getOptions(image *Image) []string{
+	options := make([]string , 0)
+	options = append(options , QEMU_IMAGE_CREATE_OPTIONS)
+	options = append(options , getImageType(image)...)
+	options = append(options , getImagePath(image))
+	options = append(options , getImageSize(image )...)
+	return options
+	
+}
+func getImageSize(image *Image) []string {
+	if image.Size == "" {
+		return []string{"10G"}
+	}
+	return []string { image.Size }
+}
+func getImagePath(image *Image) string {
+	imagesdir := ConfigProvider.GetImageDir()
+	imagepath := appendPath(imagesdir, image.Name)
 	return imagepath
 }
 func appendPath(dir string, name string) string {
@@ -46,4 +61,11 @@ func confirmImagePath(imagepath string) {
 	if os.IsNotExist(err) == false {
 		log.Fatalf("Disk %s already exists", imagepath)
 	}
+}
+
+func getImageType(image *Image) []string {
+	if image.Type == "" {
+		return []string {"-f" , "raw"}
+	}
+	return []string{"-f" , image.Type}
 }

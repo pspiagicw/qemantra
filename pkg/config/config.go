@@ -10,16 +10,21 @@ const IMAGE_DIR_NAME = "images"
 const MACHINE_DIR_NAME = "machines"
 const QEMANTRA_DIR = ".qemantra"
 
-type Config struct {
-	ImageDir   string
-	MachineDir string
+type Config interface {
+	GetImageDir()   string
+	GetMachineDir() string
 }
 
-func (c *Config) GetImageDir() string {
-	return c.ImageDir
+type UserConfig struct {
+	ImageDir string
+	MachineDir string
+	
 }
-func (c *Config) GetMachineDir() string {
-	return c.MachineDir
+func (u *UserConfig) GetImageDir() string {
+	return u.ImageDir
+}
+func (u *UserConfig) GetMachineDir() string {
+	return u.MachineDir
 }
 
 func getHomeDir() string {
@@ -54,9 +59,9 @@ func getUserDirs() (string, string) {
 	return imagedir, machinedir
 
 }
-func GetConfig() *Config {
+func GetConfig() Config {
 	imagedir, machinedir := getUserDirs()
-	return &Config{
+	return &UserConfig{
 		ImageDir:   imagedir,
 		MachineDir: machinedir,
 	}
