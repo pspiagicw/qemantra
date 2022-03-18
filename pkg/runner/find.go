@@ -17,7 +17,7 @@ func FindMachine(name string) *Runner {
 	}
 	return nil
 }
-func ListMachines(image bool) {
+func ListMachines(image bool, verbose bool) {
 	if image {
 		images := getImageList()
 		for i, image := range images {
@@ -26,8 +26,18 @@ func ListMachines(image bool) {
 		return
 	}
 	machines := getMachineList()
-	for i, runner := range machines {
-		fmt.Printf("%d) Name: %s\n", i, runner.Name)
+	if verbose {
+		for i, runner := range machines {
+			fmt.Printf("%d) Name: %s\n", i, runner.Name)
+			fmt.Printf("    MemSize: %s\n", runner.MemSize)
+			fmt.Printf("    CpuCores: %s\n", runner.CpuCores)
+			fmt.Printf("    DrivePath: %s\n", runner.DrivePath)
+		}
+
+	} else {
+		for i, runner := range machines {
+			fmt.Printf("%d) Name: %s\n", i, runner.Name)
+		}
 	}
 }
 func getMachineList() []Runner {
