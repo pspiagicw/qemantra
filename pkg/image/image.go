@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
+	"github.com/pspiagicw/qemantra/pkg/dirs"
 	"github.com/pspiagicw/qemantra/pkg/executor"
 )
 
@@ -20,6 +21,15 @@ type Image struct {
 	Type string
 	Name string
 	Size string
+}
+func FindImage(name string) string {
+	files := dirs.ListDirs(ConfigProvider.GetImageDir())
+	for _ , i := range files {
+		if i.Name() == name {
+			return appendPath(ConfigProvider.GetImageDir() , name)
+		}
+	}
+	return ""
 }
 
 func CreateImage(image *Image) (string, error) {
