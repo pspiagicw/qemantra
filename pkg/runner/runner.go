@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/pspiagicw/qemantra/pkg/executor"
+	"github.com/pspiagicw/qemantra/pkg/image"
 )
 
 const menuBoot string = "menu=on"
@@ -22,7 +23,19 @@ type Runner struct {
 }
 
 func RunMachine(runner *Runner) {
+	if runner.ExternalDisk != ""{
+		fullpath := image.FindImage(runner.ExternalDisk)
+		if fullpath == "" {
+			log.Fatalf("Can't find disk with name '%s'" , runner.ExternalDisk)
+		}
+		log.Printf("Disk Found! Using '%s'" , fullpath)
+		runner.ExternalDisk = fullpath
+	}
+
 	startMachine(runner)
+}
+func addExternalDisk(runner *Runner) {
+	
 }
 func startMachine(runner *Runner) {
 	options := constructOptions(runner)
