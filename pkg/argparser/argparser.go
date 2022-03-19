@@ -11,11 +11,13 @@ type Options struct {
 	CreateImgOptions     *CreateImgOptions
 	CreateMachineOptions *CreateMachineOptions
 	ListOptions          *ListOptions
+	EditOptions          *EditMachineOptions
 
 	RunOptionCommand     *flaggy.Subcommand
 	CreateImgCommand     *flaggy.Subcommand
 	CreateMachineCommand *flaggy.Subcommand
 	ListCommand          *flaggy.Subcommand
+	EditCommand          *flaggy.Subcommand
 }
 
 // Function to parse all the command line arguments.
@@ -37,19 +39,24 @@ func addSubCommands() *Options {
 	createImgSubCommand, create_img_options := addCreateImgCommand()
 	createMachineSubCommand, create_machine_options := addCreateMachineCommand()
 	listSubCommand, list_options := addListCommand()
+	editSubCommand, edit_options := addEditMachineCommand()
 	flaggy.AttachSubcommand(runSubcommand, 1)
 	flaggy.AttachSubcommand(createImgSubCommand, 1)
 	flaggy.AttachSubcommand(createMachineSubCommand, 1)
 	flaggy.AttachSubcommand(listSubCommand, 1)
+	flaggy.AttachSubcommand(editSubCommand, 1)
 	global := &Options{
 		RunOptions:           run_options,
 		CreateImgOptions:     create_img_options,
 		CreateMachineOptions: create_machine_options,
 		RunOptionCommand:     runSubcommand,
 		CreateImgCommand:     createImgSubCommand,
+		EditOptions:          edit_options,
+
 		CreateMachineCommand: createMachineSubCommand,
 		ListOptions:          list_options,
 		ListCommand:          listSubCommand,
+		EditCommand:          editSubCommand,
 	}
 	return global
 }
@@ -180,4 +187,39 @@ func addListCommand() (*flaggy.Subcommand, *ListOptions) {
 	list := flaggy.NewSubcommand("list")
 	list.Bool(&options.Img, "i", "images", "List images")
 	return list, options
+}
+
+type EditMachineOptions struct {
+	Name       string
+	NoDisk     bool
+	DiskName   string
+	DiskFormat string
+	DiskSize   string
+	MemSize    string
+	CpuCores   string
+}
+
+func newEditOptionsCommand() *EditMachineOptions {
+	return &EditMachineOptions{
+		Name:       "",
+		NoDisk:     false,
+		DiskName:   "",
+		DiskFormat: "",
+		DiskSize:   "",
+		MemSize:    "",
+		CpuCores:   "",
+	}
+}
+func addEditMachineCommand() (*flaggy.Subcommand, *EditMachineOptions) {
+	options := newEditOptionsCommand()
+
+	edit_machine := flaggy.NewSubcommand("edit")
+	edit_machine.String(&options.Name, "n", "name", "Name of the machine")
+	edit_machine.Bool(&options.NoDisk, "x", "no-disk", "Don't create disk")
+	edit_machine.String(&options.DiskName, "i", "disk-name", "Name of the disk")
+	edit_machine.String(&options.DiskFormat, "f", "disk-format", "Format of the disk")
+	edit_machine.String(&options.DiskSize, "s", "disk-size", "Size of the disk")
+	edit_machine.String(&options.MemSize, "m", "mem-size", "Ram to provide")
+	edit_machine.String(&options.CpuCores, "c", "cpu-cores", "Cores to provide")
+	return edit_machine, options
 }

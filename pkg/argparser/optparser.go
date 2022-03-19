@@ -32,6 +32,10 @@ func ParseAndRun(globalOptions *Options, version string) {
 
 	} else if globalOptions.ListCommand.Used {
 		runner.ListMachines(globalOptions.ListOptions.Img)
+		
+	} else if globalOptions.EditCommand.Used {
+		log.Println("Editing a new machine!")
+
 	} else {
 		prompt.ShowBanner(version)
 	}
