@@ -3,15 +3,15 @@
 ![GitHub](https://img.shields.io/github/license/pspiagicw/qemantra?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pspiagicw/qemantra?style=for-the-badge)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/pspiagicw/qemantra?style=for-the-badge)
+![GitHub Stars](https://img.shields.io/github/stars/pspiagicw/qemantra?style=for-the-badge)
 
-![QEMantra Icon](./assets/qemantra_icon_128.png)
+Qemantra is a command-line tool for creating and managing QEMU Virtual Machines.
 
+![QEMantra banner](./assets/banner.png)
 
-Qemantra is a tool for creating and running QEMU Virtual Machines.
 
 QEMU is better and sometimes faster than VirtualBox , but does not have any
-command-line central managing solution. This tool does not run your virtual machines.
-It simply aims to configure and run Virtual Machines using `QEMU`.
+command-line central managing solution. This tool aims to manage and run your virtual machines using `QEMU`.
 
 ![img](./assets/gifs/intro.gif)
 
@@ -50,13 +50,10 @@ Qemantra aims to become a simple and convinient way to manage Virtual Machines. 
 
 ## Installation ?
 
-Currently you can only build from source.
+Currently you can only build from source.You will need `Golang` installed on your system.
 
-- Qemantra is built in golang , you must have golang installed.
-- Clone the repository.
-- `make build` to build the binary.
-- Move the binary to a folder in your $PATH variable. 
-  Or use `make install` to install in default `$GOBIN`
+
+Install using `go install` by running `go install github.com/pspiagicw/qemantra@latest`.
 
 ## Contributing
 
