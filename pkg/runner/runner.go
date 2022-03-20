@@ -9,6 +9,7 @@ import (
 
 const menuBoot string = "menu=on"
 const isoBoot string = "d"
+
 var ExecProvider = executor.GetExecutor()
 
 type Runner struct {
@@ -20,22 +21,22 @@ type Runner struct {
 	Iso           string `json:"-"`
 	ExternalDisk  string `json:"-"`
 	Boot          string `json:"-"`
+	UEFI          bool   `json:"-"`
 }
 
 func RunMachine(runner *Runner) {
-	if runner.ExternalDisk != ""{
+	if runner.ExternalDisk != "" {
 		fullpath := image.FindImage(runner.ExternalDisk)
 		if fullpath == "" {
-			log.Fatalf("Can't find disk with name '%s'" , runner.ExternalDisk)
+			log.Fatalf("Can't find disk with name '%s'", runner.ExternalDisk)
 		}
-		log.Printf("Disk Found! Using '%s'" , fullpath)
+		log.Printf("Disk Found! Using '%s'", fullpath)
 		runner.ExternalDisk = fullpath
 	}
 
 	startMachine(runner)
 }
 func addExternalDisk(runner *Runner) {
-	
 }
 func startMachine(runner *Runner) {
 	options := constructOptions(runner)
@@ -46,7 +47,7 @@ func startMachine(runner *Runner) {
 	// cmd.Stderr = &out
 
 	// err := cmd.Run()
-	err := ExecProvider.Execute(runner.SystemCommand , options)
+	err := ExecProvider.Execute(runner.SystemCommand, options)
 	if err != nil {
 		log.Printf("Some error occured %v", err)
 	}
@@ -58,9 +59,16 @@ func constructOptions(runner *Runner) []string {
 	options = append(options, getIsoOptions(runner)...)
 	options = append(options, getDriveOptions(runner)...)
 	options = append(options, getBootOptions(runner)...)
-	options = append(options ,getCpuOptions(runner)...)
+	options = append(options, getCpuOptions(runner)...)
+	options = append(options, getUEFIOptions(runner)...)
 	options = append(options, getExternalDiskOption(runner)...)
 	return options
+}
+func getUEFIOptions(runner *Runner) []string {
+	if runner.UEFI {
+		return []string{"-bios" , "/usr/share/ovmf/x64/OVMF.fd"}
+	}
+	return []string{}
 }
 func getIsoOptions(runner *Runner) []string {
 	if runner.Iso != "" {

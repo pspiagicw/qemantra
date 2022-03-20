@@ -100,7 +100,9 @@ These are the major features planned to be added to `qemantra`. Other features a
 - [x] Can use boot options
 - [ ] Make a auto install script.
 - [ ] Add to major repositories(Debian , AUR , Gentoo)
-- [ ] Support UEFI using OVMF
+- [x] Support UEFI using OVMF
+- [ ] Configuration changes using ENVIRONMENT VARIABLES
+- [ ] Multiple architecture support
 - [ ] Suppport easy clipboard sharing
 - [ ] Support easy shared folder support
 - [ ] List currently running machines.

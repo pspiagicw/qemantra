@@ -4,6 +4,7 @@ package argparser
 import (
 	"log"
 
+	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/creator"
 	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/prompt"
@@ -45,6 +46,10 @@ func addRunnerOptions(option *RunCommandOptions, runner *runner.Runner) {
 	}
 	if option.boot != "" {
 		runner.Boot = option.boot
+	}
+	if option.uefi != false {
+		config.EnsureUEFIReady()
+		runner.UEFI = true
 	}
 }
 

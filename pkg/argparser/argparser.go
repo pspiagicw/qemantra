@@ -61,6 +61,7 @@ type RunCommandOptions struct {
 	diskname     string
 	externaldisk string
 	boot         string
+	uefi         bool
 }
 
 // String function for RunCommandOptions
@@ -76,6 +77,7 @@ func newRunCommandOptions() *RunCommandOptions {
 		iso:          "",
 		externaldisk: "",
 		boot:         "",
+		uefi:         false,
 	}
 }
 
@@ -88,6 +90,7 @@ func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
 	run.String(&options.diskname, "d", "disk", "Add disk to boot order")
 	run.String(&options.externaldisk, "e", "externaldisk", "Add external disk to boot order")
 	run.String(&options.boot, "b", "boot", "Boot options")
+	run.Bool(&options.uefi, "u" , "uefi" , "Enable UEFI support")
 	return run, options
 }
 
