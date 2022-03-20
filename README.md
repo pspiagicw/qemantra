@@ -37,8 +37,47 @@ command-line central managing solution. This tool aims to manage and run your vi
 ### Create a Image
 ![img](./assets/gifs/create-img.gif)
 
-### Documentation
-Currently documentation only exists as a `--help` flag.
+### Usage
+Call `qemantra` in your terminal.
+```sh
+$ qemantra
+```
+
+#### Check
+Run `qemantra check` for checking for dependencies and configuration.
+
+Highly recommended before using `qemantra`!.
+
+#### Create Machine
+
+The `qemantra create-machine` subcommand provides functionality to create machines.
+| Option        | Description                                             |
+|---------------|---------------------------------------------------------|
+| `--name`      | Name of the machine                                     |
+| `--no-disk`   | Don't create a disk                                     |
+| `--disk-name` | Name of the disk(Not applicable when using `no-disk`)   |
+| `--disk-size` | Size of the disk(Not applicable when using `disk-size`) |
+| `--mem-size`  | RAM to provide to the VM                                |
+| `--cpu-cores` | Cores to provide to the RAM.                            |
+|---------------|---------------------------------------------------------|
+
+#### Running a machine
+The `qemantra run` subcommand provides functionality to run a virtual machine.
+|------------------|----------------------------------------------------------------------------------|
+| Option           | Description                                                                      |
+| `--name`         | Name of the machine                                                              |
+| `--iso`          | Path to the ISO(Relative path works)                                             |
+| `--disk`         | Disk name to add to boot order(Should be in default qemantra directory)          |
+| `--externaldisk` | Path to a external disk to add to boot order(Any disk , not managed by qemantra) |
+| `--boot`         | Boot options while starting the VM                                               |
+|------------------|----------------------------------------------------------------------------------|
+
+The boot options can be either `menu` which provides a menu to choose between boot devices. Or you can use `iso` option to directly boot the given iso.
+    
+#### List machines
+Use `qemantra list` to list currently configured machines. Use `--verbose` option to list more information about the VM(Mem , Cpu etc).
+
+You can list the images managed by `qemantra` by using `--images` option to `qemantra list`.In most cases the virtual machine would automatically use the correct disk without any problem.
 
 ## Motivation ?
 
@@ -51,6 +90,7 @@ Qemantra aims to become a simple and convinient way to manage Virtual Machines. 
 ## Installation ?
 
 Currently you can only build from source.You will need `Golang` installed on your system.
+As a prerequisite you also need QEMU installed.
 
 
 Install using `go install` by running `go install github.com/pspiagicw/qemantra@latest`.
