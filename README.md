@@ -20,6 +20,7 @@ command-line central managing solution. This tool aims to manage and run your vi
 - Create , list and run virtual machines.
 - Create configurations to run on demand.
 - Use features of QEMU like KVM , multiple architecture support etc.
+- Features like UEFI available in a simple flag!
 
 ## Examples
 ### Running a Virtual Machine
@@ -78,14 +79,6 @@ Use `qemantra list` to list currently configured machines. Use `--verbose` optio
 
 You can list the images managed by `qemantra` by using `--images` option to `qemantra list`.In most cases the virtual machine would automatically use the correct disk without any problem.
 
-## Motivation ?
-
-Virtualbox is good, but it has a QT interface and it's command line inteface is hectic at best.
-QEMU has no official (or good) frontend , the command line interface is mature , but has no central managing solution.
-
-Qemantra aims to become a simple and convinient way to manage Virtual Machines. It is designed for the casual Virtualizer.
-
-
 ## Installation ?
 
 Currently you can only build from source.You will need `Golang` installed on your system.
@@ -93,6 +86,32 @@ As a prerequisite you also need QEMU installed.
 
 
 Install using `go install` by running `go install github.com/pspiagicw/qemantra@latest`.
+
+## Roadmap ?
+
+These are the major features planned to be added to `qemantra`. Other features are welcome to be discussed.
+
+- [x] Running virtual machines
+- [x] Creating virtual machines.
+- [x] Can use memory and cpu cores.
+- [x] Can use iso while running
+- [x] Can use different disks while running
+- [x] Can use external disk while running
+- [x] Can use boot options
+- [ ] Make a auto install script.
+- [ ] Add to major repositories(Debian , AUR , Gentoo)
+- [ ] Support UEFI using OVMF
+- [ ] Suppport easy clipboard sharing
+- [ ] Support easy shared folder support
+- [ ] List currently running machines.
+- [ ] Control logging functionality(`-v` / `-vv' and `-vvv`)
+
+## Motivation ?
+
+Virtualbox is good, but it has a QT interface and it's command line inteface is hectic at best.
+QEMU has no official (or good) frontend , the command line interface is mature , but has no central managing solution.
+
+Qemantra aims to become a simple and convinient way to manage Virtual Machines. It is designed for the casual Virtualizer.
 
 ## Contributing
 
