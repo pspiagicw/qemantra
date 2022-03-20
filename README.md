@@ -61,9 +61,10 @@ The `qemantra create-machine` subcommand provides functionality to create machin
 | `--cpu-cores` | Cores to provide to the RAM.                            |
 
 #### Running a machine
+
 The `qemantra run` subcommand provides functionality to run a virtual machine.
-|------------------|----------------------------------------------------------------------------------|
 | Option           | Description                                                                      |
+|------------------|----------------------------------------------------------------------------------|
 | `--name`         | Name of the machine                                                              |
 | `--iso`          | Path to the ISO(Relative path works)                                             |
 | `--disk`         | Disk name to add to boot order(Should be in default qemantra directory)          |
