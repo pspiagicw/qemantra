@@ -50,7 +50,7 @@ func ListMachines(image bool) {
 	}
 	machines := getMachineList()
 	for i, runner := range machines {
-		fmt.Printf("%d) Name: %s\n", i, runner.Name)
+		fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
 	}
 }
 func getMachineList() []Runner {
