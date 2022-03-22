@@ -13,11 +13,13 @@ const QEMANTRA_DIR = ".qemantra"
 type Config interface {
 	GetImageDir()   string
 	GetMachineDir() string
+	GetConfigDir() string
 }
 
 type UserConfig struct {
 	ImageDir string
 	MachineDir string
+	ConfigDir string
 	
 }
 func (u *UserConfig) GetImageDir() string {
@@ -25,6 +27,9 @@ func (u *UserConfig) GetImageDir() string {
 }
 func (u *UserConfig) GetMachineDir() string {
 	return u.MachineDir
+}
+func (u *UserConfig) GetConfigDir() string {
+	return u.ConfigDir
 }
 
 func getHomeDir() string {
@@ -61,9 +66,11 @@ func getUserDirs() (string, string) {
 }
 func GetConfig() Config {
 	imagedir, machinedir := getUserDirs()
+	configdir := getConfigDir()
 	return &UserConfig{
 		ImageDir:   imagedir,
 		MachineDir: machinedir,
+		ConfigDir: configdir,
 	}
 }
 func ensureExists(dir string) {

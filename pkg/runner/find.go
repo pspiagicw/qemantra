@@ -2,12 +2,19 @@ package runner
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"path/filepath"
 
 	"github.com/pspiagicw/qemantra/pkg/dirs"
 )
 
+const MOST_RECENT_FILE = "recentf"
 func FindMachine(name string) *Runner {
+	if name == "" {
+		name = findMostRecentMachine()
+	}
+	storeMostRecentMachine(name)
 	for _, file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {
 		filepath := getFileName(file)
 		runner, ok := checkName(filepath, name)
@@ -16,6 +23,22 @@ func FindMachine(name string) *Runner {
 		}
 	}
 	return nil
+}
+func storeMostRecentMachine(name string) {
+	configdir := ConfigProvider.GetConfigDir()
+	filename := filepath.Join(configdir , MOST_RECENT_FILE)
+	ioutil.WriteFile(filename , []byte(name) , 0644 )
+	
+}
+func findMostRecentMachine() string {
+	configdir := ConfigProvider.GetConfigDir()
+	filename := filepath.Join(configdir , MOST_RECENT_FILE)
+	contents , err := ioutil.ReadFile(filename)
+	if err != nil {
+		log.Fatalf("Can't read the recent file %s , %v" , filename , err)
+	}
+	return string(contents)
+
 }
 func ListMachines(image bool) {
 	if image {
