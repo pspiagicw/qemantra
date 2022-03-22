@@ -170,11 +170,13 @@ func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineOptions) {
 
 type ListOptions struct {
 	Img bool
+	Verbose bool
 }
 
 func newListOptions() *ListOptions {
 	return &ListOptions{
 		Img: false,
+		Verbose: false,
 	}
 }
 func addListCommand() (*flaggy.Subcommand, *ListOptions) {
@@ -182,5 +184,6 @@ func addListCommand() (*flaggy.Subcommand, *ListOptions) {
 
 	list := flaggy.NewSubcommand("list")
 	list.Bool(&options.Img, "i", "images", "List images")
+	list.Bool(&options.Verbose , "v" , "verbose" , "All details")
 	return list, options
 }

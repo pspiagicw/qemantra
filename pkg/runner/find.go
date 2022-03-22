@@ -10,6 +10,7 @@ import (
 )
 
 const MOST_RECENT_FILE = "recentf"
+
 func FindMachine(name string) *Runner {
 	if name == "" {
 		name = findMostRecentMachine()
@@ -26,32 +27,44 @@ func FindMachine(name string) *Runner {
 }
 func storeMostRecentMachine(name string) {
 	configdir := ConfigProvider.GetConfigDir()
-	filename := filepath.Join(configdir , MOST_RECENT_FILE)
-	ioutil.WriteFile(filename , []byte(name) , 0644 )
-	
+	filename := filepath.Join(configdir, MOST_RECENT_FILE)
+	ioutil.WriteFile(filename, []byte(name), 0644)
+
 }
 func findMostRecentMachine() string {
 	configdir := ConfigProvider.GetConfigDir()
-	filename := filepath.Join(configdir , MOST_RECENT_FILE)
-	contents , err := ioutil.ReadFile(filename)
+	filename := filepath.Join(configdir, MOST_RECENT_FILE)
+	contents, err := ioutil.ReadFile(filename)
 	if err != nil {
-		log.Fatalf("Can't read the recent file %s , %v" , filename , err)
+		log.Fatalf("Can't read the recent file %s , %v", filename, err)
 	}
 	return string(contents)
 
 }
-func ListMachines(image bool) {
+func ListMachines(image bool, verbose bool) {
 	if image {
 		images := getImageList()
 		for i, image := range images {
 			fmt.Printf("%d) Path: %s\n", i, image)
 		}
 		return
+	} else {
+		machines := getMachineList()
+		if verbose {
+			for i, runner := range machines {
+				fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
+				fmt.Printf("    MemSize: %s\n", runner.MemSize)
+				fmt.Printf("    CpuCores: %s\n", runner.CpuCores)
+				fmt.Printf("    DrivePath: %s\n", runner.DrivePath)
+			}
+
+		} else {
+			for i, runner := range machines {
+				fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
+			}
+		}
 	}
-	machines := getMachineList()
-	for i, runner := range machines {
-		fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
-	}
+
 }
 func getMachineList() []Runner {
 	runners := make([]Runner, 0)
