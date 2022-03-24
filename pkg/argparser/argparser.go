@@ -16,6 +16,7 @@ type Options struct {
 	CreateImgCommand     *flaggy.Subcommand
 	CreateMachineCommand *flaggy.Subcommand
 	ListCommand          *flaggy.Subcommand
+	CheckCommand         *flaggy.Subcommand
 }
 
 // Function to parse all the command line arguments.
@@ -37,10 +38,12 @@ func addSubCommands() *Options {
 	createImgSubCommand, create_img_options := addCreateImgCommand()
 	createMachineSubCommand, create_machine_options := addCreateMachineCommand()
 	listSubCommand, list_options := addListCommand()
+	checkSubCommand := addCheckCommand()
 	flaggy.AttachSubcommand(runSubcommand, 1)
 	flaggy.AttachSubcommand(createImgSubCommand, 1)
 	flaggy.AttachSubcommand(createMachineSubCommand, 1)
 	flaggy.AttachSubcommand(listSubCommand, 1)
+	flaggy.AttachSubcommand(checkSubCommand, 1)
 	global := &Options{
 		RunOptions:           run_options,
 		CreateImgOptions:     create_img_options,
@@ -50,6 +53,7 @@ func addSubCommands() *Options {
 		CreateMachineCommand: createMachineSubCommand,
 		ListOptions:          list_options,
 		ListCommand:          listSubCommand,
+		CheckCommand:         checkSubCommand,
 	}
 	return global
 }
@@ -90,7 +94,7 @@ func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
 	run.String(&options.diskname, "d", "disk", "Add disk to boot order")
 	run.String(&options.externaldisk, "e", "externaldisk", "Add external disk to boot order")
 	run.String(&options.boot, "b", "boot", "Boot options")
-	run.Bool(&options.uefi, "u" , "uefi" , "Enable UEFI support")
+	run.Bool(&options.uefi, "u", "uefi", "Enable UEFI support")
 	return run, options
 }
 
@@ -169,13 +173,13 @@ func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineOptions) {
 }
 
 type ListOptions struct {
-	Img bool
+	Img     bool
 	Verbose bool
 }
 
 func newListOptions() *ListOptions {
 	return &ListOptions{
-		Img: false,
+		Img:     false,
 		Verbose: false,
 	}
 }
@@ -184,6 +188,10 @@ func addListCommand() (*flaggy.Subcommand, *ListOptions) {
 
 	list := flaggy.NewSubcommand("list")
 	list.Bool(&options.Img, "i", "images", "List images")
-	list.Bool(&options.Verbose , "v" , "verbose" , "All details")
+	list.Bool(&options.Verbose, "v", "verbose", "All details")
 	return list, options
+}
+func addCheckCommand() *flaggy.Subcommand {
+	check := flaggy.NewSubcommand("check")
+	return check
 }
