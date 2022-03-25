@@ -66,6 +66,7 @@ type RunCommandOptions struct {
 	externaldisk string
 	boot         string
 	uefi         bool
+	no_kvm       bool
 }
 
 // String function for RunCommandOptions
@@ -82,6 +83,7 @@ func newRunCommandOptions() *RunCommandOptions {
 		externaldisk: "",
 		boot:         "",
 		uefi:         false,
+		no_kvm:       false,
 	}
 }
 
@@ -95,6 +97,7 @@ func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
 	run.String(&options.externaldisk, "e", "externaldisk", "Add external disk to boot order")
 	run.String(&options.boot, "b", "boot", "Boot options")
 	run.Bool(&options.uefi, "u", "uefi", "Enable UEFI support")
+	run.Bool(&options.no_kvm, "k", "no-kvm", "Disable KVM Support")
 	return run, options
 }
 

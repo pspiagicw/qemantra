@@ -56,6 +56,9 @@ func addRunnerOptions(option *RunCommandOptions, runner *runner.Runner) {
 		config.EnsureUEFIReady()
 		runner.UEFI = true
 	}
+	if option.no_kvm != false {
+		runner.NO_KVM = true
+	}
 }
 
 // Convert given arguments(as options) to instance of MachineCreator

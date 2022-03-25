@@ -22,6 +22,7 @@ type Runner struct {
 	ExternalDisk  string `json:"-"`
 	Boot          string `json:"-"`
 	UEFI          bool   `json:"-"`
+	NO_KVM        bool   `json:"-"`
 }
 
 func RunMachine(runner *Runner) {
@@ -55,7 +56,7 @@ func startMachine(runner *Runner) {
 func constructOptions(runner *Runner) []string {
 	options := []string{}
 	options = append(options, getMemOptions(runner)...)
-	options = append(options, getMiscOptions(runner)...)
+	options = append(options, getKVMOptions(runner)...)
 	options = append(options, getIsoOptions(runner)...)
 	options = append(options, getDriveOptions(runner)...)
 	options = append(options, getBootOptions(runner)...)
@@ -66,7 +67,7 @@ func constructOptions(runner *Runner) []string {
 }
 func getUEFIOptions(runner *Runner) []string {
 	if runner.UEFI {
-		return []string{"-bios" , "/usr/share/ovmf/x64/OVMF.fd"}
+		return []string{"-bios", "/usr/share/ovmf/x64/OVMF.fd"}
 	}
 	return []string{}
 }
@@ -97,7 +98,10 @@ func getCpuOptions(runner *Runner) []string {
 	}
 	return []string{}
 }
-func getMiscOptions(runner *Runner) []string {
+func getKVMOptions(runner *Runner) []string {
+	if runner.NO_KVM {
+		return []string{}
+	}
 	return []string{"-enable-kvm"}
 }
 func getBootOptions(runner *Runner) []string {
