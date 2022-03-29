@@ -71,13 +71,18 @@ The `qemantra run` subcommand provides functionality to run a virtual machine.
 | `--disk`         | Disk name to add to boot order(Should be in default qemantra directory)          |
 | `--externaldisk` | Path to a external disk to add to boot order(Any disk , not managed by qemantra) |
 | `--boot`         | Boot options while starting the VM                                               |
+| `--uefi`         | Enable UEFI support(Requires `OVMF` to be installed)                             |
+| `--no-kvm`       | Disables KVM(Enabled by default)                                                                                 |
+
+
+If `qemantra run` has no arguments , it will execute the last machine which was booted.
 
 The boot options can be either `menu` which provides a menu to choose between boot devices. Or you can use `iso` option to directly boot the given iso.
     
 #### List machines
 Use `qemantra list` to list currently configured machines. Use `--verbose` option to list more information about the VM(Mem , Cpu etc).
 
-You can list the images managed by `qemantra` by using `--images` option to `qemantra list`.In most cases the virtual machine would automatically use the correct disk without any problem.
+You can list the images managed by `qemantra` by using `--images` option to `qemantra list`.
 
 ## Installation ?
 
@@ -106,7 +111,7 @@ These are the major features planned to be added to `qemantra`. Other features a
 - [ ] Suppport easy clipboard sharing
 - [ ] Support easy shared folder support
 - [ ] List currently running machines.
-- [ ] Control logging functionality(`-v` / `-vv' and `-vvv`)
+- [ ] Control logging functionality(`-v` / `-vv` and `-vvv`)
 
 ## Motivation ?
 
