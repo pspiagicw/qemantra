@@ -94,9 +94,9 @@ func getMemOptions(runner *Runner) []string {
 }
 func getCpuOptions(runner *Runner) []string {
 	if runner.CpuCores != "" {
-		return []string{"-smp", runner.CpuCores}
+		return []string{"-cpu" , "host" , "-smp", runner.CpuCores}
 	}
-	return []string{}
+	return []string{"-cpu" , "host"}
 }
 func getKVMOptions(runner *Runner) []string {
 	if runner.NO_KVM {
