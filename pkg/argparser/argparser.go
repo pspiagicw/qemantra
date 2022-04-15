@@ -11,12 +11,14 @@ type Options struct {
 	CreateImgOptions     *CreateImgOptions
 	CreateMachineOptions *CreateMachineOptions
 	ListOptions          *ListOptions
+	RenameOptions        *RenameOptions
 
 	RunOptionCommand     *flaggy.Subcommand
 	CreateImgCommand     *flaggy.Subcommand
 	CreateMachineCommand *flaggy.Subcommand
 	ListCommand          *flaggy.Subcommand
 	CheckCommand         *flaggy.Subcommand
+	RenameCommand        *flaggy.Subcommand
 }
 
 // Function to parse all the command line arguments.
@@ -39,11 +41,13 @@ func addSubCommands() *Options {
 	createMachineSubCommand, create_machine_options := addCreateMachineCommand()
 	listSubCommand, list_options := addListCommand()
 	checkSubCommand := addCheckCommand()
+	renameSubcommand, renameOptions := addRenameCommand()
 	flaggy.AttachSubcommand(runSubcommand, 1)
 	flaggy.AttachSubcommand(createImgSubCommand, 1)
 	flaggy.AttachSubcommand(createMachineSubCommand, 1)
 	flaggy.AttachSubcommand(listSubCommand, 1)
 	flaggy.AttachSubcommand(checkSubCommand, 1)
+	flaggy.AttachSubcommand(renameSubcommand, 1)
 	global := &Options{
 		RunOptions:           run_options,
 		CreateImgOptions:     create_img_options,
@@ -54,6 +58,8 @@ func addSubCommands() *Options {
 		ListOptions:          list_options,
 		ListCommand:          listSubCommand,
 		CheckCommand:         checkSubCommand,
+		RenameOptions: renameOptions,
+		RenameCommand:        renameSubcommand,
 	}
 	return global
 }
@@ -193,6 +199,28 @@ func addListCommand() (*flaggy.Subcommand, *ListOptions) {
 	list.Bool(&options.Img, "i", "images", "List images")
 	list.Bool(&options.Verbose, "v", "verbose", "All details")
 	return list, options
+}
+
+type RenameOptions struct {
+	OldName string
+	NewName string
+}
+
+func newRenameOptions() *RenameOptions {
+	return &RenameOptions{
+		OldName: "",
+		NewName: "",
+	}
+}
+
+func addRenameCommand() (*flaggy.Subcommand, *RenameOptions) {
+	options := newRenameOptions()
+
+	rename := flaggy.NewSubcommand("rename")
+	rename.String(&options.OldName, "o", "old-name", "Name of the macine currently")
+	rename.String(&options.NewName, "n", "new-name", "The new name to rename the machine to")
+	return rename, options
+
 }
 func addCheckCommand() *flaggy.Subcommand {
 	check := flaggy.NewSubcommand("check")

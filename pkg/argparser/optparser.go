@@ -33,11 +33,15 @@ func ParseAndRun(globalOptions *Options, version string) {
 
 	} else if globalOptions.ListCommand.Used {
 		runner.ListMachines(globalOptions.ListOptions.Img , globalOptions.ListOptions.Verbose)
-
 		
 	} else if globalOptions.CheckCommand.Used {
 		config.PerformCheck()
 		
+	} else if globalOptions.RenameCommand.Used {
+		oldName := globalOptions.RenameOptions.OldName
+		newName := globalOptions.RenameOptions.NewName
+		runner.RenameMachine(oldName , newName)
+
 	} else {
 		prompt.ShowBanner(version)
 	}
