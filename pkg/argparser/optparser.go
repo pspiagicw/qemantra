@@ -32,13 +32,30 @@ func ParseAndRun(globalOptions *Options, version string) {
 
 	} else if globalOptions.ListCommand.Used {
 		runner.ListMachines(globalOptions.ListOptions.Img)
-		
+
 	} else if globalOptions.EditCommand.Used {
-		log.Println("Editing a new machine!")
+		log.Println("Finding the given Machine")
+		machine := runner.FindMachine(globalOptions.EditOptions.Name)
+		if machine == nil {
+			log.Fatalf("Machine %s not found", globalOptions.EditOptions.Name)
+		}
+		creator.EditMachine(editOptionToMachineCreator(globalOptions.EditOptions) , machine)
 
 	} else {
 		prompt.ShowBanner(version)
 	}
+}
+func editOptionToMachineCreator(options *EditMachineOptions) *creator.MachineCreator {
+	machine := &creator.MachineCreator{
+		Name:       options.Name,
+		NoDisk:     options.NoDisk,
+		DiskName:   options.DiskName,
+		DiskFormat: options.DiskFormat,
+		DiskSize:   options.DiskFormat,
+		MemSize:    options.MemSize,
+		CpuCores:   options.CpuCores,
+	}
+	return machine
 }
 func addRunnerOptions(option *RunCommandOptions, runner *runner.Runner) {
 	if option.iso != "" {

@@ -2,7 +2,9 @@ package argparser
 
 import (
 	"fmt"
+
 	"github.com/integrii/flaggy"
+	"github.com/pspiagicw/qemantra/pkg/creator"
 )
 
 // Struct to store all the parsed options and subcommand
@@ -189,15 +191,16 @@ func addListCommand() (*flaggy.Subcommand, *ListOptions) {
 	return list, options
 }
 
-type EditMachineOptions struct {
-	Name       string
-	NoDisk     bool
-	DiskName   string
-	DiskFormat string
-	DiskSize   string
-	MemSize    string
-	CpuCores   string
-}
+// type EditMachineOptions struct {
+// 	Name       string
+// 	NoDisk     bool
+// 	DiskName   string
+// 	DiskFormat string
+// 	DiskSize   string
+// 	MemSize    string
+// 	CpuCores   string
+// }
+type EditMachineOptions creator.MachineCreator
 
 func newEditOptionsCommand() *EditMachineOptions {
 	return &EditMachineOptions{

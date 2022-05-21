@@ -2,6 +2,7 @@ package runner
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"log"
@@ -25,7 +26,9 @@ func getFileName(file fs.FileInfo) string {
 }
 
 func checkName(filepath string, name string) (*Runner, bool) {
+	fmt.Printf("Checking Name %s" , filepath)
 	runner, err := decodeFileToRunner(filepath)
+	fmt.Println(runner)
 	if err != nil {
 		log.Fatalf("Can't decode file %s , %v", filepath, err)
 	}
