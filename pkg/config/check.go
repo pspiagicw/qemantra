@@ -17,7 +17,7 @@ func EnsureSystemReady() {
 		log.Fatalf("Sorry only Linux is tested and supported!")
 	}
 	if !CheckQEMU() {
-		log.Fatalln("Error detecting 'qemu-img' command %v , please ensure it exists")
+		log.Fatalln("Error detecting 'qemu-img' command , please ensure it exists")
 	}
 
 }

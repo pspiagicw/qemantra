@@ -9,6 +9,7 @@ import (
 
 	"github.com/pspiagicw/qemantra/pkg/config"
 )
+
 var ConfigProvider = config.GetConfig()
 
 func readFile(file string) ([]byte, error) {

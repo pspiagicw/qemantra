@@ -58,7 +58,7 @@ func addSubCommands() *Options {
 		ListOptions:          list_options,
 		ListCommand:          listSubCommand,
 		CheckCommand:         checkSubCommand,
-		RenameOptions: renameOptions,
+		RenameOptions:        renameOptions,
 		RenameCommand:        renameSubcommand,
 	}
 	return global

@@ -8,23 +8,22 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/dirs"
 )
 
-
-func RenameMachine(oldname string , newname string)  {
+func RenameMachine(oldname string, newname string) {
 	run := FindMachine(oldname)
 	if run == nil {
-		log.Fatalf("Machine %s not found! " , oldname)
+		log.Fatalf("Machine %s not found! ", oldname)
 	}
 	newRun := FindMachine(newname)
 	if newRun != nil {
-		log.Fatalf("Machine with name %s already exists!" , newname)
+		log.Fatalf("Machine with name %s already exists!", newname)
 	}
 	filepath := FindMachineFile(oldname)
-	ReplaceName(filepath , newname)
+	ReplaceName(filepath, newname)
 }
 func FindMachineFile(name string) string {
-	for _ , file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {
+	for _, file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {
 		filepath := getFileName(file)
-		_ , ok := checkName(filepath , name)
+		_, ok := checkName(filepath, name)
 		if ok {
 			return filepath
 		}
@@ -32,20 +31,20 @@ func FindMachineFile(name string) string {
 	return ""
 }
 
-func ReplaceName(path string , newname string) {
-	runner , err := decodeFileToRunner(path)
+func ReplaceName(path string, newname string) {
+	runner, err := decodeFileToRunner(path)
 	if err != nil {
-		log.Fatalf("Error reading %s file" , path)
-		
+		log.Fatalf("Error reading %s file", path)
+
 	}
 	runner.Name = newname
-	err = encodeJsonToFile(runner , path)
+	err = encodeJsonToFile(runner, path)
 	if err != nil {
-		log.Fatalf("Error updating %q file with new name" , err)
+		log.Fatalf("Error updating %q file with new name", err)
 	}
 }
 
-func encodeJsonToFile(runner *Runner , filepath string ) error {
+func encodeJsonToFile(runner *Runner, filepath string) error {
 	contents, err := json.Marshal(runner)
 	if err != nil {
 		return err

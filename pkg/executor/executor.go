@@ -6,13 +6,14 @@ import (
 )
 
 type Executor interface {
-	Execute(cmd string , options []string) error
+	Execute(cmd string, options []string) error
 	GetCommand() []string
 }
 type SystemExecutor struct {
 }
-func (s *SystemExecutor) Execute(cmd string , options []string) error {
-	command := exec.Command(cmd , options...)
+
+func (s *SystemExecutor) Execute(cmd string, options []string) error {
+	command := exec.Command(cmd, options...)
 	log.Printf("Executing '%s' on your operating system", command.String())
 	err := command.Run()
 	if err != nil {

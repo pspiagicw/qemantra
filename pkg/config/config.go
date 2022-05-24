@@ -11,17 +11,17 @@ const MACHINE_DIR_NAME = "machines"
 const QEMANTRA_DIR = ".qemantra"
 
 type Config interface {
-	GetImageDir()   string
+	GetImageDir() string
 	GetMachineDir() string
 	GetConfigDir() string
 }
 
 type UserConfig struct {
-	ImageDir string
+	ImageDir   string
 	MachineDir string
-	ConfigDir string
-	
+	ConfigDir  string
 }
+
 func (u *UserConfig) GetImageDir() string {
 	return u.ImageDir
 }
@@ -70,12 +70,12 @@ func GetConfig() Config {
 	return &UserConfig{
 		ImageDir:   imagedir,
 		MachineDir: machinedir,
-		ConfigDir: configdir,
+		ConfigDir:  configdir,
 	}
 }
 func ensureExists(dir string) {
 	if !dirExists(dir) {
-		log.Printf("Creating %s as it does not exists!" , dir)
+		log.Printf("Creating %s as it does not exists!", dir)
 		err := os.Mkdir(dir, 0755)
 		if err != nil {
 			log.Fatalf("Error creating %s,%v", dir, err)

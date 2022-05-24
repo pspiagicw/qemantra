@@ -28,9 +28,9 @@ func TestListDirs(t *testing.T) {
 		"sello",
 	}
 	got := ListDirs(dirpath)
-	for i , want := range wanted {
+	for i, want := range wanted {
 		if got[i].Name() != want {
-			t.Errorf("wanted %v  ,got %v" , got , want)
+			t.Errorf("wanted %v  ,got %v", got, want)
 		}
 	}
 }

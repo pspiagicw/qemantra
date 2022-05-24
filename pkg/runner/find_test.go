@@ -29,5 +29,3 @@ package runner
 
 // 	return imagedir , machinedir
 // }
-
-

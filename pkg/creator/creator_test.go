@@ -1,6 +1,6 @@
 package creator
-// package creator
 
+// package creator
 
 // type TestExecutor struct {
 // 	Command []string
@@ -12,7 +12,7 @@ package creator
 // }
 // func (t *TestExecutor) GetCommand() []string{
 // 	return t.Command
-	
+
 // }
 // type TestConfig struct {
 // }
@@ -22,7 +22,6 @@ package creator
 // func (t *TestConfig) GetMachineDir() string {
 // 	return "testdir/machines"
 // }
-
 
 // func TestCreator(t *testing.T) {
 // }

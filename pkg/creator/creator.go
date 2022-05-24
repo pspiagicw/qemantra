@@ -15,6 +15,7 @@ import (
 const SYSTEM_COMMAND string = "qemu-system-x86_64"
 
 var ConfigProvider = config.GetConfig()
+
 type MachineCreator struct {
 	Name       string
 	NoDisk     bool
@@ -73,7 +74,6 @@ func encodeJsonToFile(runner *runner.Runner) error {
 	filepath := getFileName(runner.Name)
 	writeFile(contents, filepath)
 	return nil
-
 }
 func writeFile(contents []byte, filepath string) error {
 	err := ioutil.WriteFile(filepath, contents, 0644)
