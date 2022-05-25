@@ -27,7 +27,6 @@ type MachineCreator struct {
 }
 
 func CreateNewMachine(machine *MachineCreator) {
-	checkIfMachineExists(machine)
 	imagepath := createImage(machine)
 	runner := constructRunner(imagepath, machine)
 	err := encodeJsonToFile(runner)
@@ -93,3 +92,4 @@ func getShortName(name string) string {
 	name = name + ".json"
 	return name
 }
+
