@@ -236,15 +236,6 @@ func addCheckCommand() *flaggy.Subcommand {
 	return check
 }
 
-// type EditMachineOptions struct {
-// 	Name       string
-// 	NoDisk     bool
-// 	DiskName   string
-// 	DiskFormat string
-// 	DiskSize   string
-// 	MemSize    string
-// 	CpuCores   string
-// }
 type EditMachineOptions creator.MachineCreator
 
 func newEditOptionsCommand() *EditMachineOptions {

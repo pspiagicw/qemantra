@@ -92,4 +92,3 @@ func getShortName(name string) string {
 	name = name + ".json"
 	return name
 }
-

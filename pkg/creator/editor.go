@@ -10,8 +10,8 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/runner"
 )
 
-func EditMachine(editor *MachineCreator , currentRunner *runner.Runner) {
-	editedRunner := mergeCreatorRunnner(currentRunner , editor)
+func EditMachine(editor *MachineCreator, currentRunner *runner.Runner) {
+	editedRunner := mergeCreatorRunnner(currentRunner, editor)
 	fmt.Println(editedRunner)
 	err := encodeJsonToFile(editedRunner)
 
@@ -20,14 +20,13 @@ func EditMachine(editor *MachineCreator , currentRunner *runner.Runner) {
 	}
 }
 
-
-func mergeCreatorRunnner(runner *runner.Runner , creator *MachineCreator) *runner.Runner {
+func mergeCreatorRunnner(runner *runner.Runner, creator *MachineCreator) *runner.Runner {
 
 	if creator.CpuCores != "" {
 		runner.CpuCores = creator.CpuCores
 	}
 
-	if creator.MemSize != ""{
+	if creator.MemSize != "" {
 		runner.MemSize = creator.MemSize
 	}
 
@@ -38,7 +37,7 @@ func mergeCreatorRunnner(runner *runner.Runner , creator *MachineCreator) *runne
 	if creator.DiskName != "" && creator.NoDisk != true {
 		runner.DrivePath = imageHandler(creator)
 	}
-	
+
 	return runner
 }
 func imageHandler(machine *MachineCreator) string {
