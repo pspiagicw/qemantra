@@ -7,9 +7,9 @@ const BANNER string = `
 ░█\█░█▀▀░█░█░█▀█░█░█░░█░░█▀▄░█▀█
 ░░▀\░▀▀▀░▀░▀░▀░▀░▀░▀░░▀░░▀░▀░▀░▀`
 
-func ShowBanner(name string) {
+func ShowBanner(version string) {
 	fmt.Println(BANNER)
-	fmt.Println("Version 0.0.1")
+	fmt.Printf("Version %s\n", version)
 	fmt.Println("Control QEMU like magic!")
 	fmt.Println("Welcome to Qemantra")
 	fmt.Println("Run `qemantra -h` for help")

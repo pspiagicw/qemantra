@@ -12,6 +12,10 @@ import (
 const OVMF_PATH = "/usr/share/ovmf"
 const GOOS_WINDOWS = "windows"
 
+// The function which checks if the system is ready.
+// Checks include
+// - If system is Unix/Linux
+// - If QEMU is installed
 func EnsureSystemReady() {
 	if !CheckSystemType() {
 		log.Fatalf("Sorry only Linux is tested and supported!")
@@ -21,6 +25,9 @@ func EnsureSystemReady() {
 	}
 
 }
+
+// Uses `runtime.GOOS` to check if system is Unix-based.
+// Returns `true` if system Unix based else false.
 func CheckSystemType() bool {
 	if runtime.GOOS == GOOS_WINDOWS {
 		return false
@@ -28,6 +35,8 @@ func CheckSystemType() bool {
 	return true
 
 }
+
+// Checks if the `qemu-img` command available in `$PATH` variable.
 func CheckQEMU() bool {
 	_, err := exec.LookPath("qemu-img")
 	if err != nil {
@@ -36,11 +45,15 @@ func CheckQEMU() bool {
 	return true
 
 }
+
+// Checks if UEFI files , using `OVMF` are available .
 func EnsureUEFIReady() {
 	if !CheckUEFI() {
 		log.Fatalf("UEFI not supported! Install `OVMF` to enable support")
 	}
 }
+
+// Checks for the required OVMF directory and returns false if not present.
 func CheckUEFI() bool {
 	_, err := os.Stat(OVMF_PATH)
 	if os.IsNotExist(err) {
@@ -48,6 +61,7 @@ func CheckUEFI() bool {
 	}
 	return true
 }
+
 func PerformCheck() {
 	if CheckUEFI() {
 		color.Green("✓ UEFI Support enabled!")
