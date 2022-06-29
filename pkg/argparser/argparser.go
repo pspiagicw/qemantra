@@ -2,7 +2,6 @@ package argparser
 
 import (
 	"fmt"
-
 	"github.com/integrii/flaggy"
 	"github.com/pspiagicw/qemantra/pkg/creator"
 )

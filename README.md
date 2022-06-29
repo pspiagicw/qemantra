@@ -89,7 +89,6 @@ You can list the images managed by `qemantra` by using `--images` option to `qem
 Currently you can only build from source.You will need `Golang` installed on your system.
 As a prerequisite you also need QEMU installed.
 
-
 Install using `go install` by running `go install github.com/pspiagicw/qemantra@latest`.
 
 ## Roadmap ?
@@ -104,14 +103,14 @@ These are the major features planned to be added to `qemantra`. Other features a
 - [x] Can use external disk while running
 - [x] Can use boot options
 - [ ] Make a auto install script.
-- [ ] Add to major repositories(Debian , AUR , Gentoo)
+- [ ] Control logging functionality(`-v` / `-vv` and `-vvv`)
 - [x] Support UEFI using OVMF
+- [ ] Add to major repositories(Debian , AUR , Gentoo)
 - [ ] Configuration changes using ENVIRONMENT VARIABLES
 - [ ] Multiple architecture support
 - [ ] Suppport easy clipboard sharing
 - [ ] Support easy shared folder support
 - [ ] List currently running machines.
-- [ ] Control logging functionality(`-v` / `-vv` and `-vvv`)
 
 ## Motivation ?
 
