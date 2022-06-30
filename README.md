@@ -87,11 +87,24 @@ You can list the images managed by `qemantra` by using `--images` option to `qem
 
 ## Installation ?
 
-<!-- Currently you can only build from source.You will need `Golang` installed on your system. -->
-<!-- As a prerequisite you also need QEMU installed. -->
-You can either install using `golang` or download the static binary from the [release](https://github.com/pspiagicw/qemantra/releases).
+### Installation using Go
+You can install using Go by using
+```sh
+go install github.com/pspiagicw/qemantra
+```
 
-Install using `go install` by running `go install github.com/pspiagicw/qemantra@latest`.
+This requires `$GOBIN` to be in our `$PATH` variable.
+
+### Installation using script
+You can also use the autoinstall script. 
+You should generally not execute scripts from the internet , so check the script
+```sh
+curl https://raw.githubusercontent.com/pspiagicw/qemantra/main/scripts/install.sh | bash
+```
+
+### Installing manually
+- Download the static binary from the [release](https://github.com/pspiagicw/qemantra/releases) page.
+- Move the binary to a location on your `$PATH` variable.
 
 ## Roadmap ?
 
@@ -104,9 +117,9 @@ These are the major features planned to be added to `qemantra`. Other features a
 - [x] Can use different disks while running
 - [x] Can use external disk while running
 - [x] Can use boot options
-- [ ] Make a auto install script.
-- [ ] Control logging functionality(`-v` / `-vv` and `-vvv`)
+- [x] Make a auto install script.
 - [x] Support UEFI using OVMF
+- [ ] Control logging functionality(`-v` / `-vv` and `-vvv`)
 - [ ] Add to major repositories(Debian , AUR , Gentoo)
 - [ ] Configuration changes using ENVIRONMENT VARIABLES
 - [ ] Multiple architecture support
