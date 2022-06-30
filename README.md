@@ -1,4 +1,9 @@
-# Qemantra
+<p align="center">
+    <a href="https://github.com/pspiagicw/qemantra">
+        <img width="180" src="./assets/qemantra.png" alt="qemantra Logo">
+    </a>
+</p>
+
 ![GitHub issues](https://img.shields.io/github/issues-raw/pspiagicw/qemantra?logoColor=%23ffb86c&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/pspiagicw/qemantra?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pspiagicw/qemantra?style=for-the-badge)
@@ -7,7 +12,6 @@
 
 Qemantra is a command-line tool for creating and managing QEMU Virtual Machines.
 
-![QEMantra banner](./assets/banner.png)
 
 
 QEMU is better and sometimes faster than VirtualBox , but does not have any
