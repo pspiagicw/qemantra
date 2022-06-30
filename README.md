@@ -58,8 +58,8 @@ The `qemantra create-machine` subcommand provides functionality to create machin
 | `--no-disk`   | Don't create a disk                                     |
 | `--disk-name` | Name of the disk(Not applicable when using `no-disk`)   |
 | `--disk-size` | Size of the disk(Not applicable when using `disk-size`) |
-| `--mem-size`  | RAM to provide to the VM                                |
 | `--cpu-cores` | Cores to provide to the RAM.                            |
+| `--mem-size`  | RAM to provide to the VM                                |
 
 #### Running a machine
 
@@ -74,10 +74,12 @@ The `qemantra run` subcommand provides functionality to run a virtual machine.
 | `--uefi`         | Enable UEFI support(Requires `OVMF` to be installed)                             |
 | `--no-kvm`       | Disables KVM(Enabled by default)                                                                                 |
 
+The boot options can be either `menu` which provides a menu to choose between boot devices. Or you can use `iso` option to directly boot the given iso.
 
+#### Renaming a machine
+The `qemantra rename` command is used to rename a existing virtual machine.
 If `qemantra run` has no arguments , it will execute the last machine which was booted.
 
-The boot options can be either `menu` which provides a menu to choose between boot devices. Or you can use `iso` option to directly boot the given iso.
     
 #### List machines
 Use `qemantra list` to list currently configured machines. Use `--verbose` option to list more information about the VM(Mem , Cpu etc).
@@ -86,8 +88,9 @@ You can list the images managed by `qemantra` by using `--images` option to `qem
 
 ## Installation ?
 
-Currently you can only build from source.You will need `Golang` installed on your system.
-As a prerequisite you also need QEMU installed.
+<!-- Currently you can only build from source.You will need `Golang` installed on your system. -->
+<!-- As a prerequisite you also need QEMU installed. -->
+You can either install using `golang` or download the static binary from the [release](https://github.com/pspiagicw/qemantra/releases).
 
 Install using `go install` by running `go install github.com/pspiagicw/qemantra@latest`.
 
