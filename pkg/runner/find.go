@@ -41,31 +41,25 @@ func findMostRecentMachine() string {
 	return string(contents)
 
 }
-func ListMachines(image bool, verbose bool) {
-	if image {
-		images := getImageList()
-		for i, image := range images {
-			fmt.Printf("%d) Path: %s\n", i, image)
-		}
-		return
-	} else {
-		machines := getMachineList()
+func ListMachines(verbose bool) {
+	machines := getMachineList()
+	for i, runner := range machines {
+		fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
 		if verbose {
-			for i, runner := range machines {
-				fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
-				fmt.Printf("    MemSize: %s\n", runner.MemSize)
-				fmt.Printf("    CpuCores: %s\n", runner.CpuCores)
-				fmt.Printf("    DrivePath: %s\n", runner.DrivePath)
-			}
-
-		} else {
-			for i, runner := range machines {
-				fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
-			}
+			fmt.Printf("    MemSize: %s\n", runner.MemSize)
+			fmt.Printf("    CpuCores: %s\n", runner.CpuCores)
+			fmt.Printf("    DrivePath: %s\n", runner.DrivePath)
 		}
 	}
 
 }
+func ListImages(verbose bool) {
+	images := getImageList()
+	for i, image := range images {
+		fmt.Printf("%d) Path: %s\n", i, image)
+	}
+}
+
 func getMachineList() []Runner {
 	runners := make([]Runner, 0)
 	for _, file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {

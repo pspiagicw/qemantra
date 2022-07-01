@@ -1,113 +1,119 @@
-// Package to parse arguments passed to qemantra
 package argparser
 
-import (
-	"log"
+/*
 
-	"github.com/pspiagicw/qemantra/pkg/config"
-	"github.com/pspiagicw/qemantra/pkg/creator"
-	"github.com/pspiagicw/qemantra/pkg/image"
-	"github.com/pspiagicw/qemantra/pkg/prompt"
-	"github.com/pspiagicw/qemantra/pkg/runner"
+This file is incharge of parsing the OPTIONS struct to execute the corresponding function.
+
+The most important function here is the `ParseOptions()` function
+It has a if statement that executes a helper function for each of the command.
+
+This helper function takes care of logging anything , parsing and finally calling the function responsible for that action.
+These function are named {{ .Command}}Execute()
+
+Some {{ .Command}}Options need to be converted to respective structs for future processing.
+These are done by helper functions. These are named as {{ .Command}}OptionsTo{{ .RequiredStruct }}().
+Here {{ .RequiredStruct }} is the name of the struct in Pascal Case.
+
+*/
+import (
+    "log"
+
+    "github.com/pspiagicw/qemantra/pkg/config"
+    "github.com/pspiagicw/qemantra/pkg/creator"
+    "github.com/pspiagicw/qemantra/pkg/image"
+    "github.com/pspiagicw/qemantra/pkg/prompt"
+    "github.com/pspiagicw/qemantra/pkg/runner"
 )
 
-// Check the parsed arguments and run corresponding actions
-// The input is Options which contains all the options passed.
-func ParseAndRun(globalOptions *Options, version string) {
-	if globalOptions.CreateMachineCommand.Used {
-		log.Println("Creating a new machine!")
-		cr := globalOptionsToMachineCreator(globalOptions)
-		creator.CreateNewMachine(cr)
-	} else if globalOptions.CreateImgCommand.Used {
-		log.Println("Creating a new image!")
-		im := globalOptionsToImage(globalOptions)
-		image.CreateImage(im)
-	} else if globalOptions.RunOptionCommand.Used {
-		log.Println("Finding the given machine!")
-		machine := runner.FindMachine(globalOptions.RunOptions.name)
-		if machine == nil {
-			log.Fatalf("Machine %s not found", globalOptions.RunOptions.name)
-		}
-		addRunnerOptions(globalOptions.RunOptions, machine)
-		runner.RunMachine(machine)
-
-	} else if globalOptions.ListCommand.Used {
-		runner.ListMachines(globalOptions.ListOptions.Img, globalOptions.ListOptions.Verbose)
-
-	} else if globalOptions.CheckCommand.Used {
-		config.PerformCheck()
-
-	} else if globalOptions.RenameCommand.Used {
-		oldName := globalOptions.RenameOptions.OldName
-		newName := globalOptions.RenameOptions.NewName
-		runner.RenameMachine(oldName, newName)
-
-	} else if globalOptions.EditCommand.Used {
-		log.Println("Finding the given Machine")
-		machine := runner.FindMachine(globalOptions.EditOptions.Name)
-		if machine == nil {
-			log.Fatalf("Machine %s not found", globalOptions.EditOptions.Name)
-		}
-		creator.EditMachine(editOptionToMachineCreator(globalOptions.EditOptions), machine)
-
-	} else {
-		prompt.ShowBanner(version)
-	}
+func ParseOptions(global *Options, version string) {
+    if global.CreateMachineCommand.Used {
+        CreateMachineExecute(global.CreateMachineOptions)
+   } else if global.CreateImgCommand.Used {
+        CreateImgExecute(global.CreateImgOptions)
+    } else if global.RunCommand.Used {
+        RunExecute(global.RunOptions)
+    } else if global.ListCommand.Used {
+        ListExecute(global.ListOptions)
+    } else if global.CheckCommand.Used {
+        config.PerformCheck()
+    } else if global.RenameCommand.Used {
+        RenameExecute(global.RenameOptions)
+    } else if global.EditCommand.Used {
+        EditExecute(global.EditOptions)
+    } else {
+        prompt.ShowBanner(version)
+    }
 }
-func editOptionToMachineCreator(options *EditMachineOptions) *creator.MachineCreator {
-	machine := &creator.MachineCreator{
-		Name:       options.Name,
-		NoDisk:     options.NoDisk,
-		DiskName:   options.DiskName,
-		DiskFormat: options.DiskFormat,
-		DiskSize:   options.DiskFormat,
-		MemSize:    options.MemSize,
-		CpuCores:   options.CpuCores,
-	}
-	return machine
-}
-func addRunnerOptions(option *RunCommandOptions, runner *runner.Runner) {
-	if option.iso != "" {
-		runner.Iso = option.iso
-	}
-	if option.externaldisk != "" {
-		runner.ExternalDisk = option.externaldisk
-	}
-	if option.boot != "" {
-		runner.Boot = option.boot
-	}
-	if option.uefi != false {
-		config.EnsureUEFIReady()
-		runner.UEFI = true
-	}
-	if option.no_kvm != false {
-		runner.NO_KVM = true
-	}
+func RunOptionsToRunner(option *RunOptions, runner *runner.Runner) {
+    if option.iso != "" {
+        runner.Iso = option.iso
+    }
+    if option.externaldisk != "" {
+        runner.ExternalDisk = option.externaldisk
+    }
+    if option.boot != "" {
+        runner.Boot = option.boot
+    }
+    if option.uefi != false {
+        config.EnsureUEFIReady()
+        runner.UEFI = true
+    }
+    if option.no_kvm != false {
+        runner.NO_KVM = true
+    }
 }
 
-// Convert given arguments(as options) to instance of MachineCreator
-// Machine Creator can be used to create a machine
-func globalOptionsToMachineCreator(globalOptions *Options) *creator.MachineCreator {
-	cr := &creator.MachineCreator{
-		Name:       globalOptions.CreateMachineOptions.Name,
-		NoDisk:     globalOptions.CreateMachineOptions.NoDisk,
-		MemSize:    globalOptions.CreateMachineOptions.MemSize,
-		CpuCores:   globalOptions.CreateMachineOptions.CpuCores,
-		DiskName:   globalOptions.CreateMachineOptions.DiskName,
-		DiskFormat: globalOptions.CreateMachineOptions.DiskFormat,
-		DiskSize:   globalOptions.CreateMachineOptions.DiskSize,
-	}
-	return cr
-
+// -- CREATE MACHINE
+func CreateMachineExecute(options *CreateMachineOptions) {
+        log.Println("Creating a new machine!")
+        cr := (*creator.MachineCreator)(options)
+        creator.CreateNewMachine(cr)
+}
+// -- CREATE IMG
+func CreateImgExecute(options *CreateImgOptions) {
+        log.Println("Creating a new image!")
+        im := (*image.Image)(options)
+        image.CreateImage(im)
 }
 
-// Convert given arguments(as options) to instance of Image
-// Image struct can be used to create a new image.
-func globalOptionsToImage(globalOptions *Options) *image.Image {
-	im := &image.Image{
-		Type: globalOptions.CreateImgOptions.Format,
-		Name: globalOptions.CreateImgOptions.Name,
-		Size: globalOptions.CreateImgOptions.Size,
-	}
-	return im
+// -- RUN 
+func RunExecute(options *RunOptions) {
+        log.Println("Finding the given machine!")
+        machine := runner.FindMachine(options.name)
+
+        if machine == nil {
+            log.Fatalf("Machine %s not found", options.name)
+        }
+        RunOptionsToRunner(options, machine)
+        runner.RunMachine(machine)
+}
+
+// -- LIST
+func ListExecute(options *ListOptions) {
+    if options.Img { 
+        runner.ListImages(options.Verbose)
+    } else {
+        runner.ListMachines(options.Verbose)
+    }
+}
+
+// -- RENAME
+func RenameExecute(options *RenameOptions) {
+        oldName := options.OldName
+        newName := options.NewName
+        runner.RenameMachine(oldName, newName)
+}
+
+// -- EDIT
+func EditExecute(options *EditOptions) {
+        log.Println("Finding the given Machine")
+
+        machine := runner.FindMachine(options.Name)
+
+        if machine == nil {
+            log.Fatalf("Machine %s not found", options.Name)
+        }
+
+        create_machine:= (*creator.MachineCreator)(options)
+        creator.EditMachine(create_machine,  machine)
 }

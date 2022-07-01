@@ -13,5 +13,5 @@ var VERSION string
 func main() {
 	config.EnsureSystemReady()
 	options := argparser.ParseArguments(VERSION)
-	argparser.ParseAndRun(options, VERSION)
+	argparser.ParseOptions(options, VERSION)
 }

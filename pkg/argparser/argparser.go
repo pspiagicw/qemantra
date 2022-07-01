@@ -1,21 +1,42 @@
+// This package parses the flags passed to the binary.
 package argparser
 
+/*
+This file parses the command line arguments and converts them into a internal struct known as `Options`.
+It uses `flaggy` for this parsing.
+
+The OPTIONS struct stores the command itself and it's options.
+The actual parsing of arguments happen in the `ParseArguments` function.
+
+The `Options` struct has 2 types of field for each command.Here {{ .Command }} is the name of the command in Pascal case
+- {{ .Command }}Options : Stores the flags/options for that command
+- {{ .Command }}Command : Stores the command's instance itself as it is needed later.
+
+Example `run` command has 2 fields in the Options struct
+- RunOptions 
+- RunCommand
+
+Every command needs 1 functions to be initiated with the name add{{ .Command }}Command(). Thus the `run` command has 1 function
+- addRunCommand: 
+This function is incharge of creating the function , adding arguments to the function and registering with flaggy.
+
+*/
 import (
-	"fmt"
 	"github.com/integrii/flaggy"
 	"github.com/pspiagicw/qemantra/pkg/creator"
+    "github.com/pspiagicw/qemantra/pkg/image"
 )
 
-// Struct to store all the parsed options and subcommand
+// Master struct to store all the commands and options
 type Options struct {
-	RunOptions           *RunCommandOptions
+	RunOptions           *RunOptions
 	CreateImgOptions     *CreateImgOptions
 	CreateMachineOptions *CreateMachineOptions
 	ListOptions          *ListOptions
 	RenameOptions        *RenameOptions
-	EditOptions          *EditMachineOptions
+	EditOptions          *EditOptions
 
-	RunOptionCommand     *flaggy.Subcommand
+	RunCommand           *flaggy.Subcommand
 	CreateImgCommand     *flaggy.Subcommand
 	CreateMachineCommand *flaggy.Subcommand
 	ListCommand          *flaggy.Subcommand
@@ -27,53 +48,42 @@ type Options struct {
 // Function to parse all the command line arguments.
 // Set's qemantra's version and description.
 func ParseArguments(version string) *Options {
-	flaggy.SetName("qemantra")
-	flaggy.SetDescription("Control QEMU like magic")
-	flaggy.DefaultParser.ShowHelpOnUnexpected = true
-	flaggy.SetVersion(version)
-	flaggy.DefaultParser.AdditionalHelpAppend = "https://github.com/pspiagicw/qemantra"
+	setFlaggyInfo(version)
 	globalOptions := addSubCommands()
 	flaggy.Parse()
 	return globalOptions
 }
 
-// Helper function to add subcommands and options
-func addSubCommands() *Options {
-	runSubcommand, run_options := addRunCommand()
-	createImgSubCommand, create_img_options := addCreateImgCommand()
-	createMachineSubCommand, create_machine_options := addCreateMachineCommand()
-	listSubCommand, list_options := addListCommand()
-	checkSubCommand := addCheckCommand()
-	renameSubcommand, renameOptions := addRenameCommand()
-	editSubCommand, edit_options := addEditMachineCommand()
-	flaggy.AttachSubcommand(runSubcommand, 1)
-	flaggy.AttachSubcommand(createImgSubCommand, 1)
-	flaggy.AttachSubcommand(createMachineSubCommand, 1)
-	flaggy.AttachSubcommand(listSubCommand, 1)
-	flaggy.AttachSubcommand(checkSubCommand, 1)
-	flaggy.AttachSubcommand(renameSubcommand, 1)
-	flaggy.AttachSubcommand(editSubCommand, 1)
-	global := &Options{
-		RunOptions:           run_options,
-		CreateImgOptions:     create_img_options,
-		CreateMachineOptions: create_machine_options,
-		RunOptionCommand:     runSubcommand,
-		CreateImgCommand:     createImgSubCommand,
-		EditOptions:          edit_options,
+// Helper function to set all the information about the program with flaggy.
+func setFlaggyInfo(version string) {
+	flaggy.SetName("qemantra")
+	flaggy.SetDescription("Control QEMU like magic")
+	flaggy.DefaultParser.ShowHelpOnUnexpected = true
+	flaggy.SetVersion(version)
+	flaggy.DefaultParser.AdditionalHelpAppend = "https://github.com/pspiagicw/qemantra"
+}
 
-		CreateMachineCommand: createMachineSubCommand,
-		ListOptions:          list_options,
-		ListCommand:          listSubCommand,
-		CheckCommand:         checkSubCommand,
-		RenameOptions:        renameOptions,
-		RenameCommand:        renameSubcommand,
-		EditCommand:          editSubCommand,
-	}
+// Adds all the subCommands to the Options struct
+func addSubCommands() *Options {
+	global := new(Options)
+
+	global.RunCommand, global.RunOptions = addRunCommand()
+	global.CreateImgCommand, global.CreateImgOptions = addCreateImgCommand()
+	global.CreateMachineCommand, global.CreateMachineOptions = addCreateMachineCommand()
+	global.ListCommand, global.ListOptions = addListCommand()
+	global.CheckCommand = addCheckCommand()
+	global.RenameCommand, global.RenameOptions = addRenameCommand()
+	global.EditCommand, global.EditOptions = addEditCommand()
+
 	return global
 }
 
-// Struct to store parsed information if `run` subcommand is used.
-type RunCommandOptions struct {
+/*
+    ALL COMMANDS START FROM HERE
+*/
+
+// --- RUN COMMAND
+type RunOptions struct {
 	name         string
 	iso          string
 	diskname     string
@@ -83,28 +93,10 @@ type RunCommandOptions struct {
 	no_kvm       bool
 }
 
-// String function for RunCommandOptions
-func (r *RunCommandOptions) String() string {
-	return fmt.Sprintf("Name: %s , iso: %s , diskname: %s , externaldisk: %s", r.name, r.iso, r.diskname, r.externaldisk)
-}
-
-// Helper function to create a instance of RunCommandOptions
-func newRunCommandOptions() *RunCommandOptions {
-	return &RunCommandOptions{
-		name:         "",
-		diskname:     "",
-		iso:          "",
-		externaldisk: "",
-		boot:         "",
-		uefi:         false,
-		no_kvm:       false,
-	}
-}
-
-// Function to add logic for parsing the `run` command
-func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
-	options := newRunCommandOptions()
+func addRunCommand() (*flaggy.Subcommand, *RunOptions) {
+	options := new(RunOptions)
 	run := flaggy.NewSubcommand("run")
+
 	run.String(&options.name, "n", "name", "Name of the Machine")
 	run.String(&options.iso, "i", "iso", "Name of the ISO")
 	run.String(&options.diskname, "d", "disk", "Add disk to boot order")
@@ -112,71 +104,41 @@ func addRunCommand() (*flaggy.Subcommand, *RunCommandOptions) {
 	run.String(&options.boot, "b", "boot", "Boot options")
 	run.Bool(&options.uefi, "u", "uefi", "Enable UEFI support")
 	run.Bool(&options.no_kvm, "k", "no-kvm", "Disable KVM Support")
+
+	flaggy.AttachSubcommand(run, 1)
 	return run, options
 }
 
-// Struct to store parsed information if `create-img` subcommand is used.
-type CreateImgOptions struct {
-	Name   string
-	Format string
-	Size   string
-}
+// -- CREATE IMG COMMAND
 
-// String fucntion to create a instance of CreateImgOptions
-func (c *CreateImgOptions) String() string {
-	return fmt.Sprintf("Name: %s , format: %s , size: %s", c.Name, c.Format, c.Size)
-}
+type CreateImgOptions  image.Image
 
-// Helper function to create instance of CreateImgOptions
-func newCreateImgOptions() *CreateImgOptions {
-	return &CreateImgOptions{
-		Name:   "",
-		Format: "",
-		Size:   "",
-	}
-}
-
-// Function to add logic for `create-img` command
 func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgOptions) {
-	options := newCreateImgOptions()
+	options := new(CreateImgOptions)
 	create_img := flaggy.NewSubcommand("create-img")
 	create_img.String(&options.Name, "n", "name", "Name of the disk")
-	create_img.String(&options.Format, "f", "format", "Format of the disk")
+	create_img.String(&options.Type, "f", "format", "Type of the disk")
 	create_img.String(&options.Size, "s", "size", "Size of the disk")
+	flaggy.AttachSubcommand(create_img, 1)
 	return create_img, options
 }
 
-type CreateMachineOptions struct {
-	Name       string
-	NoDisk     bool
-	DiskName   string
-	DiskFormat string
-	DiskSize   string
-	MemSize    string
-	CpuCores   string
-}
 
-func (c *CreateMachineOptions) String() string {
-	if c.NoDisk {
-		return fmt.Sprintf("Name: %s , Disk: %v , MemSize: %s , CpuCores: %s", c.Name, c.NoDisk, c.MemSize, c.CpuCores)
-	} else {
-		return fmt.Sprintf("Name: %s , Diskname: %s , Diskformat: %s , Disksize: %s , MemSize: %s , CpuCores: %s", c.Name, c.DiskName, c.DiskFormat, c.DiskSize, c.MemSize, c.CpuCores)
-	}
-}
+// -- CREATE MACHINE COMMAND
+// type CreateMachineOptions struct {
+// 	Name       string
+// 	NoDisk     bool
+// 	DiskName   string
+// 	DiskFormat string
+// 	DiskSize   string
+// 	MemSize    string
+// 	CpuCores   string
+// }
 
-func newCreateMachineOptions() *CreateMachineOptions {
-	return &CreateMachineOptions{
-		Name:       "",
-		NoDisk:     false,
-		DiskName:   "",
-		DiskFormat: "",
-		DiskSize:   "",
-		MemSize:    "",
-		CpuCores:   "",
-	}
-}
+type CreateMachineOptions creator.MachineCreator
+
 func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineOptions) {
-	options := newCreateMachineOptions()
+	options := new(CreateMachineOptions)
 
 	create_machine := flaggy.NewSubcommand("create-machine")
 	create_machine.String(&options.Name, "n", "name", "Name of the machine")
@@ -186,70 +148,60 @@ func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineOptions) {
 	create_machine.String(&options.DiskSize, "s", "disk-size", "Size of the disk")
 	create_machine.String(&options.MemSize, "m", "mem-size", "Ram to provide")
 	create_machine.String(&options.CpuCores, "c", "cpu-cores", "Cores to provide")
+
+	flaggy.AttachSubcommand(create_machine, 1)
 	return create_machine, options
 }
 
+// -- LIST COMMAND
 type ListOptions struct {
 	Img     bool
 	Verbose bool
 }
 
-func newListOptions() *ListOptions {
-	return &ListOptions{
-		Img:     false,
-		Verbose: false,
-	}
-}
 func addListCommand() (*flaggy.Subcommand, *ListOptions) {
-	options := newListOptions()
+	options := new(ListOptions)
 
 	list := flaggy.NewSubcommand("list")
 	list.Bool(&options.Img, "i", "images", "List images")
 	list.Bool(&options.Verbose, "v", "verbose", "All details")
+
+	flaggy.AttachSubcommand(list, 1)
 	return list, options
 }
 
+// -- RENAME COMMAND
 type RenameOptions struct {
 	OldName string
 	NewName string
 }
 
-func newRenameOptions() *RenameOptions {
-	return &RenameOptions{
-		OldName: "",
-		NewName: "",
-	}
-}
-
 func addRenameCommand() (*flaggy.Subcommand, *RenameOptions) {
-	options := newRenameOptions()
+	options := new(RenameOptions)
 
 	rename := flaggy.NewSubcommand("rename")
 	rename.String(&options.OldName, "o", "old-name", "Name of the macine currently")
 	rename.String(&options.NewName, "n", "new-name", "The new name to rename the machine to")
+	flaggy.AttachSubcommand(rename, 1)
 	return rename, options
 
 }
+
+
+// -- CHECK COMMAND
 func addCheckCommand() *flaggy.Subcommand {
 	check := flaggy.NewSubcommand("check")
+	flaggy.AttachSubcommand(check, 1)
 	return check
 }
 
-type EditMachineOptions creator.MachineCreator
 
-func newEditOptionsCommand() *EditMachineOptions {
-	return &EditMachineOptions{
-		Name:       "",
-		NoDisk:     false,
-		DiskName:   "",
-		DiskFormat: "",
-		DiskSize:   "",
-		MemSize:    "",
-		CpuCores:   "",
-	}
-}
-func addEditMachineCommand() (*flaggy.Subcommand, *EditMachineOptions) {
-	options := newEditOptionsCommand()
+
+// -- EDIT COMMAND
+type EditOptions creator.MachineCreator
+
+func addEditCommand() (*flaggy.Subcommand, *EditOptions) {
+	options := new(EditOptions)
 
 	edit_machine := flaggy.NewSubcommand("edit")
 	edit_machine.String(&options.Name, "n", "name", "Name of the machine")
@@ -259,5 +211,7 @@ func addEditMachineCommand() (*flaggy.Subcommand, *EditMachineOptions) {
 	edit_machine.String(&options.DiskSize, "s", "disk-size", "Size of the disk")
 	edit_machine.String(&options.MemSize, "m", "mem-size", "Ram to provide")
 	edit_machine.String(&options.CpuCores, "c", "cpu-cores", "Cores to provide")
+
+	flaggy.AttachSubcommand(edit_machine, 1)
 	return edit_machine, options
 }
