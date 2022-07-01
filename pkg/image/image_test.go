@@ -27,6 +27,9 @@ func (t *TestConfig) GetImageDir() string {
 func (t *TestConfig) GetMachineDir() string {
 	return ""
 }
+func (t *TestConfig) GetConfigDir() string {
+    return "testdir"
+}
 func TestCreateImage(t *testing.T) {
 	tables := []Image{
 		{

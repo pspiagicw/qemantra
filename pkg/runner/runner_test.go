@@ -66,18 +66,17 @@ func TestConstructOptions(t *testing.T) {
 		},
 	}
 	wanted := [][]string{
-		{"-enable-kvm", "-hda", "test.img"},
-		{"-m", "4G", "-enable-kvm", "-hda", "test.img"},
-		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-smp", "2"},
-		{"-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-smp", "2"},
-		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img"},
-		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-boot", "menu=on", "-hdb", "externaltest.img"},
-		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-boot", "d", "-smp", "2", "-hdb", "externaltest.img"},
+		{"-enable-kvm", "-hda", "test.img", "-cpu" , "host"},
+		{"-m", "4G", "-enable-kvm", "-hda", "test.img" , "-cpu" , "host"},
+		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-cpu" , "host" ,  "-smp", "2"},
+		{"-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img",  "-cpu" , "host" ,"-smp", "2"},
+		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img" , "-cpu" , "host"},
+		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-boot", "menu=on", "-cpu" , "host" , "-hdb", "externaltest.img"},
+		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-boot", "d", "-cpu" , "host" ,  "-smp", "2", "-hdb", "externaltest.img" },
 	}
 	for i, tt := range table {
 		want := wanted[i]
 		got := constructOptions(&tt)
-		t.Logf("Test %d", i)
 		assertStringArray(t, got, want)
 
 	}
