@@ -135,7 +135,7 @@ func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgOptions) {
 // 	CpuCores   string
 // }
 
-type CreateMachineOptions creator.MachineCreator
+type CreateMachineOptions creator.Machine
 
 func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineOptions) {
 	options := new(CreateMachineOptions)
@@ -198,7 +198,7 @@ func addCheckCommand() *flaggy.Subcommand {
 
 
 // -- EDIT COMMAND
-type EditOptions creator.MachineCreator
+type EditOptions creator.Machine
 
 func addEditCommand() (*flaggy.Subcommand, *EditOptions) {
 	options := new(EditOptions)

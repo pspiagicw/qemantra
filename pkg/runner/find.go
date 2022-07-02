@@ -11,11 +11,13 @@ import (
 
 const MOST_RECENT_FILE = "recentf"
 
-func FindMachine(name string) *Runner {
-	if name == "" {
-		name = findMostRecentMachine()
+func FindMachine(name string, useCache bool) *Runner {
+	if useCache {
+		if name == "" {
+			name = findMostRecentMachine()
+		}
+		storeMostRecentMachine(name)
 	}
-	storeMostRecentMachine(name)
 	for _, file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {
 		filepath := getFileName(file)
 		runner, ok := checkName(filepath, name)

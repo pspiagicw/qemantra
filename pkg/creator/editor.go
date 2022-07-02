@@ -10,7 +10,7 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/runner"
 )
 
-func EditMachine(editor *MachineCreator, currentRunner *runner.Runner) {
+func EditMachine(editor *Machine, currentRunner *runner.Runner) {
 	editedRunner := mergeCreatorRunnner(currentRunner, editor)
 	fmt.Println(editedRunner)
 	err := encodeJsonToFile(editedRunner)
@@ -20,7 +20,7 @@ func EditMachine(editor *MachineCreator, currentRunner *runner.Runner) {
 	}
 }
 
-func mergeCreatorRunnner(runner *runner.Runner, creator *MachineCreator) *runner.Runner {
+func mergeCreatorRunnner(runner *runner.Runner, creator *Machine) *runner.Runner {
 
 	if creator.CpuCores != "" {
 		runner.CpuCores = creator.CpuCores
@@ -40,7 +40,7 @@ func mergeCreatorRunnner(runner *runner.Runner, creator *MachineCreator) *runner
 
 	return runner
 }
-func imageHandler(machine *MachineCreator) string {
+func imageHandler(machine *Machine) string {
 	if machine.NoDisk {
 		return ""
 	}

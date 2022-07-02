@@ -1,5 +1,14 @@
+// This package can create and edit machines.
 package creator
 
+/*
+This file has 2 important functions.
+- CreateMachine 
+- Edit Machine
+
+Both require a special struct Machine which stores the information required
+to create and edit a machine.
+*/
 import (
 	"encoding/json"
 	"io/ioutil"
@@ -16,7 +25,8 @@ const SYSTEM_COMMAND string = "qemu-system-x86_64"
 
 var ConfigProvider = config.GetConfig()
 
-type MachineCreator struct {
+// Main struct to create 
+type Machine struct {
 	Name       string
 	NoDisk     bool
 	DiskName   string
@@ -26,7 +36,10 @@ type MachineCreator struct {
 	CpuCores   string
 }
 
-func CreateNewMachine(machine *MachineCreator) {
+func CreateMachine(machine *Machine) {
+    if checkIfMachineExists(machine) {
+        log.Fatalf("Machine '%s' already exists!" , machine.Name)
+    }
 	imagepath := createImage(machine)
 	runner := constructRunner(imagepath, machine)
 	err := encodeJsonToFile(runner)
@@ -34,13 +47,14 @@ func CreateNewMachine(machine *MachineCreator) {
 		log.Fatalf("Could not create new machine %v", err)
 	}
 }
-func checkIfMachineExists(machine *MachineCreator) {
-	runner := runner.FindMachine(machine.Name)
+func checkIfMachineExists(machine *Machine) bool {
+	runner := runner.FindMachine(machine.Name , false)
 	if runner != nil {
-		log.Fatalf("Machine %s already exists!", machine.Name)
+		return true
 	}
+    return false
 }
-func createImage(machine *MachineCreator) string {
+func createImage(machine *Machine) string {
 	if machine.NoDisk {
 		return ""
 	}
@@ -51,11 +65,11 @@ func createImage(machine *MachineCreator) string {
 	}
 	imagepath, err := image.CreateImage(im)
 	if err != nil {
-		log.Fatalf("Can't create the disk %v", err)
+        log.Fatalf("Can't create the disk: %v", err)
 	}
 	return imagepath
 }
-func constructRunner(im string, machine *MachineCreator) *runner.Runner {
+func constructRunner(im string, machine *Machine) *runner.Runner {
 	runner := &runner.Runner{
 		Name:          machine.Name,
 		DrivePath:     im,
@@ -65,6 +79,7 @@ func constructRunner(im string, machine *MachineCreator) *runner.Runner {
 	}
 	return runner
 }
+
 func encodeJsonToFile(runner *runner.Runner) error {
 	contents, err := json.Marshal(runner)
 	if err != nil {

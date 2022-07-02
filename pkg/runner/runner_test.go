@@ -76,7 +76,7 @@ func TestConstructOptions(t *testing.T) {
 	}
 	for i, tt := range table {
 		want := wanted[i]
-		got := constructOptions(&tt)
+		got := constructArguments(&tt)
 		assertStringArray(t, got, want)
 
 	}

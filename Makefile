@@ -11,7 +11,6 @@ tidy:
 	go mod tidy
 test:
 	go test  ./...
-	go test -cover ./...
 
 build: $(MAINFILE) tidy
 	go build -o $(BINARY) -ldflags $(LDFLAGS) $(MAINFILE)

@@ -9,11 +9,11 @@ import (
 )
 
 func RenameMachine(oldname string, newname string) {
-	run := FindMachine(oldname)
+	run := FindMachine(oldname , false)
 	if run == nil {
 		log.Fatalf("Machine %s not found! ", oldname)
 	}
-	newRun := FindMachine(newname)
+	newRun := FindMachine(newname , false)
 	if newRun != nil {
 		log.Fatalf("Machine with name %s already exists!", newname)
 	}

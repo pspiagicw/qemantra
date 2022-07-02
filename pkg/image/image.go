@@ -35,16 +35,18 @@ func FindImage(name string) string {
 
 func CreateImage(image *Image) (string, error) {
 	imagepath := getImagePath(image)
-	confirmImagePath(imagepath)
-	options := getOptions(image)
-	err := ExecProvider.Execute(QEMU_IMAGE_CREATE_COMMMAND, options)
+	if checkIfImageExists(imagepath) {
+		log.Fatalf("Disk %s already exists", imagepath)
+	}
+	arguments := getCommandArguments(image)
+	err := ExecProvider.Execute(QEMU_IMAGE_CREATE_COMMMAND, arguments)
 	if err != nil {
 		return "", err
 	}
 	return imagepath, nil
 }
 
-func getOptions(image *Image) []string {
+func getCommandArguments(image *Image) []string {
 	options := make([]string, 0)
 	options = append(options, QEMU_IMAGE_CREATE_OPTIONS)
 	options = append(options, getImageType(image)...)
@@ -67,11 +69,12 @@ func getImagePath(image *Image) string {
 func appendPath(dir string, name string) string {
 	return filepath.Join(dir, name)
 }
-func confirmImagePath(imagepath string) {
+func checkIfImageExists(imagepath string) bool {
 	_, err := os.Stat(imagepath)
 	if os.IsNotExist(err) == false {
-		log.Fatalf("Disk %s already exists", imagepath)
+        return true
 	}
+    return false
 }
 
 func getImageType(image *Image) []string {
