@@ -19,7 +19,9 @@ func RenameMachine(oldname string, newname string) {
 	}
 	filepath := FindMachineFile(oldname)
 	ReplaceName(filepath, newname)
+    // Add RenameFile(filepath , newname)
 }
+
 func FindMachineFile(name string) string {
 	for _, file := range dirs.ListDirs(ConfigProvider.GetMachineDir()) {
 		filepath := getFileName(file)

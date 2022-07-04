@@ -14,10 +14,8 @@ func ListDirs(dir string) []fs.FileInfo {
 			log.Fatalf("Error reading dir: %s", dir)
 		}
 		return dirlisting
-	} else {
-		return nil
-	}
-
+	} 
+    return nil
 }
 func dirExists(dir string) bool {
 	_, err := os.Stat(dir)

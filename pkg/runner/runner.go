@@ -21,6 +21,7 @@ type argumentGenerator func(runner *Runner) []string
 const menuBoot string = "menu=on"
 const isoBoot string = "d"
 
+const OVMF_PATH = "/usr/share/ovmf/x64/OVMF.fd"
 var ExecProvider = executor.GetExecutor()
 
 type Runner struct {
@@ -73,6 +74,7 @@ func startMachine(runner *Runner) {
 }
 func constructArguments(runner *Runner) []string {
 	arguments := []string{}
+
     generators := getGenerators()
     for i := 0; i < len(generators) ; i++ {
         arguments = append(arguments , generators[i](runner)...)
@@ -81,7 +83,7 @@ func constructArguments(runner *Runner) []string {
 }
 func generateUEFIArguments(runner *Runner) []string {
 	if runner.UEFI {
-		return []string{"-bios", "/usr/share/ovmf/x64/OVMF.fd"}
+		return []string{"-bios", OVMF_PATH}
 	}
 	return []string{}
 }

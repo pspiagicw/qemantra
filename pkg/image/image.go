@@ -1,9 +1,9 @@
 package image
 
 import (
-	"log"
 	"os"
 	"path/filepath"
+    "fmt"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/dirs"
@@ -36,7 +36,7 @@ func FindImage(name string) string {
 func CreateImage(image *Image) (string, error) {
 	imagepath := getImagePath(image)
 	if checkIfImageExists(imagepath) {
-		log.Fatalf("Disk %s already exists", imagepath)
+        return "" , fmt.Errorf("disk %s already exists" , imagepath)
 	}
 	arguments := getCommandArguments(image)
 	err := ExecProvider.Execute(QEMU_IMAGE_CREATE_COMMMAND, arguments)

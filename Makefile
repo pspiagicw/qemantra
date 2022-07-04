@@ -35,3 +35,7 @@ compile-release:
 clean:
 	rm -rf $(BUILD_DIR)
 	mkdir $(BUILD_DIR)
+cover:
+	go test -coverprofile cover.out ./...
+	go tool cover -html=cover.out
+

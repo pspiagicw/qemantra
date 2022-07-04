@@ -1,4 +1,4 @@
-// This package parses the flags passed to the binary.
+// argparser parses the flags passed to `qemantra`
 package argparser
 
 /*
@@ -8,50 +8,52 @@ It uses `flaggy` for this parsing.
 The OPTIONS struct stores the command itself and it's options.
 The actual parsing of arguments happen in the `ParseArguments` function.
 
-The `Options` struct has 2 types of field for each command.Here {{ .Command }} is the name of the command in Pascal case
+The `Options` struct has 2 types of field for each command.Here {{ .Command }} is the name of the command in Camel case
 - {{ .Command }}Options : Stores the flags/options for that command
+
+Every subcommand has a global variable named:
 - {{ .Command }}Command : Stores the command's instance itself as it is needed later.
 
-Example `run` command has 2 fields in the Options struct
-- RunOptions 
-- RunCommand
+Example `run` command has 2 important elements
+- RunOptions: In the `Options` struct
+- RunCommand: Global Variable
 
 Every command needs 1 functions to be initiated with the name add{{ .Command }}Command(). Thus the `run` command has 1 function
-- addRunCommand: 
+- addRunCommand:
 This function is incharge of creating the function , adding arguments to the function and registering with flaggy.
 
 */
 import (
 	"github.com/integrii/flaggy"
 	"github.com/pspiagicw/qemantra/pkg/creator"
-    "github.com/pspiagicw/qemantra/pkg/image"
+	"github.com/pspiagicw/qemantra/pkg/image"
 )
 
-// Master struct to store all the commands and options
-type Options struct {
-	RunOptions           *RunOptions
-	CreateImgOptions     *CreateImgOptions
-	CreateMachineOptions *CreateMachineOptions
-	ListOptions          *ListOptions
-	RenameOptions        *RenameOptions
-	EditOptions          *EditOptions
-
-	RunCommand           *flaggy.Subcommand
-	CreateImgCommand     *flaggy.Subcommand
-	CreateMachineCommand *flaggy.Subcommand
-	ListCommand          *flaggy.Subcommand
-	CheckCommand         *flaggy.Subcommand
-	RenameCommand        *flaggy.Subcommand
-	EditCommand          *flaggy.Subcommand
+// Stores all the flags passed.
+type Flags struct {
+	runFlags           *RunFlags
+	createImgFlags     *CreateImgFlags
+	createMachineFlags *CreateMachineFlags
+	listFlags          *ListFlags
+	renameFlags        *RenameFlags
+	editFlags          *EditFlags
 }
+
+var runCommand *flaggy.Subcommand
+var createImgCommand *flaggy.Subcommand
+var createMachineCommand *flaggy.Subcommand
+var listCommand *flaggy.Subcommand
+var checkCommand *flaggy.Subcommand
+var renameCommand *flaggy.Subcommand
+var editCommand *flaggy.Subcommand
 
 // Function to parse all the command line arguments.
 // Set's qemantra's version and description.
-func ParseArguments(version string) *Options {
+func ParseFlags(version string) *Flags {
 	setFlaggyInfo(version)
-	globalOptions := addSubCommands()
+	global := addSubCommands()
 	flaggy.Parse()
-	return globalOptions
+	return global
 }
 
 // Helper function to set all the information about the program with flaggy.
@@ -64,26 +66,27 @@ func setFlaggyInfo(version string) {
 }
 
 // Adds all the subCommands to the Options struct
-func addSubCommands() *Options {
-	global := new(Options)
+func addSubCommands() *Flags {
+	global := new(Flags)
 
-	global.RunCommand, global.RunOptions = addRunCommand()
-	global.CreateImgCommand, global.CreateImgOptions = addCreateImgCommand()
-	global.CreateMachineCommand, global.CreateMachineOptions = addCreateMachineCommand()
-	global.ListCommand, global.ListOptions = addListCommand()
-	global.CheckCommand = addCheckCommand()
-	global.RenameCommand, global.RenameOptions = addRenameCommand()
-	global.EditCommand, global.EditOptions = addEditCommand()
+	checkCommand = addCheckCommand()
+
+	runCommand, global.runFlags = addRunCommand()
+	createImgCommand, global.createImgFlags = addCreateImgCommand()
+	createMachineCommand, global.createMachineFlags = addCreateMachineCommand()
+	listCommand, global.listFlags = addListCommand()
+	renameCommand, global.renameFlags = addRenameCommand()
+	editCommand, global.editFlags = addEditCommand()
 
 	return global
 }
 
 /*
-    ALL COMMANDS START FROM HERE
+   ALL COMMANDS START FROM HERE
 */
 
 // --- RUN COMMAND
-type RunOptions struct {
+type RunFlags struct {
 	name         string
 	iso          string
 	diskname     string
@@ -93,36 +96,35 @@ type RunOptions struct {
 	no_kvm       bool
 }
 
-func addRunCommand() (*flaggy.Subcommand, *RunOptions) {
-	options := new(RunOptions)
+func addRunCommand() (*flaggy.Subcommand, *RunFlags) {
+	flags := new(RunFlags)
 	run := flaggy.NewSubcommand("run")
 
-	run.String(&options.name, "n", "name", "Name of the Machine")
-	run.String(&options.iso, "i", "iso", "Name of the ISO")
-	run.String(&options.diskname, "d", "disk", "Add disk to boot order")
-	run.String(&options.externaldisk, "e", "externaldisk", "Add external disk to boot order")
-	run.String(&options.boot, "b", "boot", "Boot options")
-	run.Bool(&options.uefi, "u", "uefi", "Enable UEFI support")
-	run.Bool(&options.no_kvm, "k", "no-kvm", "Disable KVM Support")
+	run.String(&flags.name, "n", "name", "Name of the Machine")
+	run.String(&flags.iso, "i", "iso", "Name of the ISO")
+	run.String(&flags.diskname, "d", "disk", "Add disk to boot order")
+	run.String(&flags.externaldisk, "e", "externaldisk", "Add external disk to boot order")
+	run.String(&flags.boot, "b", "boot", "Boot options")
+	run.Bool(&flags.uefi, "u", "uefi", "Enable UEFI support")
+	run.Bool(&flags.no_kvm, "k", "no-kvm", "Disable KVM Support")
 
 	flaggy.AttachSubcommand(run, 1)
-	return run, options
+	return run, flags
 }
 
 // -- CREATE IMG COMMAND
 
-type CreateImgOptions  image.Image
+type CreateImgFlags image.Image
 
-func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgOptions) {
-	options := new(CreateImgOptions)
+func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgFlags) {
+	flags := new(CreateImgFlags)
 	create_img := flaggy.NewSubcommand("create-img")
-	create_img.String(&options.Name, "n", "name", "Name of the disk")
-	create_img.String(&options.Type, "f", "format", "Type of the disk")
-	create_img.String(&options.Size, "s", "size", "Size of the disk")
+	create_img.String(&flags.Name, "n", "name", "Name of the disk")
+	create_img.String(&flags.Type, "f", "format", "Type of the disk")
+	create_img.String(&flags.Size, "s", "size", "Size of the disk")
 	flaggy.AttachSubcommand(create_img, 1)
-	return create_img, options
+	return create_img, flags
 }
-
 
 // -- CREATE MACHINE COMMAND
 // type CreateMachineOptions struct {
@@ -135,58 +137,57 @@ func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgOptions) {
 // 	CpuCores   string
 // }
 
-type CreateMachineOptions creator.Machine
+type CreateMachineFlags creator.Machine
 
-func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineOptions) {
-	options := new(CreateMachineOptions)
+func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineFlags) {
+	flags := new(CreateMachineFlags)
 
 	create_machine := flaggy.NewSubcommand("create-machine")
-	create_machine.String(&options.Name, "n", "name", "Name of the machine")
-	create_machine.Bool(&options.NoDisk, "x", "no-disk", "Don't create disk")
-	create_machine.String(&options.DiskName, "i", "disk-name", "Name of the disk")
-	create_machine.String(&options.DiskFormat, "f", "disk-format", "Format of the disk")
-	create_machine.String(&options.DiskSize, "s", "disk-size", "Size of the disk")
-	create_machine.String(&options.MemSize, "m", "mem-size", "Ram to provide")
-	create_machine.String(&options.CpuCores, "c", "cpu-cores", "Cores to provide")
+	create_machine.String(&flags.Name, "n", "name", "Name of the machine")
+	create_machine.Bool(&flags.NoDisk, "x", "no-disk", "Don't create disk")
+	create_machine.String(&flags.DiskName, "i", "disk-name", "Name of the disk")
+	create_machine.String(&flags.DiskFormat, "f", "disk-format", "Format of the disk")
+	create_machine.String(&flags.DiskSize, "s", "disk-size", "Size of the disk")
+	create_machine.String(&flags.MemSize, "m", "mem-size", "Ram to provide")
+	create_machine.String(&flags.CpuCores, "c", "cpu-cores", "Cores to provide")
 
 	flaggy.AttachSubcommand(create_machine, 1)
-	return create_machine, options
+	return create_machine, flags
 }
 
 // -- LIST COMMAND
-type ListOptions struct {
+type ListFlags struct {
 	Img     bool
 	Verbose bool
 }
 
-func addListCommand() (*flaggy.Subcommand, *ListOptions) {
-	options := new(ListOptions)
+func addListCommand() (*flaggy.Subcommand, *ListFlags) {
+	flags := new(ListFlags)
 
 	list := flaggy.NewSubcommand("list")
-	list.Bool(&options.Img, "i", "images", "List images")
-	list.Bool(&options.Verbose, "v", "verbose", "All details")
+	list.Bool(&flags.Img, "i", "images", "List images")
+	list.Bool(&flags.Verbose, "v", "verbose", "All details")
 
 	flaggy.AttachSubcommand(list, 1)
-	return list, options
+	return list, flags
 }
 
 // -- RENAME COMMAND
-type RenameOptions struct {
+type RenameFlags struct {
 	OldName string
 	NewName string
 }
 
-func addRenameCommand() (*flaggy.Subcommand, *RenameOptions) {
-	options := new(RenameOptions)
+func addRenameCommand() (*flaggy.Subcommand, *RenameFlags) {
+	flags := new(RenameFlags)
 
 	rename := flaggy.NewSubcommand("rename")
-	rename.String(&options.OldName, "o", "old-name", "Name of the macine currently")
-	rename.String(&options.NewName, "n", "new-name", "The new name to rename the machine to")
+	rename.String(&flags.OldName, "o", "old-name", "Name of the macine currently")
+	rename.String(&flags.NewName, "n", "new-name", "The new name to rename the machine to")
 	flaggy.AttachSubcommand(rename, 1)
-	return rename, options
+	return rename, flags
 
 }
-
 
 // -- CHECK COMMAND
 func addCheckCommand() *flaggy.Subcommand {
@@ -195,23 +196,21 @@ func addCheckCommand() *flaggy.Subcommand {
 	return check
 }
 
-
-
 // -- EDIT COMMAND
-type EditOptions creator.Machine
+type EditFlags creator.Machine
 
-func addEditCommand() (*flaggy.Subcommand, *EditOptions) {
-	options := new(EditOptions)
+func addEditCommand() (*flaggy.Subcommand, *EditFlags) {
+	flags := new(EditFlags)
 
 	edit_machine := flaggy.NewSubcommand("edit")
-	edit_machine.String(&options.Name, "n", "name", "Name of the machine")
-	edit_machine.Bool(&options.NoDisk, "x", "no-disk", "Don't create disk")
-	edit_machine.String(&options.DiskName, "i", "disk-name", "Name of the disk")
-	edit_machine.String(&options.DiskFormat, "f", "disk-format", "Format of the disk")
-	edit_machine.String(&options.DiskSize, "s", "disk-size", "Size of the disk")
-	edit_machine.String(&options.MemSize, "m", "mem-size", "Ram to provide")
-	edit_machine.String(&options.CpuCores, "c", "cpu-cores", "Cores to provide")
+	edit_machine.String(&flags.Name, "n", "name", "Name of the machine")
+	edit_machine.Bool(&flags.NoDisk, "x", "no-disk", "Don't create disk")
+	edit_machine.String(&flags.DiskName, "i", "disk-name", "Name of the disk")
+	edit_machine.String(&flags.DiskFormat, "f", "disk-format", "Format of the disk")
+	edit_machine.String(&flags.DiskSize, "s", "disk-size", "Size of the disk")
+	edit_machine.String(&flags.MemSize, "m", "mem-size", "Ram to provide")
+	edit_machine.String(&flags.CpuCores, "c", "cpu-cores", "Cores to provide")
 
 	flaggy.AttachSubcommand(edit_machine, 1)
-	return edit_machine, options
+	return edit_machine, flags
 }

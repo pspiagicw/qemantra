@@ -12,7 +12,8 @@ These function are named {{ .Command}}Execute()
 
 Some {{ .Command}}Options need to be converted to respective structs for future processing.
 These are done by helper functions. These are named as {{ .Command}}OptionsTo{{ .RequiredStruct }}().
-Here {{ .RequiredStruct }} is the name of the struct in Pascal Case.
+
+Here {{ .RequiredStruct }} is the name of the struct in Camel Case.
 
 */
 import (
@@ -25,26 +26,28 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/runner"
 )
 
-func ParseOptions(global *Options, version string) {
-	if global.CreateMachineCommand.Used {
-		CreateMachineExecute(global.CreateMachineOptions)
-	} else if global.CreateImgCommand.Used {
-		CreateImgExecute(global.CreateImgOptions)
-	} else if global.RunCommand.Used {
-		RunExecute(global.RunOptions)
-	} else if global.ListCommand.Used {
-		ListExecute(global.ListOptions)
-	} else if global.CheckCommand.Used {
+func ParseOptions(global *Flags, version string) {
+	switch {
+	case createMachineCommand.Used:
+		createMachineExecute(global.createMachineFlags)
+	case createImgCommand.Used:
+		createImgExecute(global.createImgFlags)
+	case runCommand.Used:
+		runExecute(global.runFlags)
+	case listCommand.Used:
+		listExecute(global.listFlags)
+	case checkCommand.Used:
 		config.PerformCheck()
-	} else if global.RenameCommand.Used {
-		RenameExecute(global.RenameOptions)
-	} else if global.EditCommand.Used {
-		EditExecute(global.EditOptions)
-	} else {
+	case renameCommand.Used:
+		renameExecute(global.renameFlags)
+	case editCommand.Used:
+		editExecute(global.editFlags)
+	default:
 		prompt.ShowBanner(version)
+
 	}
 }
-func RunOptionsToRunner(option *RunOptions, runner *runner.Runner) {
+func RunOptionsToRunner(option *RunFlags, runner *runner.Runner) {
 	if option.iso != "" {
 		runner.Iso = option.iso
 	}
@@ -64,24 +67,24 @@ func RunOptionsToRunner(option *RunOptions, runner *runner.Runner) {
 }
 
 // -- CREATE MACHINE
-func CreateMachineExecute(options *CreateMachineOptions) {
+func createMachineExecute(options *CreateMachineFlags) {
 	log.Println("Creating a new machine!")
 	cr := (*creator.Machine)(options)
 	creator.CreateMachine(cr)
 }
 
 // -- CREATE IMG
-func CreateImgExecute(options *CreateImgOptions) {
+func createImgExecute(options *CreateImgFlags) {
 	log.Println("Creating a new image!")
 	im := (*image.Image)(options)
 	_, err := image.CreateImage(im)
 	if err != nil {
-        log.Fatalf("Error creating image %v" , err)
+		log.Fatalf("Error creating image %v", err)
 	}
 }
 
 // -- RUN
-func RunExecute(options *RunOptions) {
+func runExecute(options *RunFlags) {
 	log.Println("Finding the given machine!")
 	machine := runner.FindMachine(options.name, true)
 
@@ -93,7 +96,7 @@ func RunExecute(options *RunOptions) {
 }
 
 // -- LIST
-func ListExecute(options *ListOptions) {
+func listExecute(options *ListFlags) {
 	if options.Img {
 		runner.ListImages(options.Verbose)
 	} else {
@@ -102,14 +105,14 @@ func ListExecute(options *ListOptions) {
 }
 
 // -- RENAME
-func RenameExecute(options *RenameOptions) {
+func renameExecute(options *RenameFlags) {
 	oldName := options.OldName
 	newName := options.NewName
 	runner.RenameMachine(oldName, newName)
 }
 
 // -- EDIT
-func EditExecute(options *EditOptions) {
+func editExecute(options *EditFlags) {
 	log.Println("Finding the given Machine")
 
 	machine := runner.FindMachine(options.Name, false)
