@@ -10,25 +10,17 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/runner"
 )
 
-func EditMachine(editor *Machine, currentRunner *runner.Runner) {
-	editedRunner := mergeCreatorRunnner(currentRunner, editor)
-	fmt.Println(editedRunner)
-	err := encodeJsonToFile(editedRunner)
+func EditMachine(m *Machine, r *runner.Runner) {
+	machine := RunnerToMachine(r, m)
+	fmt.Println(machine)
+	err := SaveRunner(machine)
 
 	if err != nil {
 		log.Fatalf("Error writing to file , %v", err)
 	}
 }
 
-func mergeCreatorRunnner(runner *runner.Runner, creator *Machine) *runner.Runner {
-
-	if creator.CpuCores != "" {
-		runner.CpuCores = creator.CpuCores
-	}
-
-	if creator.MemSize != "" {
-		runner.MemSize = creator.MemSize
-	}
+func RunnerToMachine(runner *runner.Runner, creator *Machine) *runner.Runner {
 
 	if creator.NoDisk {
 		runner.DrivePath = ""

@@ -22,6 +22,7 @@ const menuBoot string = "menu=on"
 const isoBoot string = "d"
 
 const OVMF_PATH = "/usr/share/ovmf/x64/OVMF.fd"
+
 var ExecProvider = executor.GetExecutor()
 
 type Runner struct {
@@ -34,51 +35,51 @@ type Runner struct {
 	ExternalDisk  string `json:"-"`
 	Boot          string `json:"-"`
 	UEFI          bool   `json:"-"`
-	NO_KVM        bool   `json:"-"`
+	KVM           bool   `json:"-"`
 }
 
 func RunMachine(runner *Runner) {
-    checkExternalDisk(runner)
+	checkExternalDisk(runner)
 	startMachine(runner)
 }
 func checkExternalDisk(runner *Runner) {
 	if runner.ExternalDisk != "" {
 		fullpath := image.FindImage(runner.ExternalDisk)
 		if fullpath == "" {
-            log.Fatalf("Can't find disk with name: '%s'", runner.ExternalDisk)
+			log.Fatalf("Can't find disk with name: '%s'", runner.ExternalDisk)
 		}
 		log.Printf("Disk Found! Using '%s'", fullpath)
 		runner.ExternalDisk = fullpath
 	}
 }
 func getGenerators() []argumentGenerator {
-    var argumentOrder []argumentGenerator 
+	var argumentOrder []argumentGenerator
 
-    argumentOrder = append(argumentOrder , generateMemArguments)
-    argumentOrder = append(argumentOrder , generateKVMArguments)
-    argumentOrder = append(argumentOrder , generateISOArguments)
-    argumentOrder = append(argumentOrder , generateDriveArguments)
-    argumentOrder = append(argumentOrder , generateBootArguments)
-    argumentOrder = append(argumentOrder , generateCPUArguments)
-    argumentOrder = append(argumentOrder , generateUEFIArguments)
-    argumentOrder = append(argumentOrder , generateExternalDiskArguments)
-    return argumentOrder
+	argumentOrder = append(argumentOrder, generateMemArguments)
+	argumentOrder = append(argumentOrder, generateKVMArguments)
+	argumentOrder = append(argumentOrder, generateISOArguments)
+	argumentOrder = append(argumentOrder, generateDriveArguments)
+	argumentOrder = append(argumentOrder, generateBootArguments)
+	argumentOrder = append(argumentOrder, generateCPUArguments)
+	argumentOrder = append(argumentOrder, generateUEFIArguments)
+	argumentOrder = append(argumentOrder, generateExternalDiskArguments)
+	return argumentOrder
 }
 func startMachine(runner *Runner) {
 	arguments := constructArguments(runner)
 
 	err := ExecProvider.Execute(runner.SystemCommand, arguments)
 	if err != nil {
-        log.Printf("Some error occured: %v", err)
+		log.Printf("Some error occured: %v", err)
 	}
 }
 func constructArguments(runner *Runner) []string {
 	arguments := []string{}
 
-    generators := getGenerators()
-    for i := 0; i < len(generators) ; i++ {
-        arguments = append(arguments , generators[i](runner)...)
-    }
+	generators := getGenerators()
+	for i := 0; i < len(generators); i++ {
+		arguments = append(arguments, generators[i](runner)...)
+	}
 	return arguments
 }
 func generateUEFIArguments(runner *Runner) []string {
@@ -115,7 +116,7 @@ func generateCPUArguments(runner *Runner) []string {
 	return []string{"-cpu", "host"}
 }
 func generateKVMArguments(runner *Runner) []string {
-	if runner.NO_KVM {
+	if runner.KVM {
 		return []string{}
 	}
 	return []string{"-enable-kvm"}

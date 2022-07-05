@@ -52,7 +52,7 @@ func TestFindMachine(t *testing.T) {
 				Iso:           "",
 			},
 		}
-        files := make( map[string]([]byte))
+		files := make(map[string]([]byte))
 		for _, runnner := range runners {
 			content, err := json.Marshal(runnner)
 			if err != nil {
@@ -77,10 +77,10 @@ func TestFindMachine(t *testing.T) {
 			machinepath: path,
 		}
 		for _, want := range runners {
-            got := FindMachine(want.Name , false)
-            if *got != want {
-                t.Errorf("got %v , wanted %v" , got , want)
-            }
+			got := FindMachine(want.Name, false)
+			if *got != want {
+				t.Errorf("got %v , wanted %v", got, want)
+			}
 
 		}
 		ExecProvider = previousExecProvider
@@ -115,13 +115,13 @@ func TestFindMachine(t *testing.T) {
 				Iso:           "",
 			},
 		}
-        files := make( map[string]([]byte))
+		files := make(map[string]([]byte))
 		for _, runnner := range runners {
 			content, err := json.Marshal(runnner)
 			if err != nil {
 				t.Fatalf("Failed to marshal runner: %v", err)
 			}
-			files[runnner.Name + "123"] = content
+			files[runnner.Name+"123"] = content
 		}
 
 		path, tearDown := setupTestComplex(
@@ -140,10 +140,10 @@ func TestFindMachine(t *testing.T) {
 			machinepath: path,
 		}
 		for range runners {
-            got := FindMachine("nobody" , false)
-            if got != nil {
-                t.Errorf("got %v , wanted %v" , got , nil)
-            }
+			got := FindMachine("nobody", false)
+			if got != nil {
+				t.Errorf("got %v , wanted %v", got, nil)
+			}
 
 		}
 		ExecProvider = previousExecProvider

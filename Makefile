@@ -10,7 +10,7 @@ BUILD_DIR=build
 tidy:
 	go mod tidy
 test:
-	go test  ./...
+	richgo test  ./...
 
 build: $(MAINFILE) tidy
 	go build -o $(BINARY) -ldflags $(LDFLAGS) $(MAINFILE)

@@ -22,7 +22,7 @@ import (
 	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/creator"
 	"github.com/pspiagicw/qemantra/pkg/image"
-	"github.com/pspiagicw/qemantra/pkg/prompt"
+	"github.com/pspiagicw/qemantra/pkg/console"
 	"github.com/pspiagicw/qemantra/pkg/runner"
 )
 
@@ -43,7 +43,7 @@ func ParseOptions(global *Flags, version string) {
 	case editCommand.Used:
 		editExecute(global.editFlags)
 	default:
-		prompt.ShowBanner(version)
+		console.ShowBanner(version)
 
 	}
 }
@@ -62,7 +62,7 @@ func RunOptionsToRunner(option *RunFlags, runner *runner.Runner) {
 		runner.UEFI = true
 	}
 	if option.no_kvm != false {
-		runner.NO_KVM = true
+		runner.KVM = true
 	}
 }
 
@@ -115,12 +115,12 @@ func renameExecute(options *RenameFlags) {
 func editExecute(options *EditFlags) {
 	log.Println("Finding the given Machine")
 
-	machine := runner.FindMachine(options.Name, false)
+	runner := runner.FindMachine(options.Name, false)
 
-	if machine == nil {
+	if runner == nil {
 		log.Fatalf("Machine %s not found", options.Name)
 	}
 
-	create_machine := (*creator.Machine)(options)
-	creator.EditMachine(create_machine, machine)
+	machine := (*creator.Machine)(options)
+	creator.EditMachine(machine, runner)
 }

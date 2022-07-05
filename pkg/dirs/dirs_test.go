@@ -1,7 +1,7 @@
 package dirs
 
 import (
-    "io/fs"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"testing"
@@ -20,7 +20,7 @@ func TestListDirs(t *testing.T) {
 			t.Fatalf("Error creating temp dir %v ", err)
 		}
 		defer os.RemoveAll(dirpath)
-		for _, name := range []string{"hello" , "sello"} {
+		for _, name := range []string{"hello", "sello"} {
 			tmpfilepath := filepath.Join(dirpath, name)
 			os.WriteFile(tmpfilepath, []byte(""), 0644)
 
@@ -37,15 +37,15 @@ func TestListDirs(t *testing.T) {
 		}
 
 	})
-    t.Run("Directory does not exist" , func(t *testing.T) {
-        notExistentDir := "/tmp/get-out"
+	t.Run("Directory does not exist", func(t *testing.T) {
+		notExistentDir := "/tmp/get-out"
 
-        var want []fs.FileInfo = nil
-        got := ListDirs(notExistentDir)
+		var want []fs.FileInfo = nil
+		got := ListDirs(notExistentDir)
 
-        if want != nil {
-            t.Errorf("wanted %v , got %v" , got , want)
-        }
+		if want != nil {
+			t.Errorf("wanted %v , got %v", got, want)
+		}
 
-    })
+	})
 }

@@ -3,7 +3,7 @@ package creator
 
 /*
 This file has 2 important functions.
-- CreateMachine 
+- CreateMachine
 - Edit Machine
 
 Both require a special struct Machine which stores the information required
@@ -25,34 +25,32 @@ const SYSTEM_COMMAND string = "qemu-system-x86_64"
 
 var ConfigProvider = config.GetConfig()
 
-// Main struct to create 
+// Main struct to create
 type Machine struct {
-	Name       string
 	NoDisk     bool
 	DiskName   string
 	DiskFormat string
 	DiskSize   string
-	MemSize    string
-	CpuCores   string
+    runner.Runner
 }
 
 func CreateMachine(machine *Machine) {
-    if checkIfMachineExists(machine) {
-        log.Fatalf("Machine '%s' already exists!" , machine.Name)
-    }
+	if checkIfMachineExists(machine) {
+		log.Fatalf("Machine '%s' already exists!", machine.Name)
+	}
 	imagepath := createImage(machine)
 	runner := constructRunner(imagepath, machine)
-	err := encodeJsonToFile(runner)
+	err := SaveRunner(runner)
 	if err != nil {
 		log.Fatalf("Could not create new machine %v", err)
 	}
 }
 func checkIfMachineExists(machine *Machine) bool {
-	runner := runner.FindMachine(machine.Name , false)
+	runner := runner.FindMachine(machine.Name, false)
 	if runner != nil {
 		return true
 	}
-    return false
+	return false
 }
 func createImage(machine *Machine) string {
 	if machine.NoDisk {
@@ -65,29 +63,29 @@ func createImage(machine *Machine) string {
 	}
 	imagepath, err := image.CreateImage(im)
 	if err != nil {
-        log.Fatalf("Can't create the disk: %v", err)
+		log.Fatalf("Can't create the disk: %v", err)
 	}
 	return imagepath
 }
 func constructRunner(im string, machine *Machine) *runner.Runner {
-	runner := &runner.Runner{
-		Name:          machine.Name,
-		DrivePath:     im,
-		SystemCommand: SYSTEM_COMMAND,
-		MemSize:       machine.MemSize,
-		CpuCores:      machine.CpuCores,
-	}
-	return runner
+	// runner := &runner.Runner{
+	// 	Name:          machine.Name,
+	// 	DrivePath:     im,
+	// 	SystemCommand: SYSTEM_COMMAND,
+	// 	MemSize:       machine.MemSize,
+	// 	CpuCores:      machine.CpuCores,
+	// }
+    return &machine.Runner
+	// return runner
 }
 
-func encodeJsonToFile(runner *runner.Runner) error {
+func SaveRunner(runner *runner.Runner) error {
 	contents, err := json.Marshal(runner)
 	if err != nil {
 		return err
 	}
 	filepath := getFileName(runner.Name)
-	writeFile(contents, filepath)
-	return nil
+    return writeFile(contents , filepath)
 }
 func writeFile(contents []byte, filepath string) error {
 	err := ioutil.WriteFile(filepath, contents, 0644)

@@ -1,22 +1,23 @@
 package image
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
-    "fmt"
+    "github.com/stretchr/testify/assert"
 )
 
 type TestExecutor struct {
-    errorExecute bool
-	Command []string
+	errorExecute bool
+	Command      []string
 }
 
 func (t *TestExecutor) Execute(command string, options []string) error {
-    if t.errorExecute {
-        return fmt.Errorf("fake error")
+	if t.errorExecute {
+		return fmt.Errorf("fake error")
 
-    }
+	}
 	t.Command = []string{command}
 	t.Command = append(t.Command, options...)
 	return nil
@@ -61,9 +62,9 @@ func setupTest(t *testing.T, files []string) (string, func(t *testing.T)) {
 }
 
 func TestCreateImage(t *testing.T) {
-    t.Run("image already exists" , func(t *testing.T) {
-        path , tearDown := setupTest(t , []string{"hello"})
-        defer tearDown(t)
+	t.Run("image already exists", func(t *testing.T) {
+		path, tearDown := setupTest(t, []string{"hello"})
+		defer tearDown(t)
 		tables := []Image{
 			{
 				Name: "hello",
@@ -71,32 +72,29 @@ func TestCreateImage(t *testing.T) {
 				Size: "10G",
 			},
 		}
-        wanted := []string{""}
+		wanted := []string{
+            "",
+        }
 		previousExecProvider := ExecProvider
 		previousConfigProvider := ConfigProvider
-        // Give error on purpose
+		// Give error on purpose
 		ExecProvider = &TestExecutor{
-            errorExecute: true,
-        }
+			errorExecute: true,
+		}
 		ConfigProvider = &TestConfig{
 			imagepath: path,
 		}
 		for i, tt := range tables {
-            got , err := CreateImage(&tt)
+			got, err := CreateImage(&tt)
 			want := wanted[i]
-            if got != want {
-                t.Errorf("got %v , wanted %v" , got , want)
-            }
-            if err == nil {
-                t.Errorf("error should not be nil")
-            }
+            assert.Equal(t , got , want)
+            assert.Error(t , err)
 
 		}
 		ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider
 
-
-    })
+	})
 
 	t.Run("executor does not give error", func(t *testing.T) {
 		const imageDir = "testdir/images"
@@ -135,17 +133,18 @@ func TestCreateImage(t *testing.T) {
 			imagepath: "testdir/images",
 		}
 		for i, tt := range tables {
-			CreateImage(&tt)
+            _ , err := CreateImage(&tt)
 			got := ExecProvider.GetCommand()
 			want := wanted[i]
-			assertStringArray(t, got, want)
+            assert.ElementsMatch(t, got , want)
+            assert.Nil(t , err)
 
 		}
 		ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider
 
 	})
-    t.Run("executor gives an error" , func(t *testing.T) {
+	t.Run("executor gives an error", func(t *testing.T) {
 		const imageDir = "testdir/images"
 		tables := []Image{
 			{
@@ -154,28 +153,27 @@ func TestCreateImage(t *testing.T) {
 				Size: "10G",
 			},
 		}
-        wanted := []string{""}
+		wanted := []string{""}
 		previousExecProvider := ExecProvider
 		previousConfigProvider := ConfigProvider
-        // Give error on purpose
+		// Give error on purpose
 		ExecProvider = &TestExecutor{
-            errorExecute: true,
-        }
+			errorExecute: true,
+		}
 		ConfigProvider = &TestConfig{
 			imagepath: "testdir/images",
 		}
 		for i, tt := range tables {
-            got , _ := CreateImage(&tt)
+			got, err := CreateImage(&tt)
 			want := wanted[i]
-            if got != want {
-                t.Errorf("got %v , wanted %v" , got , want)
-            }
+            assert.Equal(t , got , want)
+            assert.Error(t , err)
 
 		}
 		ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider
 
-    })
+	})
 }
 
 func TestFindImage(t *testing.T) {
@@ -193,9 +191,7 @@ func TestFindImage(t *testing.T) {
 		want := filepath.Join(path, "hello")
 		got := FindImage("hello")
 
-		if got != want {
-			t.Errorf("got %v , wanted %v", got, want)
-		}
+        assert.Equal(t , got , want)
 
 		ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider
@@ -215,9 +211,10 @@ func TestFindImage(t *testing.T) {
 		want := ""
 		got := FindImage("hello")
 
-		if got != want {
-			t.Errorf("got %v , wanted %v", got, want)
-		}
+		// if got != want {
+		// 	t.Errorf("got %v , wanted %v", got, want)
+		// }
+        assert.Equal(t , got , want)
 
 		ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider

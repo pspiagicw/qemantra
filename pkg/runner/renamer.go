@@ -9,17 +9,17 @@ import (
 )
 
 func RenameMachine(oldname string, newname string) {
-	run := FindMachine(oldname , false)
+	run := FindMachine(oldname, false)
 	if run == nil {
 		log.Fatalf("Machine %s not found! ", oldname)
 	}
-	newRun := FindMachine(newname , false)
+	newRun := FindMachine(newname, false)
 	if newRun != nil {
 		log.Fatalf("Machine with name %s already exists!", newname)
 	}
 	filepath := FindMachineFile(oldname)
 	ReplaceName(filepath, newname)
-    // Add RenameFile(filepath , newname)
+	// Add RenameFile(filepath , newname)
 }
 
 func FindMachineFile(name string) string {
