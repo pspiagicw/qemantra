@@ -1,8 +1,7 @@
 // This package can create and edit machines.
-package creator
+package manage
 
 /*
-This file has 2 important functions.
 - CreateMachine
 - Edit Machine
 
@@ -18,7 +17,7 @@ import (
 
 	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/image"
-	"github.com/pspiagicw/qemantra/pkg/runner"
+	"github.com/pspiagicw/qemantra/pkg/run"
 )
 
 const SYSTEM_COMMAND string = "qemu-system-x86_64"
@@ -31,27 +30,28 @@ type Machine struct {
 	DiskName   string
 	DiskFormat string
 	DiskSize   string
-    runner.Runner
+	run.Runner
 }
 
 func CreateMachine(machine *Machine) {
-	if checkIfMachineExists(machine) {
+	if ifMachineExists(machine) {
 		log.Fatalf("Machine '%s' already exists!", machine.Name)
 	}
 	imagepath := createImage(machine)
 	runner := constructRunner(imagepath, machine)
-	err := SaveRunner(runner)
+	err := SaveRunnerToDisk(runner)
 	if err != nil {
 		log.Fatalf("Could not create new machine %v", err)
 	}
 }
-func checkIfMachineExists(machine *Machine) bool {
-	runner := runner.FindMachine(machine.Name, false)
+func ifMachineExists(machine *Machine) bool {
+	runner := FindMachine(machine.Name, false)
 	if runner != nil {
 		return true
 	}
 	return false
 }
+
 func createImage(machine *Machine) string {
 	if machine.NoDisk {
 		return ""
@@ -62,30 +62,26 @@ func createImage(machine *Machine) string {
 		Size: machine.DiskSize,
 	}
 	imagepath, err := image.CreateImage(im)
+	log.Printf("Imagepath: %s", imagepath)
 	if err != nil {
 		log.Fatalf("Can't create the disk: %v", err)
 	}
 	return imagepath
 }
-func constructRunner(im string, machine *Machine) *runner.Runner {
-	// runner := &runner.Runner{
-	// 	Name:          machine.Name,
-	// 	DrivePath:     im,
-	// 	SystemCommand: SYSTEM_COMMAND,
-	// 	MemSize:       machine.MemSize,
-	// 	CpuCores:      machine.CpuCores,
-	// }
-    return &machine.Runner
-	// return runner
+
+func constructRunner(imagepath string, machine *Machine) *run.Runner {
+	machine.Runner.DrivePath = imagepath
+
+	return &machine.Runner
 }
 
-func SaveRunner(runner *runner.Runner) error {
+func SaveRunnerToDisk(runner *run.Runner) error {
 	contents, err := json.Marshal(runner)
 	if err != nil {
 		return err
 	}
-	filepath := getFileName(runner.Name)
-    return writeFile(contents , filepath)
+	filepath := generateRunnerPath(runner.Name)
+	return writeFile(contents, filepath)
 }
 func writeFile(contents []byte, filepath string) error {
 	err := ioutil.WriteFile(filepath, contents, 0644)
@@ -94,12 +90,18 @@ func writeFile(contents []byte, filepath string) error {
 	}
 	return nil
 }
-func getFileName(name string) string {
+func getRunnerPath(name string) string {
 	machineDir := ConfigProvider.GetMachineDir()
-	shortName := getShortName(name)
+	path := filepath.Join(machineDir, name)
+	return path
+}
+func generateRunnerPath(name string) string {
+	machineDir := ConfigProvider.GetMachineDir()
+	shortName := generateShortName(name)
 	return filepath.Join(machineDir, shortName)
 }
-func getShortName(name string) string {
+
+func generateShortName(name string) string {
 	name = strings.ToLower(name)
 	name = strings.ReplaceAll(name, " ", "_")
 	name = name + ".json"

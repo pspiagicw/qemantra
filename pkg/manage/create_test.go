@@ -1,4 +1,4 @@
-package creator
+package manage
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/pspiagicw/qemantra/pkg/image"
-	"github.com/pspiagicw/qemantra/pkg/runner"
+	"github.com/pspiagicw/qemantra/pkg/run"
 
 	// "github.com/pspiagicw/qemantra/pkg/image"
 
@@ -98,20 +98,20 @@ func setupTestSimple(t *testing.T, files []string) (string, func(t *testing.T)) 
 }
 
 func TestIfMachineExists(t *testing.T) {
-    path , tearDown := setupTestComplex(t , map[string]([]byte) {
-        "test.json": []byte("{ \"Name\": \"Test\"}"),
-        "test_machine.json": []byte("{ \"Name\": \"Test Machine\"}"),
-    })
+	path, tearDown := setupTestComplex(t, map[string]([]byte){
+		"test.json":         []byte("{ \"Name\": \"Test\"}"),
+		"test_machine.json": []byte("{ \"Name\": \"Test Machine\"}"),
+	})
 	defer tearDown(t)
 
-    previousConfigProvider := ConfigProvider
+	previousConfigProvider := ConfigProvider
 
 	ConfigProvider = &TestConfig{
 		machinepath: path,
 		imagepath:   path,
 		configpath:  path,
 	}
-	runner.ConfigProvider = &TestConfig{
+	run.ConfigProvider = &TestConfig{
 		machinepath: path,
 		imagepath:   path,
 		configpath:  path,
@@ -119,17 +119,17 @@ func TestIfMachineExists(t *testing.T) {
 
 	machines := []Machine{
 		{
-			Runner: runner.Runner{
+			Runner: run.Runner{
 				Name: "Test",
 			},
 		},
 		{
-			Runner: runner.Runner{
+			Runner: run.Runner{
 				Name: "Test Machine",
 			},
 		},
 		{
-			Runner: runner.Runner{
+			Runner: run.Runner{
 				Name: "Does not exist machine",
 			},
 		},
@@ -141,12 +141,12 @@ func TestIfMachineExists(t *testing.T) {
 		false,
 	}
 	for i, tt := range machines {
-		got := checkIfMachineExists(&tt)
-        assert.Equal(t , got , wanted[i])
+		got := ifMachineExists(&tt)
+		assert.Equal(t, got, wanted[i])
 	}
 
-    ConfigProvider = previousConfigProvider
-    runner.ConfigProvider = previousConfigProvider
+	ConfigProvider = previousConfigProvider
+	run.ConfigProvider = previousConfigProvider
 
 }
 func TestCreateMachine(t *testing.T) {
@@ -156,11 +156,11 @@ func TestCreateMachine(t *testing.T) {
 	// )
 	path, tearDown := setupDir(t)
 	defer tearDown(t)
-    previousExecProvider := image.ExecProvider
+	previousExecProvider := image.ExecProvider
 	image.ExecProvider = &TestExecutor{
 		errorExecute: false,
 	}
-    previousConfigProvider := image.ConfigProvider
+	previousConfigProvider := image.ConfigProvider
 	image.ConfigProvider = &TestConfig{
 		machinepath: path,
 		configpath:  path,
@@ -175,10 +175,10 @@ func TestCreateMachine(t *testing.T) {
 		machines := []Machine{
 			{
 				NoDisk: true,
-				Runner: runner.Runner{
+				Runner: run.Runner{
+					Name:     "Example",
 					CpuCores: "2",
 					MemSize:  "4G",
-					Name:     "Example Machine",
 				},
 			},
 			{
@@ -186,6 +186,12 @@ func TestCreateMachine(t *testing.T) {
 				DiskName:   "test.img",
 				DiskSize:   "10G",
 				DiskFormat: "qcow2",
+				Runner: run.Runner{
+					CpuCores:  "2",
+					MemSize:   "4G",
+					Name:      "Example Machine",
+					DrivePath: filepath.Join(path, "test.img"),
+				},
 			},
 		}
 		wanted := [][]string{
@@ -194,16 +200,16 @@ func TestCreateMachine(t *testing.T) {
 		}
 		for i, machine := range machines {
 			CreateMachine(&machine)
-			shortName := getShortName(machine.Name)
+			shortName := generateShortName(machine.Name)
 			path := filepath.Join(path, shortName)
 			assert.FileExists(t, path)
 			assertJSONFileEQ(t, path, machine.Runner)
 			assert.ElementsMatch(t, wanted[i], image.ExecProvider.GetCommand())
 		}
 	})
-    ConfigProvider = previousConfigProvider
-    image.ConfigProvider = previousConfigProvider
-    image.ExecProvider = previousExecProvider
+	ConfigProvider = previousConfigProvider
+	image.ConfigProvider = previousConfigProvider
+	image.ExecProvider = previousExecProvider
 }
 func TestShortName(t *testing.T) {
 	tables := []string{
@@ -215,7 +221,7 @@ func TestShortName(t *testing.T) {
 	wanted := []string{"example_machine.json", "test_machine.json", "steam_deck.json"}
 
 	for i, tt := range tables {
-		got := getShortName(tt)
+		got := generateShortName(tt)
 		want := wanted[i]
 
 		if got != want {
@@ -224,7 +230,7 @@ func TestShortName(t *testing.T) {
 	}
 }
 
-func TestGetFileName(t *testing.T) {
+func TestGetRunnerPath(t *testing.T) {
 	tables := []string{
 		"Example Machine",
 		"Test Machine",
@@ -242,12 +248,10 @@ func TestGetFileName(t *testing.T) {
 	}
 
 	for i, tt := range tables {
-		got := getFileName(tt)
+		got := generateRunnerPath(tt)
 		want := filepath.Join(examplePath, wanted[i])
 
-		if got != want {
-			t.Errorf("got %v , wanted %v", got, want)
-		}
+		assert.Equal(t, got, want)
 	}
 	// ExecProvider = previousExecProvider
 	ConfigProvider = previousConfigProvider
@@ -259,7 +263,7 @@ func assertJSONFileEQ(t testing.TB, filepath string, value interface{}) {
 	if err != nil {
 		t.Fatalf("Can't read file '%s'", filepath)
 	}
-	var copy runner.Runner
+	var copy run.Runner
 	err = json.Unmarshal(contents, &copy)
 	if err != nil {
 		t.Fatalf("Error Unmarshaling value: %v", err)

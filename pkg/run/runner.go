@@ -1,5 +1,5 @@
 // Package enables running virtual machines
-package runner
+package run
 
 /*
 This package is incharge of finding and running virtual machines.
@@ -12,7 +12,7 @@ This command is executed using `executor` package.
 import (
 	"log"
 
-	"github.com/pspiagicw/qemantra/pkg/executor"
+	"github.com/pspiagicw/qemantra/pkg/execute"
 	"github.com/pspiagicw/qemantra/pkg/image"
 )
 
@@ -23,7 +23,7 @@ const isoBoot string = "d"
 
 const OVMF_PATH = "/usr/share/ovmf/x64/OVMF.fd"
 
-var ExecProvider = executor.GetExecutor()
+var ExecProvider = execute.GetExecutor()
 
 type Runner struct {
 	Name          string `json:"name"`
@@ -68,7 +68,7 @@ func getGenerators() []argumentGenerator {
 func startMachine(runner *Runner) {
 	arguments := constructArguments(runner)
 
-	err := ExecProvider.Execute(runner.SystemCommand, arguments)
+	err := ExecProvider.Execute(generateSystemCommand(runner), arguments)
 	if err != nil {
 		log.Printf("Some error occured: %v", err)
 	}
@@ -136,4 +136,10 @@ func generateExternalDiskArguments(runner *Runner) []string {
 
 	}
 	return []string{}
+}
+func generateSystemCommand(runner *Runner) string {
+	if runner.SystemCommand == "" {
+		return "qemu-system-x86_64"
+	}
+	return runner.SystemCommand
 }

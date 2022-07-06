@@ -2,10 +2,10 @@ package image
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"os"
 	"path/filepath"
 	"testing"
-    "github.com/stretchr/testify/assert"
 )
 
 type TestExecutor struct {
@@ -73,8 +73,8 @@ func TestCreateImage(t *testing.T) {
 			},
 		}
 		wanted := []string{
-            "",
-        }
+			"",
+		}
 		previousExecProvider := ExecProvider
 		previousConfigProvider := ConfigProvider
 		// Give error on purpose
@@ -87,8 +87,8 @@ func TestCreateImage(t *testing.T) {
 		for i, tt := range tables {
 			got, err := CreateImage(&tt)
 			want := wanted[i]
-            assert.Equal(t , got , want)
-            assert.Error(t , err)
+			assert.Equal(t, got, want)
+			assert.Error(t, err)
 
 		}
 		ExecProvider = previousExecProvider
@@ -133,11 +133,11 @@ func TestCreateImage(t *testing.T) {
 			imagepath: "testdir/images",
 		}
 		for i, tt := range tables {
-            _ , err := CreateImage(&tt)
+			_, err := CreateImage(&tt)
 			got := ExecProvider.GetCommand()
 			want := wanted[i]
-            assert.ElementsMatch(t, got , want)
-            assert.Nil(t , err)
+			assert.ElementsMatch(t, got, want)
+			assert.Nil(t, err)
 
 		}
 		ExecProvider = previousExecProvider
@@ -166,8 +166,8 @@ func TestCreateImage(t *testing.T) {
 		for i, tt := range tables {
 			got, err := CreateImage(&tt)
 			want := wanted[i]
-            assert.Equal(t , got , want)
-            assert.Error(t , err)
+			assert.Equal(t, got, want)
+			assert.Error(t, err)
 
 		}
 		ExecProvider = previousExecProvider
@@ -191,7 +191,7 @@ func TestFindImage(t *testing.T) {
 		want := filepath.Join(path, "hello")
 		got := FindImage("hello")
 
-        assert.Equal(t , got , want)
+		assert.Equal(t, got, want)
 
 		ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider
@@ -214,7 +214,7 @@ func TestFindImage(t *testing.T) {
 		// if got != want {
 		// 	t.Errorf("got %v , wanted %v", got, want)
 		// }
-        assert.Equal(t , got , want)
+		assert.Equal(t, got, want)
 
 		ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider

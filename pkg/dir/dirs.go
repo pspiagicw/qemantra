@@ -1,4 +1,4 @@
-package dirs
+package dir
 
 import (
 	"io/fs"
@@ -7,15 +7,16 @@ import (
 	"os"
 )
 
-func ListDirs(dir string) []fs.FileInfo {
+func ListDir(dir string) []fs.FileInfo {
 	if dirExists(dir) {
 		dirlisting, err := ioutil.ReadDir(dir)
 		if err != nil {
 			log.Fatalf("Error reading dir: %s", dir)
 		}
 		return dirlisting
+
 	}
-	return nil
+	return []fs.FileInfo{}
 }
 func dirExists(dir string) bool {
 	_, err := os.Stat(dir)

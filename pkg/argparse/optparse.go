@@ -1,4 +1,4 @@
-package argparser
+package argparse
 
 /*
 
@@ -20,10 +20,10 @@ import (
 	"log"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
-	"github.com/pspiagicw/qemantra/pkg/creator"
-	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/console"
-	"github.com/pspiagicw/qemantra/pkg/runner"
+	"github.com/pspiagicw/qemantra/pkg/image"
+	"github.com/pspiagicw/qemantra/pkg/manage"
+	runner "github.com/pspiagicw/qemantra/pkg/run"
 )
 
 func ParseOptions(global *Flags, version string) {
@@ -69,8 +69,8 @@ func RunOptionsToRunner(option *RunFlags, runner *runner.Runner) {
 // -- CREATE MACHINE
 func createMachineExecute(options *CreateMachineFlags) {
 	log.Println("Creating a new machine!")
-	cr := (*creator.Machine)(options)
-	creator.CreateMachine(cr)
+	cr := (*manage.Machine)(options)
+	manage.CreateMachine(cr)
 }
 
 // -- CREATE IMG
@@ -86,7 +86,7 @@ func createImgExecute(options *CreateImgFlags) {
 // -- RUN
 func runExecute(options *RunFlags) {
 	log.Println("Finding the given machine!")
-	machine := runner.FindMachine(options.name, true)
+	machine := manage.FindMachine(options.name, true)
 
 	if machine == nil {
 		log.Fatalf("Machine %s not found", options.name)
@@ -98,9 +98,9 @@ func runExecute(options *RunFlags) {
 // -- LIST
 func listExecute(options *ListFlags) {
 	if options.Img {
-		runner.ListImages(options.Verbose)
+		image.ListImages(options.Verbose)
 	} else {
-		runner.ListMachines(options.Verbose)
+		manage.ListMachines(options.Verbose)
 	}
 }
 
@@ -108,19 +108,19 @@ func listExecute(options *ListFlags) {
 func renameExecute(options *RenameFlags) {
 	oldName := options.OldName
 	newName := options.NewName
-	runner.RenameMachine(oldName, newName)
+	manage.RenameMachine(oldName, newName)
 }
 
 // -- EDIT
 func editExecute(options *EditFlags) {
 	log.Println("Finding the given Machine")
 
-	runner := runner.FindMachine(options.Name, false)
+	runner := manage.FindMachine(options.Name, false)
 
 	if runner == nil {
 		log.Fatalf("Machine %s not found", options.Name)
 	}
 
-	machine := (*creator.Machine)(options)
-	creator.EditMachine(machine, runner)
+	machine := (*manage.Machine)(options)
+	manage.EditMachine(machine, runner)
 }

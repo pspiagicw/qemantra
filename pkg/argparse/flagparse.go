@@ -1,5 +1,5 @@
-// argparser parses the flags passed to `qemantra`
-package argparser
+// Package parses the flags passed to `qemantra`
+package argparse
 
 /*
 This file parses the command line arguments and converts them into a internal struct known as `Options`.
@@ -25,8 +25,8 @@ This function is incharge of creating the function , adding arguments to the fun
 */
 import (
 	"github.com/integrii/flaggy"
-	"github.com/pspiagicw/qemantra/pkg/creator"
 	"github.com/pspiagicw/qemantra/pkg/image"
+	"github.com/pspiagicw/qemantra/pkg/manage"
 )
 
 // Stores all the flags passed.
@@ -137,7 +137,7 @@ func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgFlags) {
 // 	CpuCores   string
 // }
 
-type CreateMachineFlags creator.Machine
+type CreateMachineFlags manage.Machine
 
 func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineFlags) {
 	flags := new(CreateMachineFlags)
@@ -197,7 +197,7 @@ func addCheckCommand() *flaggy.Subcommand {
 }
 
 // -- EDIT COMMAND
-type EditFlags creator.Machine
+type EditFlags manage.Machine
 
 func addEditCommand() (*flaggy.Subcommand, *EditFlags) {
 	flags := new(EditFlags)

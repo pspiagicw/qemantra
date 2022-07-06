@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
-	"github.com/pspiagicw/qemantra/pkg/dirs"
-	"github.com/pspiagicw/qemantra/pkg/executor"
+	"github.com/pspiagicw/qemantra/pkg/dir"
+	"github.com/pspiagicw/qemantra/pkg/execute"
 )
 
 const QEMU_IMAGE_CREATE_COMMMAND = "qemu-img"
@@ -15,7 +15,7 @@ const QEMU_IMAGE_CREATE_OPTIONS = "create"
 const QEMU_IMAGE_CREATE_FORMAT_OPTION = "-f"
 
 var ConfigProvider = config.GetConfig()
-var ExecProvider = executor.GetExecutor()
+var ExecProvider = execute.GetExecutor()
 
 type Image struct {
 	Type string
@@ -24,7 +24,7 @@ type Image struct {
 }
 
 func FindImage(name string) string {
-	files := dirs.ListDirs(ConfigProvider.GetImageDir())
+	files := dir.ListDir(ConfigProvider.GetImageDir())
 	for _, i := range files {
 		if i.Name() == name {
 			return appendPath(ConfigProvider.GetImageDir(), name)

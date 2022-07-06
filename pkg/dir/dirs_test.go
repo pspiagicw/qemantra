@@ -1,10 +1,12 @@
-package dirs
+package dir
 
 import (
-	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // func getFileContents() map[string]string {
@@ -15,6 +17,7 @@ import (
 // }
 func TestListDirs(t *testing.T) {
 	t.Run("Directory exists", func(t *testing.T) {
+
 		dirpath, err := os.MkdirTemp("", "listing")
 		if err != nil {
 			t.Fatalf("Error creating temp dir %v ", err)
@@ -29,7 +32,9 @@ func TestListDirs(t *testing.T) {
 			"hello",
 			"sello",
 		}
-		got := ListDirs(dirpath)
+
+		got := ListDir(dirpath)
+		log.Println(got)
 		for i, want := range wanted {
 			if got[i].Name() != want {
 				t.Errorf("wanted %v  ,got %v", got, want)
@@ -40,12 +45,13 @@ func TestListDirs(t *testing.T) {
 	t.Run("Directory does not exist", func(t *testing.T) {
 		notExistentDir := "/tmp/get-out"
 
-		var want []fs.FileInfo = nil
-		got := ListDirs(notExistentDir)
+		want := []string{}
+		got := ListDir(notExistentDir)
 
-		if want != nil {
-			t.Errorf("wanted %v , got %v", got, want)
-		}
+		// if want != got {
+		// 	t.Errorf("wanted %v , got %v", got, want)
+		// }
+		assert.ElementsMatch(t, got, want)
 
 	})
 }

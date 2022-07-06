@@ -1,26 +1,26 @@
-package creator
+package manage
 
 import (
 	"fmt"
 	"log"
 	"path/filepath"
 
-	"github.com/pspiagicw/qemantra/pkg/dirs"
+	"github.com/pspiagicw/qemantra/pkg/dir"
 	"github.com/pspiagicw/qemantra/pkg/image"
-	"github.com/pspiagicw/qemantra/pkg/runner"
+	"github.com/pspiagicw/qemantra/pkg/run"
 )
 
-func EditMachine(m *Machine, r *runner.Runner) {
+func EditMachine(m *Machine, r *run.Runner) {
 	machine := RunnerToMachine(r, m)
 	fmt.Println(machine)
-	err := SaveRunner(machine)
+	err := SaveRunnerToDisk(machine)
 
 	if err != nil {
 		log.Fatalf("Error writing to file , %v", err)
 	}
 }
 
-func RunnerToMachine(runner *runner.Runner, creator *Machine) *runner.Runner {
+func RunnerToMachine(runner *run.Runner, creator *Machine) *run.Runner {
 
 	if creator.NoDisk {
 		runner.DrivePath = ""
@@ -36,7 +36,7 @@ func imageHandler(machine *Machine) string {
 	if machine.NoDisk {
 		return ""
 	}
-	for _, image := range dirs.ListDirs(ConfigProvider.GetImageDir()) {
+	for _, image := range dir.ListDir(ConfigProvider.GetImageDir()) {
 		if image.Name() == machine.DiskName {
 			fmt.Println("Reached here")
 			imagepath := filepath.Join(ConfigProvider.GetImageDir(), image.Name())

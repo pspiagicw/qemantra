@@ -1,32 +1,33 @@
-package runner
+package manage
 
 import (
 	"encoding/json"
-	"os"
-	"path/filepath"
+	// "os"
+	// "path/filepath"
+	"github.com/pspiagicw/qemantra/pkg/run"
 	"testing"
 )
 
-func setupTestComplex(t *testing.T, files map[string]([]byte)) (string, func(t *testing.T)) {
-	dirpath, err := os.MkdirTemp("", "listing")
-	if err != nil {
-		t.Fatalf("error setting up the test: %v", err)
-	}
-	for name, contents := range files {
-		tmpfilepath := filepath.Join(dirpath, name)
-		err := os.WriteFile(tmpfilepath, contents, 0644)
-		if err != nil {
-			t.Fatalf("error setting up the test: %v", err)
-		}
-	}
-
-	return dirpath, func(t *testing.T) {
-		os.RemoveAll(dirpath)
-	}
-}
+// func setupTestComplex(t *testing.T, files map[string]([]byte)) (string, func(t *testing.T)) {
+// 	dirpath, err := os.MkdirTemp("", "listing")
+// 	if err != nil {
+// 		t.Fatalf("error setting up the test: %v", err)
+// 	}
+// 	for name, contents := range files {
+// 		tmpfilepath := filepath.Join(dirpath, name)
+// 		err := os.WriteFile(tmpfilepath, contents, 0644)
+// 		if err != nil {
+// 			t.Fatalf("error setting up the test: %v", err)
+// 		}
+// 	}
+//
+// 	return dirpath, func(t *testing.T) {
+// 		os.RemoveAll(dirpath)
+// 	}
+// }
 func TestFindMachine(t *testing.T) {
 	t.Run("machine exists", func(t *testing.T) {
-		runners := []Runner{
+		runners := []run.Runner{
 			{
 				Name:          "test",
 				DrivePath:     "test.img",
@@ -67,12 +68,12 @@ func TestFindMachine(t *testing.T) {
 		)
 		defer tearDown(t)
 
-		previousExecProvider := ExecProvider
+		// previousExecProvider := ExecProvider
 		previousConfigProvider := ConfigProvider
 
-		ExecProvider = &TestExecutor{
-			errorExecute: false,
-		}
+		// ExecProvider = &TestExecutor{
+		// 	errorExecute: false,
+		// }
 		ConfigProvider = &TestConfig{
 			machinepath: path,
 		}
@@ -83,13 +84,13 @@ func TestFindMachine(t *testing.T) {
 			}
 
 		}
-		ExecProvider = previousExecProvider
+		// ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider
 
 	})
 
 	t.Run("machine does not exist", func(t *testing.T) {
-		runners := []Runner{
+		runners := []run.Runner{
 			{
 				Name:          "test",
 				DrivePath:     "test.img",
@@ -130,12 +131,12 @@ func TestFindMachine(t *testing.T) {
 		)
 		defer tearDown(t)
 
-		previousExecProvider := ExecProvider
+		// previousExecProvider := ExecProvider
 		previousConfigProvider := ConfigProvider
 
-		ExecProvider = &TestExecutor{
-			errorExecute: false,
-		}
+		// ExecProvider = &TestExecutor{
+		// 	errorExecute: false,
+		// }
 		ConfigProvider = &TestConfig{
 			machinepath: path,
 		}
@@ -146,7 +147,7 @@ func TestFindMachine(t *testing.T) {
 			}
 
 		}
-		ExecProvider = previousExecProvider
+		// ExecProvider = previousExecProvider
 		ConfigProvider = previousConfigProvider
 
 	})

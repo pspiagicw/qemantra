@@ -1,4 +1,4 @@
-package runner
+package run
 
 import (
 	"encoding/json"
@@ -27,7 +27,6 @@ func getFileName(file fs.FileInfo) string {
 }
 
 func checkName(filepath string, name string) (*Runner, bool) {
-	fmt.Printf("Checking Name %s", filepath)
 	runner, err := decodeFileToRunner(filepath)
 	fmt.Println(runner)
 	if err != nil {

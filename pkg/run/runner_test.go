@@ -1,4 +1,4 @@
-package runner
+package run
 
 import (
 	"fmt"
@@ -112,7 +112,7 @@ func TestRunMachine(t *testing.T) {
 			RunMachine(&tt)
 			want := wanted[i]
 			got := ExecProvider.GetCommand()
-            assert.ElementsMatch(t , got , want)
+			assert.ElementsMatch(t, got, want)
 			// assertStringArray(t, got, want)
 		}
 
@@ -170,7 +170,7 @@ func TestRunMachine(t *testing.T) {
 			RunMachine(&tt)
 			want := wanted[i]
 			got := ExecProvider.GetCommand()
-            assert.ElementsMatch(t , got , want)
+			assert.ElementsMatch(t, got, want)
 		}
 
 		ExecProvider = previousExecProvider
@@ -290,7 +290,7 @@ func TestConstructOptions(t *testing.T) {
 			Iso:           "test.iso",
 			ExternalDisk:  "externaltest.img",
 			Boot:          "iso",
-			KVM:        true,
+			KVM:           true,
 		},
 		{
 			Name:          "test",
@@ -322,12 +322,12 @@ func TestConstructOptions(t *testing.T) {
 		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-boot", "d", "-cpu", "host", "-smp", "2", "-hdb", "externaltest.img"},
 		{"-m", "4G", "-cdrom", "test.iso", "-hda", "test.img", "-boot", "d", "-cpu", "host", "-smp", "2", "-hdb", "externaltest.img"},
 		{"-m", "4G", "-enable-kvm", "-cdrom", "test.iso", "-hda", "test.img", "-boot", "d", "-cpu", "host", "-smp", "2", "-bios", OVMF_PATH, "-hdb", "externaltest.img"},
-		{"-enable-kvm", "-cpu", "host" },
+		{"-enable-kvm", "-cpu", "host"},
 	}
 	for i, tt := range table {
 		want := wanted[i]
 		got := constructArguments(&tt)
-        assert.ElementsMatch(t , got , want)
+		assert.ElementsMatch(t, got, want)
 
 	}
 }
