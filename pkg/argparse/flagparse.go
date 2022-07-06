@@ -150,6 +150,7 @@ func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineFlags) {
 	create_machine.String(&flags.DiskSize, "s", "disk-size", "Size of the disk")
 	create_machine.String(&flags.MemSize, "m", "mem-size", "Ram to provide")
 	create_machine.String(&flags.CpuCores, "c", "cpu-cores", "Cores to provide")
+	create_machine.String(&flags.Runner.SystemCommand, "S", "system-command", "System command to use")
 
 	flaggy.AttachSubcommand(create_machine, 1)
 	return create_machine, flags
