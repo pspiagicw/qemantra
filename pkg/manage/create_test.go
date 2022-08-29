@@ -3,15 +3,12 @@ package manage
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/run"
-
-	// "github.com/pspiagicw/qemantra/pkg/image"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,8 +21,8 @@ type TestExecutor struct {
 func (t *TestExecutor) Execute(command string, options []string) error {
 	if t.errorExecute {
 		return fmt.Errorf("fake error")
-
 	}
+
 	t.Command = []string{command}
 	t.Command = append(t.Command, options...)
 	return nil
@@ -256,10 +253,11 @@ func TestGetRunnerPath(t *testing.T) {
 	// ExecProvider = previousExecProvider
 	ConfigProvider = previousConfigProvider
 }
+
 func assertJSONFileEQ(t testing.TB, filepath string, value interface{}) {
 	t.Helper()
 	contents, err := os.ReadFile(filepath)
-	log.Println(string(contents))
+	// log.Println(string(contents))
 	if err != nil {
 		t.Fatalf("Can't read file '%s'", filepath)
 	}
@@ -268,5 +266,7 @@ func assertJSONFileEQ(t testing.TB, filepath string, value interface{}) {
 	if err != nil {
 		t.Fatalf("Error Unmarshaling value: %v", err)
 	}
+    fmt.Println(value , copy)
 	assert.Equal(t, value, copy)
+    // assert.ObjectsAreEqualj
 }
