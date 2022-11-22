@@ -1,0 +1,6 @@
+[book]
+authors = ["pspiagicw"]
+language = "en"
+multilingual = false
+src = "src"
+title = "qemantra"

@@ -79,6 +79,7 @@ func findMostRecentMachine() string {
 }
 func ListMachines(verbose bool) {
 	machines := getRunnerList()
+
 	for i, runner := range machines {
 		fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
 		if verbose {

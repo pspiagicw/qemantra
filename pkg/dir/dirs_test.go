@@ -9,12 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// func getFileContents() map[string]string {
-// 	files := make(map[string]string)
-// 	files["hello"] = "Hello World"
-// 	files["sello"] = "Sello World"
-// 	return files
-// }
+//	func getFileContents() map[string]string {
+//		files := make(map[string]string)
+//		files["hello"] = "Hello World"
+//		files["sello"] = "Sello World"
+//		return files
+//	}
 func TestListDirs(t *testing.T) {
 	t.Run("Directory exists", func(t *testing.T) {
 

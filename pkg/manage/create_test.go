@@ -266,7 +266,7 @@ func assertJSONFileEQ(t testing.TB, filepath string, value interface{}) {
 	if err != nil {
 		t.Fatalf("Error Unmarshaling value: %v", err)
 	}
-    fmt.Println(value , copy)
+	fmt.Println(value, copy)
 	assert.Equal(t, value, copy)
-    // assert.ObjectsAreEqualj
+	// assert.ObjectsAreEqualj
 }

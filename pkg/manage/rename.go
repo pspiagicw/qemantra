@@ -2,6 +2,7 @@ package manage
 
 import (
 	"log"
+	"os"
 
 	"github.com/pspiagicw/qemantra/pkg/dir"
 )
@@ -21,8 +22,7 @@ func RenameMachine(oldname string, newname string) {
 	filepath := FindMachineFile(oldname)
 
 	ReplaceName(filepath, newname)
-	// Add RenameFile(filepath , newname)
-	// os.Remove(filepath)
+	os.Remove(filepath)
 }
 
 func FindMachineFile(name string) string {
