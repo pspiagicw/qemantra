@@ -1,7 +1,28 @@
+// MIT License
+//
+// Copyright (c) 2022 pspiagicw
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 package argparse
 
-/*
-
+/* 
 This file is incharge of parsing the OPTIONS struct to execute the corresponding function.
 
 The most important function here is the `ParseOptions()` function
@@ -17,34 +38,34 @@ Here {{ .RequiredStruct }} is the name of the struct in Camel Case.
 
 */
 import (
-	"log"
-
 	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/console"
 	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/manage"
+    log "github.com/pspiagicw/colorlog"
 	runner "github.com/pspiagicw/qemantra/pkg/run"
 )
 
-func ParseOptions(global *Flags, version string) {
+func ParseOptions(version string) {
+    initFlags(version)
+
 	switch {
 	case createMachineCommand.Used:
-		createMachineExecute(global.createMachineFlags)
+		createMachineExecute(createMachineFlags)
 	case createImgCommand.Used:
-		createImgExecute(global.createImgFlags)
+		createImgExecute(createImgFlags)
 	case runCommand.Used:
-		runExecute(global.runFlags)
+		runExecute(runFlags)
 	case listCommand.Used:
-		listExecute(global.listFlags)
+		listExecute(listFlags)
 	case checkCommand.Used:
 		config.PerformCheck()
 	case renameCommand.Used:
-		renameExecute(global.renameFlags)
+		renameExecute(renameFlags)
 	case editCommand.Used:
-		editExecute(global.editFlags)
+		editExecute(editFlags)
 	default:
 		console.ShowBanner(version)
-
 	}
 }
 func RunOptionsToRunner(option *RunFlags, runner *runner.Runner) {
@@ -68,28 +89,28 @@ func RunOptionsToRunner(option *RunFlags, runner *runner.Runner) {
 
 // -- CREATE MACHINE
 func createMachineExecute(options *CreateMachineFlags) {
-	log.Println("Creating a new machine!")
+	log.LogInfo("Creating a new machine!")
 	cr := (*manage.Machine)(options)
 	manage.CreateMachine(cr)
 }
 
 // -- CREATE IMG
 func createImgExecute(options *CreateImgFlags) {
-	log.Println("Creating a new image!")
+	log.LogInfo("Creating a new image!")
 	im := (*image.Image)(options)
 	_, err := image.CreateImage(im)
 	if err != nil {
-		log.Fatalf("Error creating image %v", err)
+		log.LogFatal("Error creating image %v", err)
 	}
 }
 
 // -- RUN
 func runExecute(options *RunFlags) {
-	log.Println("Finding the given machine!")
+	log.LogInfo("Finding the given machine!")
 	machine := manage.FindMachine(options.name, true)
 
 	if machine == nil {
-		log.Fatalf("Machine %s not found", options.name)
+		log.LogFatal("Machine %s not found", options.name)
 	}
 	RunOptionsToRunner(options, machine)
 	runner.RunMachine(machine)
@@ -113,12 +134,12 @@ func renameExecute(options *RenameFlags) {
 
 // -- EDIT
 func editExecute(options *EditFlags) {
-	log.Println("Finding the given Machine")
+	log.LogInfo("Finding the given Machine")
 
 	runner := manage.FindMachine(options.Name, false)
 
 	if runner == nil {
-		log.Fatalf("Machine %s not found", options.Name)
+		log.LogFatal("Machine %s not found", options.Name)
 	}
 
 	machine := (*manage.Machine)(options)

@@ -12,6 +12,5 @@ var VERSION string
 // This is the main function.
 func main() {
 	config.EnsureSystemReady()
-	options := argparse.ParseFlags(VERSION)
-	argparse.ParseOptions(options, VERSION)
+	argparse.ParseOptions(VERSION)
 }

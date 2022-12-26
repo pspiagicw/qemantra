@@ -1,59 +1,89 @@
-// Package parses the flags passed to `qemantra`
-package argparse
+// MIT License
+//
+// Copyright (c) 2022 pspiagicw
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 /*
-This file parses the command line arguments and converts them into a internal struct known as `Options`.
-It uses `flaggy` for this parsing.
+	Package parses the flags provided to qemantra.
 
-The OPTIONS struct stores the command itself and it's options.
-The actual parsing of arguments happen in the `ParseArguments` function.
+# Introduction
 
-The `Options` struct has 2 types of field for each command.Here {{ .Command }} is the name of the command in Camel case
-- {{ .Command }}Options : Stores the flags/options for that command
+Command parsing in qemantra is done using a external package flaggy.
+The default flag package does not provide extensive support for subcommands.
 
-Every subcommand has a global variable named:
-- {{ .Command }}Command : Stores the command's instance itself as it is needed later.
+qemantra supports multiple commands
 
-Example `run` command has 2 important elements
-- RunOptions: In the `Options` struct
-- RunCommand: Global Variable
+ 1. create-machine
+ 2. create-img
+ 3. run
+ 4. list
+ 5. check
+ 6. rename
+ 7. edit
 
-Every command needs 1 functions to be initiated with the name add{{ .Command }}Command(). Thus the `run` command has 1 function
-- addRunCommand:
-This function is incharge of creating the function , adding arguments to the function and registering with flaggy.
-
+The most efficient way of managing all these subcommands is to keep a struct for each indivisual command.
+This struct stores the values provided through the command line.
 */
+package argparse
+
 import (
 	"github.com/integrii/flaggy"
 	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/manage"
 )
 
-// Stores all the flags passed.
-type Flags struct {
-	runFlags           *RunFlags
-	createImgFlags     *CreateImgFlags
-	createMachineFlags *CreateMachineFlags
-	listFlags          *ListFlags
-	renameFlags        *RenameFlags
-	editFlags          *EditFlags
-}
+// // Stores all the Flags passed.
+// type Flags struct {
+// 	runFlags           *RunFlags
+// 	createImgFlags     *CreateImgFlags
+// 	createMachineFlags *CreateMachineFlags
+// 	listFlags          *ListFlags
+// 	renameFlags        *RenameFlags
+// 	editFlags          *EditFlags
+// }
 
-var runCommand *flaggy.Subcommand
-var createImgCommand *flaggy.Subcommand
-var createMachineCommand *flaggy.Subcommand
-var listCommand *flaggy.Subcommand
-var checkCommand *flaggy.Subcommand
-var renameCommand *flaggy.Subcommand
-var editCommand *flaggy.Subcommand
+var (
+	runFlags             *RunFlags
+    createImgFlags *CreateImgFlags
+    createMachineFlags *CreateMachineFlags
+    listFlags *ListFlags
+    renameFlags *RenameFlags
+    editFlags *EditFlags
+
+)
+var (
+	runCommand           *flaggy.Subcommand
+	createImgCommand     *flaggy.Subcommand
+	createMachineCommand *flaggy.Subcommand
+	listCommand          *flaggy.Subcommand
+	checkCommand         *flaggy.Subcommand
+	renameCommand        *flaggy.Subcommand
+	editCommand          *flaggy.Subcommand
+)
 
 // Function to parse all the command line arguments.
 // Set's qemantra's version and description.
-func ParseFlags(version string) *Flags {
+func initFlags(version string) {
 	setFlaggyInfo(version)
-	global := addSubCommands()
+	addSubCommands()
 	flaggy.Parse()
-	return global
 }
 
 // Helper function to set all the information about the program with flaggy.
@@ -66,19 +96,16 @@ func setFlaggyInfo(version string) {
 }
 
 // Adds all the subCommands to the Options struct
-func addSubCommands() *Flags {
-	global := new(Flags)
+func addSubCommands() {
 
-	checkCommand = addCheckCommand()
+	addCheckCommand()
+	addRunCommand()
+	addCreateImgCommand()
+	addCreateMachineCommand()
+	addListCommand()
+	addRenameCommand()
+	addEditCommand()
 
-	runCommand, global.runFlags = addRunCommand()
-	createImgCommand, global.createImgFlags = addCreateImgCommand()
-	createMachineCommand, global.createMachineFlags = addCreateMachineCommand()
-	listCommand, global.listFlags = addListCommand()
-	renameCommand, global.renameFlags = addRenameCommand()
-	editCommand, global.editFlags = addEditCommand()
-
-	return global
 }
 
 /*
@@ -96,7 +123,7 @@ type RunFlags struct {
 	no_kvm       bool
 }
 
-func addRunCommand() (*flaggy.Subcommand, *RunFlags) {
+func addRunCommand() {
 	flags := new(RunFlags)
 	run := flaggy.NewSubcommand("run")
 
@@ -109,37 +136,29 @@ func addRunCommand() (*flaggy.Subcommand, *RunFlags) {
 	run.Bool(&flags.no_kvm, "k", "no-kvm", "Disable KVM Support")
 
 	flaggy.AttachSubcommand(run, 1)
-	return run, flags
+    runCommand = run
+    runFlags = flags
 }
 
 // -- CREATE IMG COMMAND
 
 type CreateImgFlags image.Image
 
-func addCreateImgCommand() (*flaggy.Subcommand, *CreateImgFlags) {
+func addCreateImgCommand() {
 	flags := new(CreateImgFlags)
 	create_img := flaggy.NewSubcommand("create-img")
 	create_img.String(&flags.Name, "n", "name", "Name of the disk")
 	create_img.String(&flags.Type, "f", "format", "Type of the disk")
 	create_img.String(&flags.Size, "s", "size", "Size of the disk")
 	flaggy.AttachSubcommand(create_img, 1)
-	return create_img, flags
-}
 
-// -- CREATE MACHINE COMMAND
-// type CreateMachineOptions struct {
-// 	Name       string
-// 	NoDisk     bool
-// 	DiskName   string
-// 	DiskFormat string
-// 	DiskSize   string
-// 	MemSize    string
-// 	CpuCores   string
-// }
+    createImgCommand = create_img
+    createImgFlags = flags
+}
 
 type CreateMachineFlags manage.Machine
 
-func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineFlags) {
+func addCreateMachineCommand() {
 	flags := new(CreateMachineFlags)
 
 	create_machine := flaggy.NewSubcommand("create-machine")
@@ -153,16 +172,16 @@ func addCreateMachineCommand() (*flaggy.Subcommand, *CreateMachineFlags) {
 	create_machine.String(&flags.Runner.SystemCommand, "S", "system-command", "System command to use")
 
 	flaggy.AttachSubcommand(create_machine, 1)
-	return create_machine, flags
+    createMachineCommand = create_machine
+    createMachineFlags = flags
 }
 
-// -- LIST COMMAND
 type ListFlags struct {
 	Img     bool
 	Verbose bool
 }
 
-func addListCommand() (*flaggy.Subcommand, *ListFlags) {
+func addListCommand() {
 	flags := new(ListFlags)
 
 	list := flaggy.NewSubcommand("list")
@@ -170,37 +189,37 @@ func addListCommand() (*flaggy.Subcommand, *ListFlags) {
 	list.Bool(&flags.Verbose, "v", "verbose", "All details")
 
 	flaggy.AttachSubcommand(list, 1)
-	return list, flags
+    listCommand = list
+    listFlags = flags
 }
 
-// -- RENAME COMMAND
 type RenameFlags struct {
 	OldName string
 	NewName string
 }
 
-func addRenameCommand() (*flaggy.Subcommand, *RenameFlags) {
+func addRenameCommand() {
 	flags := new(RenameFlags)
 
 	rename := flaggy.NewSubcommand("rename")
 	rename.String(&flags.OldName, "o", "old-name", "Name of the macine currently")
 	rename.String(&flags.NewName, "n", "new-name", "The new name to rename the machine to")
 	flaggy.AttachSubcommand(rename, 1)
-	return rename, flags
+
+    renameCommand = rename
+    renameFlags = flags
 
 }
 
-// -- CHECK COMMAND
-func addCheckCommand() *flaggy.Subcommand {
+func addCheckCommand() {
 	check := flaggy.NewSubcommand("check")
 	flaggy.AttachSubcommand(check, 1)
-	return check
+    checkCommand = check
 }
 
-// -- EDIT COMMAND
 type EditFlags manage.Machine
 
-func addEditCommand() (*flaggy.Subcommand, *EditFlags) {
+func addEditCommand() {
 	flags := new(EditFlags)
 
 	edit_machine := flaggy.NewSubcommand("edit")
@@ -213,5 +232,7 @@ func addEditCommand() (*flaggy.Subcommand, *EditFlags) {
 	edit_machine.String(&flags.CpuCores, "c", "cpu-cores", "Cores to provide")
 
 	flaggy.AttachSubcommand(edit_machine, 1)
-	return edit_machine, flags
+
+    editCommand = edit_machine
+    editFlags = flags
 }

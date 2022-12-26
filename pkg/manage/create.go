@@ -11,13 +11,13 @@ to create and edit a machine.
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"path/filepath"
 	"strings"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/run"
+    log "github.com/pspiagicw/colorlog"
 )
 
 const SYSTEM_COMMAND string = "qemu-system-x86_64"
@@ -35,13 +35,13 @@ type Machine struct {
 
 func CreateMachine(machine *Machine) {
 	if ifMachineExists(machine) {
-		log.Fatalf("Machine '%s' already exists!", machine.Name)
+		log.LogFatal("Machine '%s' already exists!", machine.Name)
 	}
 	imagepath := createImage(machine)
 	runner := constructRunner(imagepath, machine)
 	err := SaveRunnerToDisk(runner)
 	if err != nil {
-		log.Fatalf("Could not create new machine %v", err)
+		log.LogFatal("Could not create new machine %v", err)
 	}
 }
 func ifMachineExists(machine *Machine) bool {
@@ -62,9 +62,9 @@ func createImage(machine *Machine) string {
 		Size: machine.DiskSize,
 	}
 	imagepath, err := image.CreateImage(im)
-	log.Printf("Imagepath: %s", imagepath)
+	log.LogInfo("Imagepath: %s", imagepath)
 	if err != nil {
-		log.Fatalf("Can't create the disk: %v", err)
+		log.LogFatal("Can't create the disk: %v", err)
 	}
 	return imagepath
 }

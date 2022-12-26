@@ -1,12 +1,11 @@
 package config
 
 import (
-	"log"
 	"os"
 	"os/exec"
 	"runtime"
 
-	"github.com/fatih/color"
+    log "github.com/pspiagicw/colorlog"
 )
 
 const OVMF_PATH = "/usr/share/ovmf"
@@ -17,18 +16,18 @@ const GOOS_WINDOWS = "windows"
 // - If system is Unix/Linux
 // - If QEMU is installed
 func EnsureSystemReady() {
-	if !CheckSystemType() {
-		log.Fatalf("Sorry only Linux is tested and supported!")
+	if !checkSystemType() {
+		log.LogFatal("Sorry only Linux is tested and supported!")
 	}
-	if !CheckQEMU() {
-		log.Fatalln("Error detecting 'qemu-img' command , please ensure it exists")
+	if !checkQEMU() {
+		log.LogFatal("Error detecting 'qemu-img' command , please ensure it exists")
 	}
 
 }
 
 // Uses `runtime.GOOS` to check if system is Unix-based.
 // Returns `true` if system Unix based else false.
-func CheckSystemType() bool {
+func checkSystemType() bool {
 	if runtime.GOOS == GOOS_WINDOWS {
 		return false
 	}
@@ -37,7 +36,7 @@ func CheckSystemType() bool {
 }
 
 // Checks if the `qemu-img` command available in `$PATH` variable.
-func CheckQEMU() bool {
+func checkQEMU() bool {
 	_, err := exec.LookPath("qemu-img")
 	if err != nil {
 		return false
@@ -49,7 +48,7 @@ func CheckQEMU() bool {
 // Checks if UEFI files , using `OVMF` are available .
 func EnsureUEFIReady() {
 	if !CheckUEFI() {
-		log.Fatalf("UEFI not supported! Install `OVMF` to enable support")
+		log.LogFatal("UEFI not supported! Install `OVMF` to enable support")
 	}
 }
 
@@ -64,19 +63,19 @@ func CheckUEFI() bool {
 
 func PerformCheck() {
 	if CheckUEFI() {
-		color.Green("✓ UEFI Support enabled!")
+		log.LogSuccess("✓ UEFI Support enabled!")
 	} else {
-		color.Red("! UEFI Support disabled!")
+		log.LogError("! UEFI Support disabled!")
 	}
 
-	if CheckQEMU() {
-		color.Green("✓ QEMU Installed!")
+	if checkQEMU() {
+		log.LogSuccess("✓ QEMU Installed!")
 	} else {
-		color.Red("! QEMU Not Installed!")
+		log.LogFatal("! QEMU Not Installed!")
 	}
-	if CheckSystemType() {
-		color.Green("✓ Your Platform is supported!")
+	if checkSystemType() {
+		log.LogSuccess("✓ Your Platform is supported!")
 	} else {
-		color.Red("! Your Platform is not supported!")
+		log.LogError("! Your Platform is not supported!")
 	}
 }
