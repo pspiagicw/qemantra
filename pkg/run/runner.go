@@ -14,9 +14,10 @@ import (
 
 	"github.com/pspiagicw/qemantra/pkg/execute"
 	"github.com/pspiagicw/qemantra/pkg/image"
+	"github.com/pspiagicw/qemantra/pkg/machine"
 )
 
-type argumentGenerator func(runner *Runner) []string
+type argumentGenerator func(*machine.Machine) []string
 
 const menuBoot string = "menu=on"
 const isoBoot string = "d"
@@ -25,31 +26,18 @@ const OVMF_PATH = "/usr/share/ovmf/x64/OVMF.fd"
 
 var ExecProvider = execute.GetExecutor()
 
-type Runner struct {
-	Name          string `json:"name"`
-	DrivePath     string `json:"drivePath"`
-	SystemCommand string `json:"systemCommand"`
-	MemSize       string `json:"memSize"`
-	CpuCores      string `json:"cpuCores"`
-	Iso           string `json:"-"`
-	ExternalDisk  string `json:"-"`
-	Boot          string `json:"-"`
-	UEFI          bool   `json:"-"`
-	KVM           bool   `json:"-"`
+func RunMachine(machine *machine.Machine) {
+	checkExternalDisk(machine)
+	startMachine(machine)
 }
-
-func RunMachine(runner *Runner) {
-	checkExternalDisk(runner)
-	startMachine(runner)
-}
-func checkExternalDisk(runner *Runner) {
-	if runner.ExternalDisk != "" {
-		fullpath := image.FindImage(runner.ExternalDisk)
+func checkExternalDisk(machine *machine.Machine) {
+	if machine.ExternalDisk != "" {
+		fullpath := image.FindImage(machine.ExternalDisk)
 		if fullpath == "" {
-			log.Fatalf("Can't find disk with name: '%s'", runner.ExternalDisk)
+			log.Fatalf("Can't find disk with name: '%s'", machine.ExternalDisk)
 		}
 		log.Printf("Disk Found! Using '%s'", fullpath)
-		runner.ExternalDisk = fullpath
+		machine.ExternalDisk = fullpath
 	}
 }
 func getGenerators() []argumentGenerator {
@@ -65,81 +53,84 @@ func getGenerators() []argumentGenerator {
 	argumentOrder = append(argumentOrder, generateExternalDiskArguments)
 	return argumentOrder
 }
-func startMachine(runner *Runner) {
-	arguments := constructArguments(runner)
+func startMachine(machine *machine.Machine) {
+	arguments := constructArguments(machine)
 
-	err := ExecProvider.Execute(generateSystemCommand(runner), arguments)
+	err := ExecProvider.Execute(generateSystemCommand(machine), arguments)
 	if err != nil {
 		log.Printf("Some error occured: %v", err)
 	}
 }
-func constructArguments(runner *Runner) []string {
+func constructArguments(machine *machine.Machine) []string {
 	arguments := []string{}
 
 	generators := getGenerators()
 	for i := 0; i < len(generators); i++ {
-		arguments = append(arguments, generators[i](runner)...)
+		arguments = append(arguments, generators[i](machine)...)
 	}
 	return arguments
 }
-func generateUEFIArguments(runner *Runner) []string {
-	if runner.UEFI {
-		return []string{"-bios", OVMF_PATH}
+func generateUEFIArguments(machine *machine.Machine) []string {
+	if machine.UEFI != "" {
+		return []string{"-bios", machine.UEFI}
 	}
 	return []string{}
 }
-func generateISOArguments(runner *Runner) []string {
-	if runner.Iso != "" {
-		option := []string{"-cdrom", runner.Iso}
+func generateISOArguments(machine *machine.Machine) []string {
+	if machine.Iso != "" {
+		option := []string{"-cdrom", machine.Iso}
 		return option
 	}
 	return []string{}
 
 }
-func generateDriveArguments(runner *Runner) []string {
-	if runner.DrivePath != "" {
-		option := []string{"-hda", runner.DrivePath}
+func generateDriveArguments(machine *machine.Machine) []string {
+	if machine.DrivePath != "" {
+		option := []string{"-hda", machine.DrivePath}
 		return option
 	}
 	return []string{}
 }
-func generateMemArguments(runner *Runner) []string {
-	if runner.MemSize != "" {
-		return []string{"-m", runner.MemSize}
+func generateMemArguments(machine *machine.Machine) []string {
+	if machine.MemSize != "" {
+		return []string{"-m", machine.MemSize}
 	}
 	return []string{}
 }
-func generateCPUArguments(runner *Runner) []string {
-	if runner.CpuCores != "" {
-		return []string{"-cpu", "host", "-smp", runner.CpuCores}
+func generateCPUArguments(machine *machine.Machine) []string {
+	if !machine.KVM {
+		return []string{}
+	}
+	if machine.CpuCores != "" {
+		return []string{"-cpu", "host", "-smp", machine.CpuCores}
 	}
 	return []string{"-cpu", "host"}
 }
-func generateKVMArguments(runner *Runner) []string {
-	if runner.KVM {
-		return []string{}
+func generateKVMArguments(machine *machine.Machine) []string {
+	if machine.KVM {
+		return []string{"-enable-kvm"}
 	}
-	return []string{"-enable-kvm"}
+	return []string{}
 }
-func generateBootArguments(runner *Runner) []string {
-	if runner.Boot == "menu" {
+func generateBootArguments(machine *machine.Machine) []string {
+	if machine.Boot == "menu" {
 		return []string{"-boot", menuBoot}
-	} else if runner.Boot == "iso" {
+	} else if machine.Boot == "iso" {
 		return []string{"-boot", isoBoot}
 	}
 	return []string{}
 
 }
-func generateExternalDiskArguments(runner *Runner) []string {
-	if runner.ExternalDisk != "" {
-		return []string{"-hdb", runner.ExternalDisk}
+func generateExternalDiskArguments(machine *machine.Machine) []string {
+	if machine.ExternalDisk != "" {
+		return []string{"-hdb", machine.ExternalDisk}
 
 	}
 	return []string{}
 }
-func generateSystemCommand(runner *Runner) string {
-	if runner.SystemCommand == "" {
+func generateSystemCommand(machine *machine.Machine) string {
+	if machine.SystemCommand == "" {
 		return "qemu-system-x86_64"
 	}
-	return runner.SystemCommand
+	return machine.SystemCommand
 }

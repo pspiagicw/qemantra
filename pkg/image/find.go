@@ -1,10 +1,10 @@
 package image
 
 import (
-	"fmt"
-	"github.com/pspiagicw/qemantra/pkg/dir"
 	"path/filepath"
 	"strings"
+
+	"github.com/pspiagicw/qemantra/pkg/dir"
 )
 
 func getImageList() []string {
@@ -16,11 +16,12 @@ func getImageList() []string {
 	return paths
 
 }
-func ListImages(verbose bool) {
+func ListImages(verbose bool) []string {
 	images := getImageList()
-	for i, image := range images {
-		fmt.Printf("%d) Path: %s\n", i, image)
-	}
+	// for i, image := range images {
+	// 	fmt.Printf("%d) Path: %s\n", i, image)
+	// }
+	return images
 }
 func getShortName(name string) string {
 	name = strings.ToLower(name)

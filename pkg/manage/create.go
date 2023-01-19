@@ -1,58 +1,41 @@
 // This package can create and edit machines.
 package manage
 
-/*
-- CreateMachine
-- Edit Machine
-
-Both require a special struct Machine which stores the information required
-to create and edit a machine.
-*/
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
+	log "github.com/pspiagicw/colorlog"
 	"github.com/pspiagicw/qemantra/pkg/config"
 	"github.com/pspiagicw/qemantra/pkg/image"
-	"github.com/pspiagicw/qemantra/pkg/run"
-    log "github.com/pspiagicw/colorlog"
+	"github.com/pspiagicw/qemantra/pkg/machine"
 )
 
 const SYSTEM_COMMAND string = "qemu-system-x86_64"
 
 var ConfigProvider = config.GetConfig()
 
-// Main struct to create
-type Machine struct {
-	NoDisk     bool
-	DiskName   string
-	DiskFormat string
-	DiskSize   string
-	run.Runner
-}
-
-func CreateMachine(machine *Machine) {
+func CreateMachine(machine *machine.Machine) {
 	if ifMachineExists(machine) {
 		log.LogFatal("Machine '%s' already exists!", machine.Name)
 	}
-	imagepath := createImage(machine)
-	runner := constructRunner(imagepath, machine)
-	err := SaveRunnerToDisk(runner)
+	machine.DrivePath = createImage(machine)
+	err := saveToDisk(machine)
 	if err != nil {
 		log.LogFatal("Could not create new machine %v", err)
 	}
 }
-func ifMachineExists(machine *Machine) bool {
-	runner := FindMachine(machine.Name, false)
+func ifMachineExists(machine *machine.Machine) bool {
+	runner := FindMachine(machine.Name)
 	if runner != nil {
 		return true
 	}
 	return false
 }
 
-func createImage(machine *Machine) string {
+func createImage(machine *machine.Machine) string {
 	if machine.NoDisk {
 		return ""
 	}
@@ -69,22 +52,16 @@ func createImage(machine *Machine) string {
 	return imagepath
 }
 
-func constructRunner(imagepath string, machine *Machine) *run.Runner {
-	machine.Runner.DrivePath = imagepath
-
-	return &machine.Runner
-}
-
-func SaveRunnerToDisk(runner *run.Runner) error {
-	contents, err := json.Marshal(runner)
+func saveToDisk(machine *machine.Machine) error {
+	filepath := generateRunnerPath(machine.Name)
+	contents, err := json.Marshal(machine)
 	if err != nil {
 		return err
 	}
-	filepath := generateRunnerPath(runner.Name)
 	return writeFile(contents, filepath)
 }
 func writeFile(contents []byte, filepath string) error {
-	err := ioutil.WriteFile(filepath, contents, 0644)
+	err := os.WriteFile(filepath, contents, 0644)
 	if err != nil {
 		return err
 	}
@@ -103,7 +80,7 @@ func generateRunnerPath(name string) string {
 
 func generateShortName(name string) string {
 	name = strings.ToLower(name)
-	name = strings.ReplaceAll(name, " ", "_")
+	name = strings.ReplaceAll(name, " ", "-")
 	name = name + ".json"
 	return name
 }

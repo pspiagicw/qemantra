@@ -1,0 +1,7 @@
+repos:
+- repo: https://github.com/dnephin/pre-commit-golang
+  rev: 'c17f835'
+  hooks:
+    - id: go-fmt
+    # - id: go-unit-tests
+    - id: go-build

@@ -2,6 +2,7 @@ package execute
 
 import (
 	"log"
+	"os"
 	"os/exec"
 )
 
@@ -14,6 +15,8 @@ type SystemExecutor struct {
 
 func (s *SystemExecutor) Execute(cmd string, options []string) error {
 	command := exec.Command(cmd, options...)
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
 	log.Printf("Executing '%s' on your operating system", command.String())
 	err := command.Run()
 	if err != nil {

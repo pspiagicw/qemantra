@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
+	"github.com/pspiagicw/qemantra/pkg/machine"
 )
 
 var ConfigProvider = config.GetConfig()
@@ -26,7 +27,7 @@ func getFileName(file fs.FileInfo) string {
 	return path
 }
 
-func checkName(filepath string, name string) (*Runner, bool) {
+func checkName(filepath string, name string) (*machine.Machine, bool) {
 	runner, err := decodeFileToRunner(filepath)
 	fmt.Println(runner)
 	if err != nil {
@@ -38,15 +39,15 @@ func checkName(filepath string, name string) (*Runner, bool) {
 	}
 	return nil, false
 }
-func decodeByteToRunner(contents []byte) (*Runner, error) {
-	var runner Runner
+func decodeByteToRunner(contents []byte) (*machine.Machine, error) {
+	var runner machine.Machine
 	err := json.Unmarshal(contents, &runner)
 	if err != nil {
 		return nil, err
 	}
 	return &runner, nil
 }
-func decodeFileToRunner(filepath string) (*Runner, error) {
+func decodeFileToRunner(filepath string) (*machine.Machine, error) {
 	contents, err := readFile(filepath)
 	if err != nil {
 		return nil, err

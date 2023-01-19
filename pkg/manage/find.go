@@ -3,54 +3,52 @@ package manage
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 
 	"github.com/pspiagicw/qemantra/pkg/dir"
-	"github.com/pspiagicw/qemantra/pkg/run"
+	"github.com/pspiagicw/qemantra/pkg/machine"
 )
 
 const MOST_RECENT_FILE = "recentf"
 
-func FindMachine(name string, useCache bool) *run.Runner {
-	if useCache {
-		if name == "" {
-			name = findMostRecentMachine()
-		}
-		storeMostRecentMachine(name)
-	}
+func FindMachine(name string) *machine.Machine {
 	for _, file := range dir.ListDir(ConfigProvider.GetMachineDir()) {
 		filepath := getRunnerPath(file.Name())
-		runner, matches := ifNameMatches(filepath, name)
+		machine, matches := ifNameMatches(filepath, name)
 		if matches {
-			return runner
+			return machine
 		}
 	}
 	return nil
 }
 
-func decodeBytesToRunner(contents []byte) (*run.Runner, error) {
-	var runner run.Runner
-	err := json.Unmarshal(contents, &runner)
+func decodeBytesToRunner(contents []byte) (*machine.Machine, error) {
+
+	var machine machine.Machine
+
+	err := json.Unmarshal(contents, &machine)
+
 	if err != nil {
 		return nil, err
 	}
-	return &runner, nil
+
+	return &machine, nil
 }
-func LoadRunnerFromDisk(filepath string) (*run.Runner, error) {
+func loadMachine(filepath string) (*machine.Machine, error) {
 	contents, err := readFile(filepath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error reading contents: %q", err)
 	}
-	runner, err := decodeBytesToRunner(contents)
+	machine, err := decodeBytesToRunner(contents)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Can't decode read contents: %q", err)
 	}
-	return runner, nil
+	return machine, nil
 }
-func ifNameMatches(filepath string, name string) (*run.Runner, bool) {
-	runner, err := LoadRunnerFromDisk(filepath)
+func ifNameMatches(filepath string, name string) (*machine.Machine, bool) {
+	runner, err := loadMachine(filepath)
 
 	if err != nil {
 		log.Fatalf("Can't decode file %s , %v", filepath, err)
@@ -64,48 +62,41 @@ func ifNameMatches(filepath string, name string) (*run.Runner, bool) {
 func storeMostRecentMachine(name string) {
 	configdir := ConfigProvider.GetConfigDir()
 	filename := filepath.Join(configdir, MOST_RECENT_FILE)
-	ioutil.WriteFile(filename, []byte(name), 0644)
+	os.WriteFile(filename, []byte(name), 0644)
 
 }
 func findMostRecentMachine() string {
 	configdir := ConfigProvider.GetConfigDir()
 	filename := filepath.Join(configdir, MOST_RECENT_FILE)
-	contents, err := ioutil.ReadFile(filename)
+	contents, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatalf("Can't read the recent file %s , %v", filename, err)
 	}
 	return string(contents)
 
 }
-func ListMachines(verbose bool) {
-	machines := getRunnerList()
+func ListMachines(verbose bool) []machine.Machine {
+	machines := getMachineList()
 
-	for i, runner := range machines {
-		fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
-		if verbose {
-			fmt.Printf("    MemSize: %s\n", runner.MemSize)
-			fmt.Printf("    CpuCores: %s\n", runner.CpuCores)
-			fmt.Printf("    DrivePath: %s\n", runner.DrivePath)
-		}
-	}
+	return machines
 
 }
 
-func getRunnerList() []run.Runner {
-	runners := make([]run.Runner, 0)
+func getMachineList() []machine.Machine {
+	runners := make([]machine.Machine, 0)
 	for _, file := range dir.ListDir(ConfigProvider.GetMachineDir()) {
 		filepath := getRunnerPath(file.Name())
-		runner, err := LoadRunnerFromDisk(filepath)
+		machine, err := loadMachine(filepath)
 		if err != nil {
 			log.Fatalf("Can't parse %s , %v", filepath, err)
 		}
-		runners = append(runners, *runner)
+		runners = append(runners, *machine)
 
 	}
 	return runners
 }
 func readFile(file string) ([]byte, error) {
-	contents, err := ioutil.ReadFile(file)
+	contents, err := os.ReadFile(file)
 	if err != nil {
 		return []byte(""), err
 	}

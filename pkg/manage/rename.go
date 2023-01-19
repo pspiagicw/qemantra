@@ -8,24 +8,24 @@ import (
 )
 
 func RenameMachine(oldname string, newname string) {
-	run := FindMachine(oldname, false)
+	run := FindMachine(oldname)
 
 	if run == nil {
 		log.Fatalf("Machine %s not found! ", oldname)
 	}
 
-	newRun := FindMachine(newname, false)
+	newRun := FindMachine(newname)
 	if newRun != nil {
 		log.Fatalf("Machine with name %s already exists!", newname)
 	}
 
-	filepath := FindMachineFile(oldname)
+	filepath := findMachineFile(oldname)
 
-	ReplaceName(filepath, newname)
+	replaceName(filepath, newname)
 	os.Remove(filepath)
 }
 
-func FindMachineFile(name string) string {
+func findMachineFile(name string) string {
 	for _, file := range dir.ListDir(ConfigProvider.GetMachineDir()) {
 		filepath := getRunnerPath(file.Name())
 		_, ok := ifNameMatches(filepath, name)
@@ -36,14 +36,14 @@ func FindMachineFile(name string) string {
 	return ""
 }
 
-func ReplaceName(path string, newname string) {
-	runner, err := LoadRunnerFromDisk(path)
+func replaceName(path string, newname string) {
+	runner, err := loadMachine(path)
 	if err != nil {
 		log.Fatalf("Error reading %s file", path)
 
 	}
 	runner.Name = newname
-	err = SaveRunnerToDisk(runner)
+	err = saveToDisk(runner)
 	if err != nil {
 		log.Fatalf("Error updating %q file with new name", err)
 	}
