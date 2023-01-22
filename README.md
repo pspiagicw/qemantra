@@ -10,7 +10,6 @@ See [here]().
 
 - You can look at the issue section, seach for a similar issue first. If you feel your issue is not found, file a issue.
 
-
 <!-- `qemantra` is a command-line tool for creating and managing QEMU Virtual Machines. -->
 <!---->
 <!-- QEMU is better and sometimes faster than VirtualBox , but does not have any -->

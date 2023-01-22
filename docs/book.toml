@@ -1,7 +1,12 @@
 [book]
 authors = ["pspiagicw"]
 language = "en"
+title = "qemantra"
+
+[output.html]
+preferred-dark-theme = "ayu"
+default-theme = "ayu"
 multilingual = false
 src = "src"
-title = "qemantra"
-theme = "ayu"
+curly-quotes = true
+git-repository-url = "https://github.com/pspiagicw/qemantra"

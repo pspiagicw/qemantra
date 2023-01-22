@@ -1,21 +1,12 @@
-# `qemantra`
+<img alt="qemantra icon" height="100" width="100" src="./qemantra.svg" align="left" style="padding-right: 1em"> *qemantra is a cli application designed to create, run and manage virtual machines using <a href="qemu"> QEMU/KVM </a> and implemented in <a href="">Go</a>*
 
-`qemantra` is a command line tool to manage virtual machines running on top on KVM/QEMU.
-It serves to be a alternative to the GUI tools like `virt-manager`.
+## Features
 
-## `how can this be used ?`
+- Easy to use and understand.
+- Create, Run and manage virtual machines.
+- Use features like KVM to full potential
 
-- Start, configure and run VM's from the terminal.
-- Integrate `qemantra` inside tools to automate Virtual Machine based tasks.
-
-## `depdencies`
-
-For obvious reasons `qemantra` depends on `QEMU`. 
-
-If you want to enable UEFI inside Virtual Machines you will also need the `ovmf` package.
-
-## `installation` 
-
-Right now this can be installed by directly downloading the latest release tarball.
+**These docs are searchable: press `s` or click on the magnifying glass icon to activate the search function!.**
 
 
+![carbon](./gifs/intro.gif)

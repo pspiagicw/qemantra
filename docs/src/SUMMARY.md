@@ -1,24 +1,30 @@
 # Summary
 
-[intro](./qemantra.md)
+[qemantra](./qemantra.md)
 
----
+# Installation
+- [Dependencies](./dependencies.md)
+- [Binary](./binary.md)
+- [Docker](./docker.md)
+- [Manual](./manual.md)
 
 # Usage
-- [Create]()
-- [Run]()
-- [Edit]()
-- [List]()
-- [Rename]()
+- [Create](./create.md)
+- [Run](./run.md)
+- [Edit](./edit.md)
+- [List](./list.md)
+- [Rename](./rename.md)
 
 # Additional Info
 
-- [UEFI]()
-- [Config]()
-- [File Format]()
+- [Global](./global.md)
+- [UEFI](./uefi.md)
+<!-- - [Config]() -->
+<!-- - [KVM]() -->
+- [File Format](./file-format.md)
 
 # Contribution
 
-- [Contributors]()
-- [Documentation]()
-- [How to contribute]()
+<!-- - [Contributors]() -->
+- [Documentation](./documentation.md)
+- [How to contribute](./contribution.md)
