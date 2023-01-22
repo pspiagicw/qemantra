@@ -1,6 +1,6 @@
 MAINFILE=cmd/qemantra/main.go
 BINARY=qemantra
-VERSION=0.0.1
+VERSION=0.2.0
 LDFLAGS="-X main.VERSION='$(VERSION)'"
 BUILD_DIR=build
 .DEFAULT_GOAL := build
@@ -24,7 +24,7 @@ release: build-clean
 	cp LICENSE build/
 	make compile-release
 	make compress-release
-compress-release:
+compress-release: compile-release
 	tar -C $(BUILD_DIR) -cvzf  build/$(BINARY)-$(VERSION)-linux-amd64.tar.gz $(BINARY)-$(VERSION)-linux-amd64 LICENSE README.md
 	tar -C $(BUILD_DIR) -cvzf  build/$(BINARY)-$(VERSION)-linux-arm.tar.gz $(BINARY)-$(VERSION)-linux-arm LICENSE README.md
 	tar -C $(BUILD_DIR) -cvzf  build/$(BINARY)-$(VERSION)-linux-i386.tar.gz $(BINARY)-$(VERSION)-linux-i386 LICENSE README.md

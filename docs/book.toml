@@ -1,7 +1,7 @@
 [book]
 authors = ["pspiagicw"]
 language = "en"
-title = "qemantra"
+title = "Control QEMU like magic!"
 
 [output.html]
 preferred-dark-theme = "ayu"

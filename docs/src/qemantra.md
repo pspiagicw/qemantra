@@ -2,11 +2,10 @@
 
 ## Features
 
-- Easy to use and understand.
-- Create, Run and manage virtual machines.
+- Intuitive usage
+- Easily create, run and manage virtual machines.
 - Use features like KVM to full potential
 
 **These docs are searchable: press `s` or click on the magnifying glass icon to activate the search function!.**
-
 
 ![carbon](./gifs/intro.gif)
