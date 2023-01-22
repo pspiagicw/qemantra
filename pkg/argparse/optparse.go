@@ -147,13 +147,14 @@ func buildMachine() *machine.Machine {
 	wantDisk := userPrompt("Do you want to attach disk? (Y/N)", func(string) error { return nil })
 
 	if wantDisk == "y" || wantDisk == "Y" {
-
 		machine.NoDisk = false
 		machine.DiskName = userPrompt("Disk Name", func(string) error { return nil })
 		machine.DiskSize = userPrompt("Disk Size", ramValidator)
 		choices := []string{"raw", "vdi", "qcow2"}
 
 		machine.DiskFormat = userSelection("Disk Format", choices)
+	} else {
+		machine.NoDisk = true
 	}
 
 	return machine

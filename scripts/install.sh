@@ -4,20 +4,23 @@ set -e pipefail
 
 VERSION="v0.0.1"
 URL="https://github.com/pspiagicw/qemantra/releases/download/${VERSION}"
-INSTALL_LOCATION="$HOME/.local/share/bin"
+INSTALL_LOCATION="$HOME/.local/bin"
 GREEN='\033[0;32m'
 RED='\033[1;31m'
 NC='\033[0m'
 
 header() {
     echo -e "
-
-    ░▄▀▄░█▀▀░█▄█░█▀█░█▀█░▀█▀░█▀▄░█▀█
-    ░█\█░█▀▀░█░█░█▀█░█░█░░█░░█▀▄░█▀█
-    ░░▀\░▀▀▀░▀░▀░▀░▀░▀░▀░░▀░░▀░▀░▀░▀
+                                 | |            
+  __ _  ___ _ __ ___   __ _ _ __ | |_ _ __ __ _ 
+ / _' |/ _ \ '_ ' _ \ / _' | '_ \| __| '__/ _' |
+| (_| |  __/ | | | | | (_| | | | | |_| | | (_| |
+ \__, |\___|_| |_| |_|\__,_|_| |_|\__|_|  \__,_|
+    | |                                         
+    |_|
     Version '0.0.1' ${GREEN}
     [*] This installer will automatically detect the type of system and start installing qemantra
-    [*] Installation by default be in $HOME/.local/share/bin/
+    [*] Installation by default be in $HOME/.local/bin/
     ${NC}
     "
 
