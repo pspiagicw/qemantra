@@ -1,6 +1,6 @@
-<img alt="qemantra icon" height="100" width="100" src="./qemantra.svg" align="left" style="padding-right: 1em"> *qemantra is a cli application designed to create, run and manage virtual machines using <a href="qemu"> QEMU/KVM </a> and implemented in <a href="">Go</a>*
+<img alt="qemantra icon" height="100" width="100" src="./assets/qemantra.svg" align="left" style="padding-right: 1em"> *qemantra is a cli application designed to create, run and manage virtual machines using <a href="qemu"> QEMU/KVM </a> and implemented in <a href="">Go</a>*
 
-![carbon](./docs/src/carbonized.png)
+![carbon](./docs/gifs/intro.gif)
 
 ## Installation
 
