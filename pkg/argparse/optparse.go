@@ -31,6 +31,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/manifoldco/promptui"
 	log "github.com/pspiagicw/colorlog"
 	"github.com/pspiagicw/qemantra/pkg/config"
@@ -105,6 +106,10 @@ func run(args []string, verbose bool) {
 
 	name := userSelection("Select Machine", choices)
 
+	if verbose {
+		log.LogInfo("[info] Machine %s Selected", name)
+	}
+
 	m := manage.FindMachine(name)
 
 	m.Iso = *iso
@@ -114,6 +119,11 @@ func run(args []string, verbose bool) {
 	m.ExternalDisk = *externaldisk
 
 	runner.RunMachine(m)
+
+	if verbose {
+		log.LogSuccess("[success] Machine successfully ran!")
+
+	}
 }
 
 func list(args []string, verbose bool) {
@@ -125,12 +135,24 @@ func list(args []string, verbose bool) {
 
 	machines := manage.ListMachines(verbose)
 
-	for i, runner := range machines {
-		fmt.Printf("%d) Name: %s\n", i+1, runner.Name)
+	if len(machines) == 0 {
+		log.LogError("No virtual machines created!")
+		return
+	}
+
+	fmt.Println()
+	fmt.Println(lipgloss.NewStyle().MarginLeft(1).Background(lipgloss.Color("#7e56f4")).Foreground(lipgloss.Color("#ffffff")).Render(" machines "))
+	fmt.Println()
+	taskStyle := lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("#50fa7b"))
+	descriptionStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ffb86c"))
+
+	for _, machine := range machines {
+
+		fmt.Println("-" + taskStyle.Render(machine.Name))
 		if verbose {
-			fmt.Printf("    MemSize: %s\n", runner.MemSize)
-			fmt.Printf("    CpuCores: %s\n", runner.CpuCores)
-			fmt.Printf("    DrivePath: %s\n", runner.DrivePath)
+			fmt.Println("\tCPU Cores: " + descriptionStyle.Render(machine.CpuCores))
+			fmt.Println("\tMemory Size: " + descriptionStyle.Render(machine.MemSize))
+			fmt.Println("\tDisk Path: " + descriptionStyle.Render(machine.DrivePath))
 		}
 	}
 }
@@ -165,12 +187,24 @@ func create(options []string, verbose bool) {
 	flag := flag.NewFlagSet("qemantra create", flag.ExitOnError)
 
 	flag.Parse(options)
-	log.LogInfo("Creating a new machine!")
+
+	if verbose {
+		log.LogInfo("[info] Creating a new machine!")
+
+	}
+
 	name := userPrompt("Name", func(string) error { return nil })
+
 	machine := buildMachine()
+
 	machine.Name = name
 
 	manage.CreateMachine(machine)
+
+	if verbose {
+		log.LogSuccess("[success] Created machine successfully!")
+
+	}
 }
 
 func rename(args []string, verbose bool) {
@@ -189,9 +223,19 @@ func rename(args []string, verbose bool) {
 
 	name := userSelection("Select Machine", choices)
 
+	if verbose {
+		log.LogInfo("[info] Selected Machine %s", name)
+
+	}
+
 	newName := userPrompt("New Name", func(string) error { return nil })
 
 	manage.RenameMachine(name, newName)
+
+	if verbose {
+		log.LogSuccess("[success] Machine renamed")
+
+	}
 
 }
 
@@ -210,6 +254,10 @@ func edit(args []string, verbose bool) {
 
 	name := userSelection("Select Machine", choices)
 
+	if verbose {
+		log.LogInfo("[info] Machine %s selected", name)
+	}
+
 	newMachine := manage.FindMachine(name)
 
 	if newMachine == nil {
@@ -219,7 +267,7 @@ func edit(args []string, verbose bool) {
 	m := buildMachine()
 
 	if m.DiskName != newMachine.DiskName && m.DiskName != "" {
-		fmt.Println("Need to create a new disk")
+		log.LogInfo("[info] Disk change detected!")
 		img := &image.Image{
 			Type: m.DiskFormat,
 			Name: m.DiskName,
@@ -229,12 +277,19 @@ func edit(args []string, verbose bool) {
 		if err != nil {
 			log.LogFatal("Could not create disk: %v", err)
 		}
+		if verbose {
+			log.LogInfo("[info] Created disk at %s", path)
+		}
 		m.DrivePath = path
 	}
 
 	m.Name = name
 
 	manage.EditMachine(m)
+
+	if verbose {
+		log.LogInfo("[info] Edited machine successfully!")
+	}
 }
 
 func userPrompt(label string, validation func(string) error) string {
