@@ -2,7 +2,7 @@
 
 set -e pipefail
 
-VERSION="v0.2.0"
+VERSION="v0.2.1"
 URL="https://github.com/pspiagicw/qemantra/releases/download/${VERSION}"
 INSTALL_LOCATION="$HOME/.local/bin"
 GREEN='\033[0;32m'
