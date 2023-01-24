@@ -2,7 +2,7 @@
 
 set -e pipefail
 
-VERSION="v0.0.1"
+VERSION="v0.2.0"
 URL="https://github.com/pspiagicw/qemantra/releases/download/${VERSION}"
 INSTALL_LOCATION="$HOME/.local/bin"
 GREEN='\033[0;32m'
@@ -18,7 +18,7 @@ header() {
  \__, |\___|_| |_| |_|\__,_|_| |_|\__|_|  \__,_|
     | |                                         
     |_|
-    Version '0.0.1' ${GREEN}
+    Version '0.2.1' ${GREEN}
     [*] This installer will automatically detect the type of system and start installing qemantra
     [*] Installation by default be in $HOME/.local/bin/
     ${NC}
@@ -47,19 +47,19 @@ print_system() {
 }
 linux_install_x86_64() {
     print_system "x86_64"
-    BINARY="qemantra-0.0.1-linux-amd64"
+    BINARY="qemantra-0.2.0-linux-amd64"
     download "$BINARY"
 }
 
 linux_install_arm64() {
     print_system "ARM64"
-    BINARY="qemantra-0.0.1-linux-arm"
+    BINARY="qemantra-0.2.0-linux-arm"
     download "$BINARY"
 }
 
 linux_install_i386() {
     print_system "i386"
-    BINARY="qemantra-0.0.1-linux-i386"
+    BINARY="qemantra-0.2.0-linux-i386"
     download "$BINARY"
 }
 
