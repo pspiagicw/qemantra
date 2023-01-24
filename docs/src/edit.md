@@ -1,8 +1,8 @@
-# edit
+# Edit
 
 You can use the `qemantra edit` command to edit any previously created machine.
 
-**Note: Edit is different from `rename`. For changing the name, see [rename]()**
+**Note: Edit is different from `rename`. For changing the name, see [rename](/rename.html)**
 
 ## Synopsis
 
@@ -18,7 +18,7 @@ qemantra [GLOBAL] edit [OPTIONS]
 
 ## Details
 
-This follows the same information as [creating a disk]().
+This follows the same information as [creating a disk](/create.html).
 
 
 

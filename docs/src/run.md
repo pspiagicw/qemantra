@@ -1,4 +1,4 @@
-# run
+# Run
 
 You can run machines using `qemantra run`
 
@@ -41,7 +41,7 @@ Provide a external disk to attach. This would be attached in addition to the exi
 
 Enable or disable KVM. By default `kvm` is enabled. To disable use `-kvm false`.
 
-**Note: Features such as SMP depend on KVM. See [here]() for more details.**
+**Note: Features such as SMP depend on KVM.**
 
 ## `-iso`
 
@@ -55,4 +55,4 @@ Provide ISO disk to attach.
 
 ## `-uefi`
 
-Provide a OVMF file to use as UEFI bios. See [here]() for more information.
+Provide a OVMF file to use as UEFI bios. See [here](/uefi.html) for more information.

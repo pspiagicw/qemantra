@@ -13,10 +13,18 @@ Set MarginFill "#bd93f9"
 Set CornerRadius 10
 Set Padding 20
 
-Type@100ms "curl https://raw.githubusercontent.com/pspiagicw/qemantra/main/scripts/install.sh | bash"
+Type@50ms "curl https://raw.githubusercontent.com/pspiagicw/qemantra/main/scripts/install.sh | bash"
 
 Enter
 
-Sleep 60s
+Sleep 10s
+
+Type "qemantra"
+
+Enter
+
+Sleep 2s
+
+
 
 

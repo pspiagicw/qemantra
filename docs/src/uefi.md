@@ -1,4 +1,4 @@
-# uefi
+# UEFI
 
 UEFI support is not natively bundled with QEMU, you need to install a external package using your package manager.
 
@@ -13,6 +13,22 @@ In most systems, this would be installed in `/usr/share/ovmf/OVMF.fd`
 ![uefi](./gifs/run-uefi.gif)
 
 </br>
+
+## Installation of OVMF
+
+
+### Debian
+
+```sh
+sudo apt install ovmf
+```
+### Arch
+
+```sh
+sudo pacman -S edk2-ovmf
+```
+
+
 
 
 

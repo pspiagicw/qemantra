@@ -1,10 +1,10 @@
-# Binary Installation
+# 🛠️ Binary Installation
 
-You can download a binary from the releases section on [GitHub]().
+You can download a binary from the releases section on [GitHub](https://github.com/pspiagicw/qemantra/releases).
 
 Move it to a folder on your PATH.
 
-Or use this [script]().
+Or use this [script](https://github.com/pspiagicw/qemantra/blob/main/scripts/install.sh).
 
 Run this command to download the script and install it automatically.
 

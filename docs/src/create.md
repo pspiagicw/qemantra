@@ -1,4 +1,4 @@
-# create
+# Create
 
 You can create virtual machines using the `qemantra create` command.
 
@@ -8,8 +8,6 @@ You can create virtual machines using the `qemantra create` command.
 qemantra [GLOBAL] create [OPTIONS]
 ```
 
-Currently no options are available.
-
 This will start a interactive prompt to ask details about the VM.
 
 </br>
@@ -17,8 +15,6 @@ This will start a interactive prompt to ask details about the VM.
 ![create](./gifs/create.gif)
 
 </br>
-
-**Note: Currently no options are available for qemantra create**
 
 ## Details
 

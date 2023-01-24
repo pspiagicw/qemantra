@@ -2,6 +2,8 @@
 
 [qemantra](./qemantra.md)
 
+[Getting Started](./getting-started.md)
+
 # Installation
 - [Dependencies](./dependencies.md)
 - [Binary](./binary.md)
@@ -19,9 +21,9 @@
 
 - [Global](./global.md)
 - [UEFI](./uefi.md)
-<!-- - [Config]() -->
-<!-- - [KVM]() -->
+- [Inspiration](./inspiration.md)
 - [File Format](./file-format.md)
+- [Who is it for ?](./target-audience.md)
 
 # Contribution
 

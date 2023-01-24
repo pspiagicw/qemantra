@@ -1,6 +1,6 @@
-# global
+# `global`
 
-`qemantra` can take some global options, these include configuration settings or verbosity settings:w
+`qemantra` can take some global options, these include configuration settings or verbosity settings
 
 Currenly options available are
 

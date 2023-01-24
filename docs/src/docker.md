@@ -1,4 +1,4 @@
-# Docker
+# 📦 Docker
 
 You can skip the installation and run with docker. It includes QEMU and other dependencies.
 
@@ -10,4 +10,6 @@ Run
 docker run --rm -v $HOME/.qemantra:/data pspiagicw/qemantra
 ```
 
-**Work in Progress**
+</br>
+
+**Note: Work in Progress!**

@@ -1,4 +1,4 @@
-# rename
+# Rename
 
 You can use the `qemantra rename` command to rename any previously created machine.
 

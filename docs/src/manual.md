@@ -1,9 +1,8 @@
-# Manual Installation
+# 🏗️  Manual Installation
 
-Manual installation is recommended when contributing.
+Manual installation is recommended when contributing, or making personal changes.
 
-You will need some packages before you can run `qemantra`.See [here]().
-
+You will need some packages before you can run `qemantra`.See [here](/dependencies.html).
 
 After installing the packages. 
 

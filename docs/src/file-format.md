@@ -1,4 +1,4 @@
-# file format
+# File Format
 
 Each virtual machine is stored as JSON file.
 

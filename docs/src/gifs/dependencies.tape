@@ -1,4 +1,4 @@
-Output manual-install.gif
+Output dependencies.gif
 
 Set Width 1200
 Set Height 600
@@ -14,35 +14,13 @@ Set MarginFill "#bd93f9"
 Set CornerRadius 10
 Set Padding 20
 
-Type@50ms "git clone https://github.com/pspiagicw/qemantra"
-
-Sleep 350ms
-
-Enter
-
-Hide
-
-Sleep 120s
-
-Show
-
-Type "cd qemantra"
-
-Sleep 350ms
+Type@50ms "# sudo apt install qemu-full"
 
 Enter
 
 Sleep 2s
 
-Type "make build"
-
-Sleep 350ms
-
-Enter
-
-Sleep 10s
-
-Type "./qemantra"
+Type@50ms "# sudo pacman -S qemu-full"
 
 Enter
 

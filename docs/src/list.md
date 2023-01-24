@@ -1,4 +1,4 @@
-# list
+# List
 
 You can list previously created machines using `qemantra list`.
 
