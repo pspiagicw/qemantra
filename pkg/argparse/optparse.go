@@ -30,6 +30,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"reflect"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/manifoldco/promptui"
@@ -156,25 +157,39 @@ func list(args []string, verbose bool) {
 		}
 	}
 }
+func generatePrompt(prompt string, template *machine.Machine, key string) string {
 
-func buildMachine() *machine.Machine {
+	if template == nil {
+		return prompt
+	}
+
+	value := reflect.Indirect(reflect.ValueOf(template)).FieldByName(key).String()
+
+	newPrompt := fmt.Sprintf("%s (%s)", prompt, value)
+
+	return newPrompt
+
+}
+
+func buildMachine(template *machine.Machine) *machine.Machine {
 	machine := &machine.Machine{}
 
-	machine.CpuCores = userPrompt("CPU Cores", coresValidator)
-	machine.MemSize = userPrompt("RAM Size", ramValidator)
-	machine.SystemCommand = userSelection("System Command", []string{
+	machine.CpuCores = userPrompt(generatePrompt("CPU Cores", template, "CpuCores"), coresValidator)
+	machine.MemSize = userPrompt(generatePrompt("RAM Size", template, "MemSize"), ramValidator)
+	machine.SystemCommand = userSelection(generatePrompt("System Command", template, "SystemCommand"), []string{
 		"qemu-system-x86_64",
 		"qemu-system-i386",
 	})
-	wantDisk := userPrompt("Do you want to attach disk? (Y/N)", func(string) error { return nil })
+
+	wantDisk := userPrompt(generatePrompt("Do you want to attach disk? (Y/N)", template, "NoDisk"), func(string) error { return nil })
 
 	if wantDisk == "y" || wantDisk == "Y" {
 		machine.NoDisk = false
-		machine.DiskName = userPrompt("Disk Name", func(string) error { return nil })
-		machine.DiskSize = userPrompt("Disk Size", ramValidator)
+		machine.DiskName = userPrompt(generatePrompt("Disk Name", template, "DiskName"), func(string) error { return nil })
+		machine.DiskSize = userPrompt(generatePrompt("Disk Size", template, "DiskSize"), ramValidator)
 		choices := []string{"raw", "vdi", "qcow2"}
 
-		machine.DiskFormat = userSelection("Disk Format", choices)
+		machine.DiskFormat = userSelection(generatePrompt("Disk Format", template, "DiskFormat"), choices)
 	} else {
 		machine.NoDisk = true
 	}
@@ -195,7 +210,7 @@ func create(options []string, verbose bool) {
 
 	name := userPrompt("Name", func(string) error { return nil })
 
-	machine := buildMachine()
+	machine := buildMachine(nil)
 
 	machine.Name = name
 
@@ -264,7 +279,7 @@ func edit(args []string, verbose bool) {
 		log.LogFatal("Machine %s not found", name)
 	}
 
-	m := buildMachine()
+	m := buildMachine(newMachine)
 
 	if m.DiskName != newMachine.DiskName && m.DiskName != "" {
 		log.LogInfo("[info] Disk change detected!")
