@@ -13,6 +13,7 @@ please contact if you feel so.
 
 - libvirt (GUI and CLI)
 - VBoxManage (CLI for VirtualBox).
+- Quickemu (CLI, has automatic ISO downloads)
 
 
 
