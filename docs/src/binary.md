@@ -12,7 +12,7 @@ Run this command to download the script and install it automatically.
 curl https://raw.githubusercontent.com/pspiagicw/qemantra/main/scripts/install.sh | bash
 ```
 
-This script would detect your system and download the appropirate binary and install it in  `/usr/local/bin/`.
+This script would detect your system and download the appropriate binary and install it in  `/usr/local/bin/`.
 
 If possible it would also install manpages and other meta information.
 

@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"runtime"
 
-    log "github.com/pspiagicw/colorlog"
+	log "github.com/pspiagicw/colorlog"
 )
 
 const OVMF_PATH = "/usr/share/ovmf"

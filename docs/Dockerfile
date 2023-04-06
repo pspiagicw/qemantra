@@ -1,4 +1,6 @@
-FROM busybox:latest
+FROM --platform=linux/arm64 busybox:latest
+
+COPY qemu-arm-static /usr/bin/qemu-arm-static
 
 RUN adduser -D static
 USER static
