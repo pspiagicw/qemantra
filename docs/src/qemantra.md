@@ -10,7 +10,7 @@
 
 ⭐ Star the project on [GitHub](https://github.com/pspiagicw/qemantra) if you like it!
 
-⚙️ Start [here](/getting-started.html) if you want a gentle introduction to qemantra!.
+⚙️ Start [here](/getting-started.html) if you want a gentle introduction!.
 
 **These docs are searchable: press `s` or click on the magnifying glass icon to activate the search function!.**
 
