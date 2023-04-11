@@ -2,11 +2,6 @@ on:
   push:
     branches:
       - main
-
-env:
-  DOCKER_USER: ${{secrets.DOCKER_USER}}
-  DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
-
 jobs:
   build-doc:
     runs-on: ubuntu-latest
@@ -18,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Login to DockerHub
         run: |
-          docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
       - name: Build docker image
         run: |
           docker build -t pspiagicw/qemantra-docs .
