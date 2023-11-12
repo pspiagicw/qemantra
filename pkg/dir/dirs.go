@@ -1,22 +1,21 @@
 package dir
 
 import (
+	"github.com/pspiagicw/goreland"
 	"io/fs"
-	"io/ioutil"
-	"log"
 	"os"
 )
 
-func ListDir(dir string) []fs.FileInfo {
+func ListDir(dir string) []fs.DirEntry {
 	if dirExists(dir) {
-		dirlisting, err := ioutil.ReadDir(dir)
+		dirlisting, err := os.ReadDir(dir)
 		if err != nil {
-			log.Fatalf("Error reading dir: %s", dir)
+			goreland.LogFatal("Error reading dir: %s", dir)
 		}
 		return dirlisting
 
 	}
-	return []fs.FileInfo{}
+	return []fs.DirEntry{}
 }
 func dirExists(dir string) bool {
 	_, err := os.Stat(dir)

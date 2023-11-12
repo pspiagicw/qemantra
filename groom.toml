@@ -4,7 +4,7 @@ name = 'qemantra'
 binary = "qemantra"
 build-dir="build"
 version="0.2.1"
-main-file = "cmd/qemantra/main.go"
+main-file = "main.go"
 ldflags="-X main.VERSION='$version'"
 
 [task.build]

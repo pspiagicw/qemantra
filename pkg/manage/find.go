@@ -3,10 +3,10 @@ package manage
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/pspiagicw/goreland"
 	"github.com/pspiagicw/qemantra/pkg/dir"
 	"github.com/pspiagicw/qemantra/pkg/machine"
 )
@@ -51,7 +51,7 @@ func ifNameMatches(filepath string, name string) (*machine.Machine, bool) {
 	runner, err := loadMachine(filepath)
 
 	if err != nil {
-		log.Fatalf("Can't decode file %s , %v", filepath, err)
+		goreland.LogFatal("Can't decode file %s , %v", filepath, err)
 	}
 
 	if runner.Name == name {
@@ -70,12 +70,12 @@ func findMostRecentMachine() string {
 	filename := filepath.Join(configdir, MOST_RECENT_FILE)
 	contents, err := os.ReadFile(filename)
 	if err != nil {
-		log.Fatalf("Can't read the recent file %s , %v", filename, err)
+		goreland.LogFatal("Can't read the recent file %s , %v", filename, err)
 	}
 	return string(contents)
 
 }
-func ListMachines(verbose bool) []machine.Machine {
+func ListMachines() []machine.Machine {
 	machines := getMachineList()
 
 	return machines
@@ -88,7 +88,7 @@ func getMachineList() []machine.Machine {
 		filepath := getRunnerPath(file.Name())
 		machine, err := loadMachine(filepath)
 		if err != nil {
-			log.Fatalf("Can't parse %s , %v", filepath, err)
+			goreland.LogFatal("Can't parse %s , %v", filepath, err)
 		}
 		runners = append(runners, *machine)
 

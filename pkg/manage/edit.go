@@ -1,8 +1,7 @@
 package manage
 
 import (
-	"log"
-
+	"github.com/pspiagicw/goreland"
 	"github.com/pspiagicw/qemantra/pkg/machine"
 )
 
@@ -10,6 +9,6 @@ func EditMachine(newMachine *machine.Machine) {
 	err := saveToDisk(newMachine)
 
 	if err != nil {
-		log.Fatalf("Error writing to file , %v", err)
+		goreland.LogFatal("Error writing to file , %v", err)
 	}
 }

@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
-	"log"
+
+	"github.com/pspiagicw/goreland"
+	"os"
 	"path/filepath"
 
 	"github.com/pspiagicw/qemantra/pkg/config"
@@ -15,7 +16,7 @@ import (
 var ConfigProvider = config.GetConfig()
 
 func readFile(file string) ([]byte, error) {
-	contents, err := ioutil.ReadFile(file)
+	contents, err := os.ReadFile(file)
 	if err != nil {
 		return []byte(""), err
 	}
@@ -31,7 +32,7 @@ func checkName(filepath string, name string) (*machine.Machine, bool) {
 	runner, err := decodeFileToRunner(filepath)
 	fmt.Println(runner)
 	if err != nil {
-		log.Fatalf("Can't decode file %s , %v", filepath, err)
+		goreland.LogFatal("Can't decode file %s , %v", filepath, err)
 	}
 
 	if runner.Name == name {

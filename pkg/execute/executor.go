@@ -1,9 +1,10 @@
 package execute
 
 import (
-	"log"
 	"os"
 	"os/exec"
+
+	"github.com/pspiagicw/goreland"
 )
 
 type Executor interface {
@@ -17,7 +18,8 @@ func (s *SystemExecutor) Execute(cmd string, options []string) error {
 	command := exec.Command(cmd, options...)
 	command.Stdout = os.Stdout
 	command.Stderr = os.Stderr
-	log.Printf("Executing '%s' on your operating system", command.String())
+	// goreland.Printf("Executing '%s' on your operating system", command.String())
+	goreland.LogExecSimple(command.String())
 	err := command.Run()
 	if err != nil {
 		return err

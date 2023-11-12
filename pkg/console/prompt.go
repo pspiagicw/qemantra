@@ -16,15 +16,7 @@ const BANNER string = `
     |_|
 `
 
-func ShowBanner(version string) {
+func ShowBanner() {
 	fmt.Print(lipgloss.NewStyle().Foreground(lipgloss.Color("#ffb86c")).Render(BANNER))
 	fmt.Println()
-	fmt.Printf("\tVersion %s\n", version)
-	fmt.Println("\tControl QEMU like magic!")
-	fmt.Println("\tWelcome to qemantra")
-	fmt.Println("\tRun `qemantra -h` for help")
-	fmt.Println()
-}
-func ShowSubcommands() {
-	fmt.Println("Available subcommands are [list,run,create,rename,edit]")
 }

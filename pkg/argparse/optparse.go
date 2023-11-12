@@ -22,311 +22,59 @@
 
 package argparse
 
-/*
-This file is incharge of parsing the OPTIONS struct to execute the corresponding function.
-
-*/
 import (
 	"flag"
 	"fmt"
-	"os"
-	"reflect"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/manifoldco/promptui"
-	log "github.com/pspiagicw/colorlog"
-	"github.com/pspiagicw/qemantra/pkg/config"
+	"github.com/pspiagicw/goreland"
 	"github.com/pspiagicw/qemantra/pkg/console"
-	"github.com/pspiagicw/qemantra/pkg/image"
-	"github.com/pspiagicw/qemantra/pkg/machine"
-	"github.com/pspiagicw/qemantra/pkg/manage"
-	runner "github.com/pspiagicw/qemantra/pkg/run"
 )
 
 func ParseOptions(version string) {
 
-	showVersion := flag.Bool("version", false, "Show version info")
-	showVerbose := flag.Bool("verbose", false, "Shoe verbose info")
-
+	flag.Usage = PrintUsage
 	flag.Parse()
-
-	if *showVersion {
-		console.ShowBanner(version)
-		os.Exit(0)
-	}
-
-	if len(flag.Args()) == 0 {
-		console.ShowBanner(version)
-		console.ShowSubcommands()
-		os.Exit(0)
-	}
-
 	args := flag.Args()
+
+	if len(args) == 0 {
+		PrintUsage()
+		goreland.LogFatal("No subcommands provided!")
+	}
 
 	cmd, args := flag.Args()[0], flag.Args()[1:]
 
-	switch cmd {
-	case "edit":
-		edit(args, *showVerbose)
-	case "create":
-		create(args, *showVerbose)
-	case "list":
-		list(args, *showVerbose)
-	case "run":
-		run(args, *showVerbose)
-	case "rename":
-		rename(args, *showVerbose)
-	case "check":
-		config.PerformCheck()
-	default:
-		console.ShowBanner(version)
-		console.ShowSubcommands()
-
+	handlers := map[string]func([]string){
+		"edit":   edit,
+		"create": create,
+		"list":   list,
+		"run":    run,
+		"rename": rename,
+		"check":  check,
+		"help":   help,
 	}
 
-}
-func run(args []string, verbose bool) {
+	handleFunc, exists := handlers[cmd]
 
-	flag := flag.NewFlagSet("qemantra run", flag.ExitOnError)
-
-	iso := flag.String("iso", "", "Path of the ISO to attach")
-	boot := flag.String("boot", "iso", "Boot order")
-	kvm := flag.Bool("kvm", true, "Enable KVM")
-	externaldisk := flag.String("external", "", "External disk to attach")
-	uefi := flag.String("uefi", "", "Path to OVMF(.fd) file")
-
-	flag.Parse(args)
-
-	machines := manage.ListMachines(verbose)
-
-	choices := []string{}
-
-	for _, m := range machines {
-		choices = append(choices, m.Name)
-	}
-
-	name := userSelection("Select Machine", choices)
-
-	if verbose {
-		log.LogInfo("[info] Machine %s Selected", name)
-	}
-
-	m := manage.FindMachine(name)
-
-	m.Iso = *iso
-	m.Boot = *boot
-	m.KVM = *kvm
-	m.UEFI = *uefi
-	m.ExternalDisk = *externaldisk
-
-	runner.RunMachine(m)
-
-	if verbose {
-		log.LogSuccess("[success] Machine successfully ran!")
-
-	}
-}
-
-func list(args []string, verbose bool) {
-	flag := flag.NewFlagSet("qemantra list", flag.ExitOnError)
-
-	_ = flag.Bool("image", false, "List images instead of machines.")
-
-	flag.Parse(args)
-
-	machines := manage.ListMachines(verbose)
-
-	if len(machines) == 0 {
-		log.LogError("No virtual machines created!")
-		return
-	}
-
-	fmt.Println()
-	fmt.Println(lipgloss.NewStyle().MarginLeft(1).Background(lipgloss.Color("#7e56f4")).Foreground(lipgloss.Color("#ffffff")).Render(" machines "))
-	fmt.Println()
-	taskStyle := lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("#50fa7b"))
-	descriptionStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#ffb86c"))
-
-	for _, machine := range machines {
-
-		fmt.Println("-" + taskStyle.Render(machine.Name))
-		if verbose {
-			fmt.Println("\tCPU Cores: " + descriptionStyle.Render(machine.CpuCores))
-			fmt.Println("\tMemory Size: " + descriptionStyle.Render(machine.MemSize))
-			fmt.Println("\tDisk Path: " + descriptionStyle.Render(machine.DrivePath))
-		}
-	}
-}
-func generatePrompt(prompt string, template *machine.Machine, key string) string {
-
-	if template == nil {
-		return prompt
-	}
-
-	value := reflect.Indirect(reflect.ValueOf(template)).FieldByName(key).String()
-
-	newPrompt := fmt.Sprintf("%s (%s)", prompt, value)
-
-	return newPrompt
-
-}
-
-func buildMachine(template *machine.Machine) *machine.Machine {
-	machine := &machine.Machine{}
-
-	machine.CpuCores = userPrompt(generatePrompt("CPU Cores", template, "CpuCores"), coresValidator)
-	machine.MemSize = userPrompt(generatePrompt("RAM Size", template, "MemSize"), ramValidator)
-	machine.SystemCommand = userSelection(generatePrompt("System Command", template, "SystemCommand"), []string{
-		"qemu-system-x86_64",
-		"qemu-system-i386",
-	})
-
-	wantDisk := userPrompt(generatePrompt("Do you want to attach disk? (Y/N)", template, "NoDisk"), func(string) error { return nil })
-
-	if wantDisk == "y" || wantDisk == "Y" {
-		machine.NoDisk = false
-		machine.DiskName = userPrompt(generatePrompt("Disk Name", template, "DiskName"), func(string) error { return nil })
-		machine.DiskSize = userPrompt(generatePrompt("Disk Size", template, "DiskSize"), ramValidator)
-		choices := []string{"raw", "vdi", "qcow2"}
-
-		machine.DiskFormat = userSelection(generatePrompt("Disk Format", template, "DiskFormat"), choices)
+	if exists {
+		handleFunc(args)
 	} else {
-		machine.NoDisk = true
-	}
-
-	return machine
-
-}
-func create(options []string, verbose bool) {
-
-	flag := flag.NewFlagSet("qemantra create", flag.ExitOnError)
-
-	flag.Parse(options)
-
-	if verbose {
-		log.LogInfo("[info] Creating a new machine!")
-
-	}
-
-	name := userPrompt("Name", func(string) error { return nil })
-
-	machine := buildMachine(nil)
-
-	machine.Name = name
-
-	manage.CreateMachine(machine)
-
-	if verbose {
-		log.LogSuccess("[success] Created machine successfully!")
-
+		PrintUsage()
 	}
 }
-
-func rename(args []string, verbose bool) {
-
-	flag := flag.NewFlagSet("qemantra rename", flag.ExitOnError)
-
-	flag.Parse(args)
-
-	machines := manage.ListMachines(verbose)
-
-	choices := []string{}
-
-	for _, m := range machines {
-		choices = append(choices, m.Name)
-	}
-
-	name := userSelection("Select Machine", choices)
-
-	if verbose {
-		log.LogInfo("[info] Selected Machine %s", name)
-
-	}
-
-	newName := userPrompt("New Name", func(string) error { return nil })
-
-	manage.RenameMachine(name, newName)
-
-	if verbose {
-		log.LogSuccess("[success] Machine renamed")
-
-	}
-
+func help(args []string) {
+	PrintUsage()
 }
-
-func edit(args []string, verbose bool) {
-
-	flag := flag.NewFlagSet("qemantra edit", flag.ExitOnError)
-
-	flag.Parse(args)
-	machines := manage.ListMachines(verbose)
-
-	choices := []string{}
-
-	for _, m := range machines {
-		choices = append(choices, m.Name)
-	}
-
-	name := userSelection("Select Machine", choices)
-
-	if verbose {
-		log.LogInfo("[info] Machine %s selected", name)
-	}
-
-	newMachine := manage.FindMachine(name)
-
-	if newMachine == nil {
-		log.LogFatal("Machine %s not found", name)
-	}
-
-	m := buildMachine(newMachine)
-
-	if m.DiskName != newMachine.DiskName && m.DiskName != "" {
-		log.LogInfo("[info] Disk change detected!")
-		img := &image.Image{
-			Type: m.DiskFormat,
-			Name: m.DiskName,
-			Size: m.DiskSize,
-		}
-		path, err := image.CreateImage(img)
-		if err != nil {
-			log.LogFatal("Could not create disk: %v", err)
-		}
-		if verbose {
-			log.LogInfo("[info] Created disk at %s", path)
-		}
-		m.DrivePath = path
-	}
-
-	m.Name = name
-
-	manage.EditMachine(m)
-
-	if verbose {
-		log.LogInfo("[info] Edited machine successfully!")
-	}
-}
-
-func userPrompt(label string, validation func(string) error) string {
-	prompt := promptui.Prompt{Label: label, Validate: validation}
-
-	value, err := prompt.Run()
-
-	if err != nil {
-		log.LogFatal("Something went wrong: %q", err)
-	}
-
-	return value
-}
-func userSelection(label string, choices []string) string {
-
-	prompt := promptui.Select{Label: label, Items: choices}
-
-	_, value, err := prompt.Run()
-
-	if err != nil {
-		log.LogFatal("Something went wrong: %q", err)
-	}
-
-	return value
+func PrintUsage() {
+	console.ShowBanner()
+	fmt.Println("qemantra is a command line tool for creating, running and managing virtual machines using QEMU/KVM.")
+	fmt.Println()
+	fmt.Println("The available commands.")
+	fmt.Println()
+	fmt.Println("\thelp\t\tShow this message and exit.")
+	fmt.Println("\tcheck\t\tCheck dependencies for qemantra.")
+	fmt.Println("\tcreate\t\tCreate a virtual machine.")
+	fmt.Println("\tlist\t\tList all virtual machines.")
+	fmt.Println("\trun\t\tRun a virtual machine.")
+	fmt.Println("\trename\t\tRename a virtual machine.")
+	fmt.Println("\tedit\t\tEdit configuration of a virtual machine.")
 }

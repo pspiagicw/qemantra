@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"github.com/pspiagicw/goreland"
 	"os"
 	"path/filepath"
 )
@@ -36,7 +36,7 @@ func getHomeDir() string {
 	home, err := os.UserHomeDir()
 
 	if err != nil {
-		log.Fatalf("Error while finding User Home Directory %v", home)
+		goreland.LogFatal("Error while finding User Home Directory %v", home)
 	}
 
 	return home
@@ -75,10 +75,10 @@ func GetConfig() Config {
 }
 func ensureExists(dir string) {
 	if !dirExists(dir) {
-		log.Printf("Creating %s as it does not exists!", dir)
+		goreland.LogInfo("Creating %s as it does not exists!", dir)
 		err := os.Mkdir(dir, 0755)
 		if err != nil {
-			log.Fatalf("Error creating %s,%v", dir, err)
+			goreland.LogFatal("Error creating %s,%v", dir, err)
 
 		}
 	}

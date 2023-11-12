@@ -1,9 +1,9 @@
 package manage
 
 import (
-	"log"
 	"os"
 
+	log "github.com/pspiagicw/goreland"
 	"github.com/pspiagicw/qemantra/pkg/dir"
 )
 
@@ -11,12 +11,12 @@ func RenameMachine(oldname string, newname string) {
 	run := FindMachine(oldname)
 
 	if run == nil {
-		log.Fatalf("Machine %s not found! ", oldname)
+		log.LogFatal("Machine %s not found! ", oldname)
 	}
 
 	newRun := FindMachine(newname)
 	if newRun != nil {
-		log.Fatalf("Machine with name %s already exists!", newname)
+		log.LogFatal("Machine with name %s already exists!", newname)
 	}
 
 	filepath := findMachineFile(oldname)
@@ -39,12 +39,12 @@ func findMachineFile(name string) string {
 func replaceName(path string, newname string) {
 	runner, err := loadMachine(path)
 	if err != nil {
-		log.Fatalf("Error reading %s file", path)
+		log.LogFatal("Error reading %s file", path)
 
 	}
 	runner.Name = newname
 	err = saveToDisk(runner)
 	if err != nil {
-		log.Fatalf("Error updating %q file with new name", err)
+		log.LogFatal("Error updating %q file with new name", err)
 	}
 }

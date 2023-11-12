@@ -1,17 +1,7 @@
-// Package enables running virtual machines
 package run
 
-/*
-This package is incharge of finding and running virtual machines.
-The most important function of this package is `RunMachine`.
-This function initializes the `Runner` struct and then uses it to construct a command.
-
-This command is executed using `executor` package.
-
-*/
 import (
-	"log"
-
+	"github.com/pspiagicw/goreland"
 	"github.com/pspiagicw/qemantra/pkg/execute"
 	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/machine"
@@ -34,9 +24,9 @@ func checkExternalDisk(machine *machine.Machine) {
 	if machine.ExternalDisk != "" {
 		fullpath := image.FindImage(machine.ExternalDisk)
 		if fullpath == "" {
-			log.Fatalf("Can't find disk with name: '%s'", machine.ExternalDisk)
+			goreland.LogFatal("Can't find disk with name: '%s'", machine.ExternalDisk)
 		}
-		log.Printf("Disk Found! Using '%s'", fullpath)
+		goreland.LogInfo("Disk Found! Using '%s'", fullpath)
 		machine.ExternalDisk = fullpath
 	}
 }
@@ -58,7 +48,7 @@ func startMachine(machine *machine.Machine) {
 
 	err := ExecProvider.Execute(generateSystemCommand(machine), arguments)
 	if err != nil {
-		log.Printf("Some error occured: %v", err)
+		goreland.LogError("Some error occured: %v", err)
 	}
 }
 func constructArguments(machine *machine.Machine) []string {
