@@ -7,10 +7,10 @@
 </br>
 
 
-Visit the [website](https://qemantra.pspiagicw.xyz) for more information.
+<!-- Visit the [website](https://qemantra.pspiagicw.xyz) for more information.
 ## Installation
 
-See [here](https://qemantra.pspiagicw.xyz).
+See [here](https://qemantra.pspiagicw.xyz). -->
 
 ## Getting help
 
