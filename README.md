@@ -12,9 +12,6 @@
 
 See [here](https://qemantra.pspiagicw.xyz). -->
 
-## Getting help
-
-- You can look at the issue section, seach for a similar issue first. If you feel your issue is not found, file a issue.
 
  `qemantra` is a command-line tool for creating and managing QEMU Virtual Machines. 
 
@@ -152,3 +149,6 @@ See [here](https://qemantra.pspiagicw.xyz). -->
  There are lot's of work in documentation and other aspects! 
  For bugs and feature requests , open a issue. 
 
+## Getting help
+
+- You can look at the issue section, seach for a similar issue first. If you feel your issue is not found, file a issue.
