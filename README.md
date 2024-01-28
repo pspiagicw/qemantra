@@ -40,8 +40,8 @@ See [here](https://qemantra.pspiagicw.xyz). -->
  ### Create a Machine with Disk 
  ![img](./docs/src/gifs/create.gif) 
 
- ### Create a Image 
- ![img](./docs/src/gifs/create-img.gif) 
+ <!-- ### Create a Image 
+ ![img](./docs/src/gifs/create-img.gif)  -->
 
  ### Usage 
  Call `qemantra` in your terminal. 
