@@ -18,7 +18,7 @@ See [here](https://qemantra.pspiagicw.xyz). -->
  QEMU is better and sometimes faster than VirtualBox , but does not have any 
  command-line central managing solution. This tool aims to manage and run your virtual machines using `QEMU`. 
 
- ![img](./assets/gifs/intro.gif) 
+ ![img](./docs/src/gifs/intro.gif) 
 
  ## Features 
 
@@ -29,19 +29,19 @@ See [here](https://qemantra.pspiagicw.xyz). -->
 
  ## Examples 
  ### Running a Virtual Machine 
- ![img](./assets/gifs/run-iso.gif) 
+ ![img](./docs/src/gifs/run-iso.gif) 
 
  ### Run a machine with boot menu 
- ![img](./assets/gifs/run-menu.gif) 
+ ![img](./docs/src/gifs/run.gif) 
 
  ### Create a Machine 
- ![img](./assets/gifs/create-machine-disk.gif) 
+ ![img](./docs/src/gifs/create-no-disk.gif) 
 
  ### Create a Machine with Disk 
- ![img](./assets/gifs/create-machine-no-disk.gif) 
+ ![img](./docs/src/gifs/create.gif) 
 
  ### Create a Image 
- ![img](./assets/gifs/create-img.gif) 
+ ![img](./docs/src/gifs/create-img.gif) 
 
  ### Usage 
  Call `qemantra` in your terminal. 
