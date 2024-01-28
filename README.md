@@ -15,16 +15,16 @@ See [here](https://qemantra.pspiagicw.xyz). -->
 
  `qemantra` is a command-line tool for creating and managing QEMU Virtual Machines. 
 
- QEMU is better and sometimes faster than VirtualBox , but does not have any 
+ QEMU is better and sometimes faster than VirtualBox, but does not have any 
  command-line central managing solution. This tool aims to manage and run your virtual machines using `QEMU`. 
 
  ![img](./docs/src/gifs/intro.gif) 
 
  ## Features 
 
- - Create , list and run virtual machines. 
+ - Create, list, and run virtual machines. 
  - Create configurations to run on demand. 
- - Use features of QEMU like KVM , multiple architecture support etc. 
+ - Use features of QEMU like KVM, multiple architecture support etc. 
  - Features like UEFI available in a simple flag! 
 
  ## Examples 
@@ -40,7 +40,7 @@ See [here](https://qemantra.pspiagicw.xyz). -->
  ### Create a Machine with Disk 
  ![img](./docs/src/gifs/create.gif) 
 
- <!-- ### Create a Image 
+ <!-- ### Create an Image 
  ![img](./docs/src/gifs/create-img.gif)  -->
 
  ### Usage 
@@ -61,37 +61,37 @@ See [here](https://qemantra.pspiagicw.xyz). -->
  |---------------|---------------------------------------------------------| 
  | `--name`      | Name of the machine                                     | 
  | `--no-disk`   | Don't create a disk                                     | 
- | `--disk-name` | Name of the disk(Not applicable when using `no-disk`)   | 
- | `--disk-size` | Size of the disk(Not applicable when using `disk-size`) | 
- | `--cpu-cores` | Cores to provide to the RAM.                            | 
+ | `--disk-name` | Name of the disk (Not applicable when using `no-disk`)  | 
+ | `--disk-size` | Size of the disk (Not applicable when using `disk-size`)| 
+ | `--cpu-cores` | Cores to provide to the RAM                             | 
  | `--mem-size`  | RAM to provide to the VM                                | 
 
  #### Running a machine 
 
  The `qemantra run` subcommand provides functionality to run a virtual machine. 
- | Option           | Description                                                                      | 
- |------------------|----------------------------------------------------------------------------------| 
- | `--name`         | Name of the machine                                                              | 
- | `--iso`          | Path to the ISO(Relative path works)                                             | 
- | `--disk`         | Disk name to add to boot order(Should be in default qemantra directory)          | 
- | `--externaldisk` | Path to a external disk to add to boot order(Any disk , not managed by qemantra) | 
- | `--boot`         | Boot options while starting the VM                                               | 
- | `--uefi`         | Enable UEFI support(Requires `OVMF` to be installed)                             | 
- | `--no-kvm`       | Disables KVM(Enabled by default)                                                                                 | 
+ | Option           | Description                                                                         | 
+ |------------------|-------------------------------------------------------------------------------------| 
+ | `--name`         | Name of the machine                                                                 | 
+ | `--iso`          | Path to the ISO (Relative path works)                                               | 
+ | `--disk`         | Disk name to add to boot order (Should be in default qemantra directory)            | 
+ | `--externaldisk` | Path to a external disk to add to the boot order (Any disk, not managed by qemantra)| 
+ | `--boot`         | Boot options while starting the VM                                                  | 
+ | `--uefi`         | Enable UEFI support (Requires `OVMF` to be installed)                               | 
+ | `--no-kvm`       | Disables KVM (Enabled by default)                                                   | 
 
- The boot options can be either `menu` which provides a menu to choose between boot devices. Or you can use `iso` option to directly boot the given iso. 
+ The boot options can be either `menu` which provides a menu to choose between boot devices. Or you can use the `iso` option to directly boot the given iso. 
 
  #### Renaming a machine 
- The `qemantra rename` command is used to rename a existing virtual machine. 
- If `qemantra run` has no arguments , it will execute the last machine which was booted. 
+ The `qemantra rename` command is used to rename an existing virtual machine. 
+ If `qemantra run` has no arguments, it will execute the last machine which was booted. 
 
       
  #### List machines 
- Use `qemantra list` to list currently configured machines. Use `--verbose` option to list more information about the VM(Mem , Cpu etc). 
+ Use `qemantra list` to list currently configured machines. Use `--verbose` option to list more information about the VM(Mem, Cpu, etc.). 
 
- You can list the images managed by `qemantra` by using `--images` option to `qemantra list`. 
+ You can list the images managed by `qemantra` by using the `--images` option to `qemantra list`. 
 
- ## Installation ? 
+ ## Installation  
 
  ### Installation using Go 
  You can install using Go by using 
@@ -99,11 +99,11 @@ See [here](https://qemantra.pspiagicw.xyz). -->
  go install github.com/pspiagicw/qemantra 
  ``` 
 
- This requires `$GOBIN` to be in our `$PATH` variable. 
+ This requires `$GOBIN` to be in your `$PATH` variable. 
 
  ### Installation using script 
  You can also use the autoinstall script.  
- You should generally not execute scripts from the internet , so check the script 
+ You should generally not execute scripts from the internet, so check the script 
  ```sh 
  curl https://raw.githubusercontent.com/pspiagicw/qemantra/main/scripts/install.sh | bash 
  ``` 
@@ -117,38 +117,38 @@ See [here](https://qemantra.pspiagicw.xyz). -->
  These are the major features planned to be added to `qemantra`. Other features are welcome to be discussed. 
 
  - [x] Running virtual machines 
- - [x] Creating virtual machines. 
- - [x] Can use memory and cpu cores. 
+ - [x] Creating virtual machines 
+ - [x] Can use memory and cpu cores 
  - [x] Can use iso while running 
  - [x] Can use different disks while running 
  - [x] Can use external disk while running 
  - [x] Can use boot options 
- - [x] Make a auto install script. 
+ - [x] Make an auto install script 
  - [x] Support UEFI using OVMF 
  - [ ] Control logging functionality(`-v` / `-vv` and `-vvv`) 
- - [ ] Add to major repositories(Debian , AUR , Gentoo) 
+ - [ ] Add to major repositories(Debian, AUR, Gentoo) 
  - [ ] Configuration changes using ENVIRONMENT VARIABLES 
  - [ ] Multiple architecture support 
- - [ ] Suppport easy clipboard sharing 
+ - [ ] Support easy clipboard sharing 
  - [ ] Support easy shared folder support 
- - [ ] List currently running machines. 
+ - [ ] List currently running machines 
 
  ## Motivation ? 
 
- Virtualbox is good, but it has a QT interface and it's command line inteface is hectic at best. 
- QEMU has no official (or good) frontend , the command line interface is mature , but has no central managing solution. 
+ Virtualbox is good, but it has a QT interface and its command line interface is hectic at best.  
+ QEMU has no official (or good) frontend, the command line interface is mature, but has no central managing solution. 
 
- `qemantra` aims to become a simple and convinient way to manage Virtual Machines. It is designed for the casual Virtualizer. 
+ `qemantra` aims to become a simple and convenient way to manage Virtual Machines. It is designed for the casual virtualizer. 
 
  ## Contributing 
 
  Anybody is welcome to contribute! 
    
- `qemantra` is written in Golang , so Golang developers can contribute in the technical aspect. 
- If you want to contribute non-technically , then too you are welcome! 
- There are lot's of work in documentation and other aspects! 
- For bugs and feature requests , open a issue. 
+ `qemantra` is written in Golang, so Go developers can contribute in the technical aspect.  
+ If you want to contribute non-technically, then you too are welcome!  
+ There is lots of work in documentation and other aspects!  
+ For bugs and feature requests open an issue. 
 
 ## Getting help
 
-- You can look at the issue section, seach for a similar issue first. If you feel your issue is not found, file a issue.
+- You can look at the issue section, search for a similar issue first. If you feel your issue is not found file an issue.
