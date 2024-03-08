@@ -24,23 +24,27 @@ package argparse
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/pspiagicw/goreland"
-	"github.com/pspiagicw/qemantra/pkg/console"
+	"github.com/pspiagicw/qemantra/pkg/help"
 )
 
 func ParseOptions(version string) {
 
-	flag.Usage = PrintUsage
+	flag.Usage = func() {
+		help.HelpUsage(version)
+	}
 	flag.Parse()
 	args := flag.Args()
 
 	if len(args) == 0 {
-		PrintUsage()
+		help.HelpUsage(version)
 		goreland.LogFatal("No subcommands provided!")
 	}
+	handleCmd(args, version)
 
+}
+func handleCmd(args []string, version string) {
 	cmd, args := flag.Args()[0], flag.Args()[1:]
 
 	handlers := map[string]func([]string){
@@ -50,7 +54,9 @@ func ParseOptions(version string) {
 		"run":    run,
 		"rename": rename,
 		"check":  check,
-		"help":   help,
+		"help": func(args []string) {
+			help.HandleHelp(args, version)
+		},
 	}
 
 	handleFunc, exists := handlers[cmd]
@@ -58,23 +64,6 @@ func ParseOptions(version string) {
 	if exists {
 		handleFunc(args)
 	} else {
-		PrintUsage()
+		help.HelpUsage(version)
 	}
-}
-func help(args []string) {
-	PrintUsage()
-}
-func PrintUsage() {
-	console.ShowBanner()
-	fmt.Println("qemantra is a command line tool for creating, running and managing virtual machines using QEMU/KVM.")
-	fmt.Println()
-	fmt.Println("The available commands.")
-	fmt.Println()
-	fmt.Println("\thelp\t\tShow this message and exit.")
-	fmt.Println("\tcheck\t\tCheck dependencies for qemantra.")
-	fmt.Println("\tcreate\t\tCreate a virtual machine.")
-	fmt.Println("\tlist\t\tList all virtual machines.")
-	fmt.Println("\trun\t\tRun a virtual machine.")
-	fmt.Println("\trename\t\tRename a virtual machine.")
-	fmt.Println("\tedit\t\tEdit configuration of a virtual machine.")
 }

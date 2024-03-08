@@ -8,6 +8,7 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/pspiagicw/goreland"
 	"github.com/pspiagicw/qemantra/pkg/config"
+	"github.com/pspiagicw/qemantra/pkg/help"
 	"github.com/pspiagicw/qemantra/pkg/image"
 	"github.com/pspiagicw/qemantra/pkg/machine"
 	"github.com/pspiagicw/qemantra/pkg/manage"
@@ -26,8 +27,9 @@ func run(args []string) {
 	boot := flag.String("boot", "iso", "Boot order")
 	kvm := flag.Bool("kvm", true, "Enable KVM")
 	externaldisk := flag.String("external", "", "External disk to attach")
-	uefi := flag.String("uefi", "", "Path to OVMF(.fd) file")
+	uefi := flag.String("uefi", "", "Path to OVMF (.fd) file")
 
+	flag.Usage = help.HelpRun
 	flag.Parse(args)
 
 	machines := manage.ListMachines()
@@ -58,7 +60,7 @@ func run(args []string) {
 func list(args []string) {
 	flag := flag.NewFlagSet("qemantra list", flag.ExitOnError)
 
-	_ = flag.Bool("image", false, "List images instead of machines.")
+	flag.Usage = help.HelpList
 
 	flag.Parse(args)
 
@@ -119,7 +121,7 @@ func buildMachine(template *machine.Machine) *machine.Machine {
 func create(options []string) {
 
 	flag := flag.NewFlagSet("qemantra create", flag.ExitOnError)
-
+	flag.Usage = help.HelpCreate
 	flag.Parse(options)
 
 	goreland.LogInfo("Creating a new machine.")
@@ -138,6 +140,7 @@ func create(options []string) {
 func rename(args []string) {
 
 	flag := flag.NewFlagSet("qemantra rename", flag.ExitOnError)
+	flag.Usage = help.HelpRename
 
 	flag.Parse(args)
 
@@ -164,6 +167,8 @@ func rename(args []string) {
 func edit(args []string) {
 
 	flag := flag.NewFlagSet("qemantra edit", flag.ExitOnError)
+
+	flag.Usage = help.HelpEdit
 
 	flag.Parse(args)
 	machines := manage.ListMachines()
