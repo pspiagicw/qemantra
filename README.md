@@ -30,15 +30,13 @@ But because of it's simplicity it is not for everyone.
 
 Mostly packaged with `qemu-full` (Arch/Debian).
 
-- `ovmf` (*Optional*): for UEFI. See [here](/uefi.html).
+- `ovmf` (*Optional*): for UEFI. See [here].
 
 ### Debian
 
 ```sh
 sudo apt install qemu-system-x86 qemu-system-sparc qemu-system-ppc qemu-system-arm
 ```
-
-**OR** 
 
 ```sh
 sudo apt install qemu-full
@@ -50,14 +48,11 @@ sudo apt install qemu-full
 sudo pacman -S qemu-system-x86 qemu-system-arm
 ```
 
-**OR**
-
 ```sh
 sudo pacman -S qemu-full
 ```
 
 ![dependencies](./gifs/dependencies.gif)
-
 
 ## Installation
 
@@ -67,38 +62,31 @@ You can download a binary from the releases section on [GitHub](https://github.c
 
 Move it to a folder on your PATH.
 
-Or use this [script](https://github.com/pspiagicw/qemantra/blob/main/scripts/install.sh).
-
-Run this command to download the script and install it automatically.
-
-```sh
-curl https://raw.githubusercontent.com/pspiagicw/qemantra/main/scripts/install.sh | bash
-```
-
-This script would detect your system and download the appropriate binary and install it in  `/usr/local/bin/`.
-
-If possible it would also install manpages and other meta information.
-
-![binary-install](./gifs/binary-install.gif)
-
-### 🏗️  Manual Installation
+### 🏗️ Manual Installation
 
 Manual installation is recommended when contributing, or making personal changes.
 
-You will need some packages before you can run `qemantra`.See [here](/dependencies.html).
+After all the dependencies are installed, including the `go` compiler.
 
-After installing the packages. 
+#### Auto Compile
 
-- You can install the `go` compiler. 
-- Clone the project and execute `groom build`
-
-If you don't have [`groom`](https://github.com/pspiagicw/groom) installed, you can also run
+You can use either `go` or [`gox`](https://github.com/pspiagicw/gox), to install the binary.
 
 ```sh
-go build main.go -o qemantra
-```
+go install github.com/pspiagicw/qemantra@latest
 
-This development binary would not have version info.
+# Or better
+gox install github.com/pspiagicw/qemantra@latest
+```
+#### Manual Compile
+
+You can clone the repo, and run `go build .` to build the binary.
+
+If you are using [`groom`](https://github.com/pspiagicw/groom), you can also run
+
+```sh
+groom build
+```
 
 ![manual-install](./gifs/manual-install.gif)
 
@@ -141,8 +129,7 @@ It should run QEMU in SDL (GUI) mode, booting the Linux Mint ISO.
 
 </br>
 
-`qemantra` has a lot of configuration options, while creating and running virtual machines. Read the documentation to know more.
-
+`qemantra` has a lot of configuration options, while creating and running virtual machines. Read the documentation below to learn more.
 
 ## Usage
 
@@ -172,7 +159,8 @@ You will need to enter
 - A valid RAM size
 
 Attaching a disk is optional. 
-Creating a VM without a disk is very useful when only trying out a ISO without the intention of installing it.
+
+> Creating a VM without a disk is very useful when only trying out a ISO without the intention of installing it.
 
 </br>
 
@@ -190,18 +178,14 @@ If a disk is requested, you will need to provide
 
 You can run machines using `qemantra run`
 
-Running the virtual machine uses QEMU to run the machine using the given details.
+> Running the virtual machine uses QEMU to run the machine using the given details.
 
 #### Synopsis
 
 ```sh
 qemantra [GLOBAL] run [OPTIONS]
 ```
-</br>
-
 ![run](./gifs/run.gif)
-
-</br>
 
 The options available are given below.
 
@@ -229,21 +213,17 @@ Provide a external disk to attach. This would be attached in addition to the exi
 
 Enable or disable KVM. By default `kvm` is enabled. To disable use `-kvm false`.
 
-**Note: Features such as SMP depend on KVM.**
+> Features such as SMP depend on KVM.**
 
 #### `-iso`
 
 Provide ISO disk to attach.
 
-</br>
-
-![run-iso](./gifs/run-iso.gif)
-
-</br>
-
 #### `-uefi`
 
-Provide a OVMF file to use as UEFI bios. See [here](/uefi.html) for more information.
+Provide a OVMF file to use as UEFI bios.
+
+![run-iso](./gifs/run-iso.gif)
 
 ### List
 
@@ -267,11 +247,7 @@ You can use the `qemantra rename` command to rename any previously created machi
 qemantra [GLOBAL] rename [OPTIONS]
 ```
 
-</br>
-
 ![rename](./gifs/rename.gif)
-
-</br>
 
 You only need to choose a VM and provide a new name. If a machine already exists, it would inform you.
 
@@ -280,29 +256,18 @@ You only need to choose a VM and provide a new name. If a machine already exists
 You can use the `qemantra edit` command to edit any previously created machine.
 It would show prompts to change the details of any given VM. Shows current settings in brackets.
 
-**Note: Edit is different from `rename`. For changing the name, see [rename](/rename.html)**
+>  Edit is different from `rename`. For changing the name, see rename.
 
 #### Synopsis
 
 ```sh
 qemantra [GLOBAL] edit [OPTIONS]
 ```
-
-</br>
-
 ![edit](./gifs/edit.gif)
-
-</br>
 
 #### Details
 
-This follows the same information as [creating a disk](/create.html).
-
-## Similar Projects
-
-- libvirt (GUI and CLI)
-- VBoxManage (CLI for VirtualBox).
-- Quickemu (CLI, has automatic ISO downloads)
+This follows the same information as creating a disk.
 
 ## `UEFI`
 
@@ -312,13 +277,9 @@ You will need to install `ovmf` package.
 
 Then when running a virtual machine, point to the appropriate (.fd) file.
 
-In most systems, this would be installed in `/usr/share/ovmf/OVMF.fd`
-
-</br>
+> In most systems, this would be installed in `/usr/share/ovmf/OVMF.fd`
 
 ![uefi](./gifs/run-uefi.gif)
-
-</br>
 
 ## File Format
 
@@ -326,7 +287,7 @@ Each virtual machine is stored as JSON file.
 
 All files are stored in `~/.qemantra/machines`.
 
-**You should only edit the machine files when you know what are you doing.**.
+> You should only edit the machine files when you know what are you doing.
 
 *Example JSON file*
 
@@ -352,6 +313,12 @@ All files are stored in `~/.qemantra/machines`.
 }
 
 ```
+
+## Similar Projects
+
+- libvirt (GUI and CLI)
+- VBoxManage (CLI for VirtualBox).
+- Quickemu (CLI, has automatic ISO downloads)
 
 ## Contribution
 
