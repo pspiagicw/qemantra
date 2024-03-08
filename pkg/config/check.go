@@ -17,7 +17,7 @@ func EnsureSystemReady() {
 		goreland.LogFatal("Sorry only Linux is tested and supported!")
 	}
 	if !checkQEMU() {
-		goreland.LogInfo("Error detecting 'qemu-img' command , please ensure it exists")
+		goreland.LogError("Error detecting 'qemu-img' command , please ensure it exists")
 	}
 
 }

@@ -8,7 +8,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/manifoldco/promptui v0.9.0
 	github.com/pspiagicw/colorlog v0.0.0-20221107082154-c17db98981f5
-	github.com/pspiagicw/goreland v0.0.0-20231111114129-17d31554ad48
+	github.com/pspiagicw/goreland v0.0.0-20231114040425-9e1a4343f6f4
 	github.com/stretchr/testify v1.8.0
 )
 

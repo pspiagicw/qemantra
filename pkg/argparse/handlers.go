@@ -72,8 +72,6 @@ func list(args []string) {
 
 	rows := [][]string{}
 	for _, machine := range machines {
-
-		// fmt.Printf("\t\"%s\"\t\tCores: %s, Memory: %s, Disk: %s\n", machine.Name, machine.CpuCores, machine.MemSize , machine.DrivePath)
 		rows = append(rows, []string{machine.Name, machine.CpuCores, machine.MemSize, machine.DrivePath})
 	}
 	goreland.LogTable(headers, rows)
