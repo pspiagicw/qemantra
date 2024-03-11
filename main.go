@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/pspiagicw/qemantra/pkg/argparse"
-	"github.com/pspiagicw/qemantra/pkg/config"
+	"github.com/pspiagicw/qemantra/argparse"
+	"github.com/pspiagicw/qemantra/handle"
 )
 
 var VERSION string
 
 func main() {
-	config.EnsureSystemReady()
-	argparse.ParseOptions(VERSION)
+	opts := argparse.ParseOptions(VERSION)
+	handle.HandleArgs(opts)
 }

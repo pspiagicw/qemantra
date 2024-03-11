@@ -1,11 +1,11 @@
-package argparse
+package validators
 
 import (
 	"fmt"
 	"strconv"
 )
 
-func coresValidator(input string) error {
+func CoreValidator(input string) error {
 	if len(input) == 0 {
 		return fmt.Errorf("No input")
 
@@ -15,9 +15,15 @@ func coresValidator(input string) error {
 		return fmt.Errorf("%s is not a valid number.", input)
 	}
 	return nil
-
 }
-func ramValidator(input string) error {
+func NameValidator(input string) error {
+	if len(input) == 0 {
+		return fmt.Errorf("No input")
+	}
+
+	return nil
+}
+func MemoryValidator(input string) error {
 	if len(input) == 0 {
 		return fmt.Errorf("It is empty")
 	}
@@ -34,11 +40,4 @@ func ramValidator(input string) error {
 	}
 	return nil
 
-}
-func yesValidator(input string) error {
-	if input != "y" && input != "Y" && input != "N" && input != "n" {
-		return fmt.Errorf("Either y/n only.")
-	}
-
-	return nil
 }
