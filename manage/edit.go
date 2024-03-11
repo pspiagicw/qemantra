@@ -20,7 +20,7 @@ func EditVM(args []string) {
 
 	name, selected := selectMachine()
 
-	newMachine := vm.GetMachine(selected)
+	newMachine := vm.PromptMachine(selected)
 
 	if newMachine.DiskName != selected.DiskName {
 		checkImage(newMachine)

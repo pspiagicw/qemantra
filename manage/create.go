@@ -24,7 +24,7 @@ func parseCreateArgs(args []string) {
 func CreateVM(args []string) {
 	parseCreateArgs(args)
 
-	m := vm.GetMachine(nil)
+	m := vm.PromptMachine(nil)
 
 	create(m)
 }

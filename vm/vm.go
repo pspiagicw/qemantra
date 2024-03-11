@@ -36,7 +36,7 @@ type VirtualMachine struct {
 	MemSize  string
 }
 
-func GetMachine(template *VirtualMachine) *VirtualMachine {
+func PromptMachine(template *VirtualMachine) *VirtualMachine {
 
 	if template == nil {
 		template = new(VirtualMachine)
