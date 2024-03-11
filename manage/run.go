@@ -20,27 +20,44 @@ type argumentGenerator func(*vm.VirtualMachine) []string
 const menuBoot string = "menu=on"
 const isoBoot string = "d"
 
-func RunVM(args []string) {
+type Opts struct {
+	kvm   bool
+	boot  string
+	iso   string
+	uefi  string
+	edisk string
+}
 
+func parseRunArgs(args []string) *Opts {
 	flag := flag.NewFlagSet("qemantra run", flag.ExitOnError)
 
-	kvm := flag.Bool("kvm", true, "Enable KVM (default true)")
-	boot := flag.String("boot", "iso", "Boot order")
-	iso := flag.String("iso", "", "Path of ISO to boot")
-	uefi := flag.String("uefi", "", "Path of OVMF (.fd) file.")
-	edisk := flag.String("external-disk", "", "Path to external disk")
+	opts := new(Opts)
+
+	flag.BoolVar(&opts.kvm, "kvm", true, "Enable KVM (default true)")
+	flag.StringVar(&opts.boot, "boot", "iso", "Boot order")
+	flag.StringVar(&opts.iso, "iso", "", "Path of ISO to boot")
+	flag.StringVar(&opts.uefi, "uefi", "", "Path of OVMF (.fd) file.")
+	flag.StringVar(&opts.edisk, "external-disk", "", "Path to external disk")
 
 	flag.Usage = help.HelpRun
 
 	flag.Parse(args)
 
+	return opts
+
+}
+
+func RunVM(args []string) {
+
+	opts := parseRunArgs(args)
+
 	_, selected := selectMachine()
 
-	selected.KVM = *kvm
-	selected.Boot = *boot
-	selected.ISO = *iso
-	selected.UEFI = *uefi
-	selected.ExternalDisk = *edisk
+	selected.KVM = opts.kvm
+	selected.Boot = opts.boot
+	selected.ISO = opts.iso
+	selected.UEFI = opts.uefi
+	selected.ExternalDisk = opts.edisk
 
 	runMachine(selected)
 }
@@ -101,6 +118,7 @@ func getGenerators() []argumentGenerator {
 func getMachines() map[string]*vm.VirtualMachine {
 
 	files, err := os.ReadDir(config.MachineDir())
+
 	if err != nil {
 		goreland.LogFatal("Error reading machines.")
 	}

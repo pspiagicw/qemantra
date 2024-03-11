@@ -21,10 +21,3 @@ func readConf() *Conf {
 		MachineDir: "/home/pspiagicw/.local/share/qemantra",
 	}
 }
-
-// func getConfPath() string {
-// 	path, err := xdg.ConfigFile("qemantra/config.toml")
-// 	if err != nil {
-// 		goreland.LogFatal("Error getting config path.")
-// 	}
-// }

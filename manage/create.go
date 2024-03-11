@@ -14,13 +14,15 @@ import (
 	"github.com/pspiagicw/qemantra/vm"
 )
 
-func CreateVM(args []string) {
-
+func parseCreateArgs(args []string) {
 	flag := flag.NewFlagSet("qemantra create", flag.ExitOnError)
 
 	flag.Usage = help.HelpCreate
 
 	flag.Parse(args)
+}
+func CreateVM(args []string) {
+	parseCreateArgs(args)
 
 	m := vm.GetMachine(nil)
 
@@ -28,6 +30,7 @@ func CreateVM(args []string) {
 }
 
 func create(m *vm.VirtualMachine) {
+
 	mpath := checkMachineExists(m)
 
 	checkImage(m)
@@ -35,6 +38,7 @@ func create(m *vm.VirtualMachine) {
 	saveToDisk(m, mpath)
 }
 func checkImage(m *vm.VirtualMachine) {
+
 	if m.DiskName == "" {
 		return
 	}

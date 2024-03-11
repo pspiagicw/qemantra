@@ -43,7 +43,7 @@ func checkImageExists(path string) {
 	if errors.Is(err, os.ErrExist) {
 		goreland.LogFatal("Disk '%s' exists!")
 	}
-	if err != nil {
+	if err == nil {
 		goreland.LogFatal("Error checking disk '%s': %v", path, err)
 	}
 }

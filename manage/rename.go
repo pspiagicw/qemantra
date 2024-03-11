@@ -5,14 +5,23 @@ import (
 	"os"
 
 	"github.com/pspiagicw/goreland"
+	"github.com/pspiagicw/qemantra/help"
 	prompt "github.com/pspiagicw/qemantra/prompts"
 	"github.com/pspiagicw/qemantra/validators"
 )
 
-func RenameVM(args []string) {
+func parseRenameArgs(args []string) {
 	flag := flag.NewFlagSet("qemantra rename", flag.ExitOnError)
 
+	flag.Usage = help.HelpRename
+
 	flag.Parse(args)
+
+}
+
+func RenameVM(args []string) {
+
+	parseRenameArgs(args)
 
 	name, selected := selectMachine()
 

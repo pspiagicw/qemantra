@@ -3,13 +3,20 @@ package manage
 import (
 	"flag"
 
+	"github.com/pspiagicw/qemantra/help"
 	"github.com/pspiagicw/qemantra/vm"
 )
 
-func EditVM(args []string) {
+func parseEditArgs(args []string) {
 	flag := flag.NewFlagSet("qemantra edit", flag.ExitOnError)
 
+	flag.Usage = help.HelpEdit
+
 	flag.Parse(args)
+}
+func EditVM(args []string) {
+
+	parseEditArgs(args)
 
 	name, selected := selectMachine()
 
