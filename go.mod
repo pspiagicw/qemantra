@@ -5,6 +5,8 @@ go 1.21.0
 toolchain go1.21.3
 
 require (
+	github.com/BurntSushi/toml v1.3.2
+	github.com/adrg/xdg v0.4.0
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/gosimple/slug v1.14.0
 	github.com/manifoldco/promptui v0.9.0
