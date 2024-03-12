@@ -20,6 +20,9 @@ func HandleArgs(opts *argparse.Opts) {
 		"version": func([]string) {
 			help.PrintVersion(opts.Version)
 		},
+		"help": func(args []string) {
+			help.HandleHelp(args, opts.Version)
+		},
 	}
 
 	cmd := opts.Args[0]

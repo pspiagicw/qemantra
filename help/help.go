@@ -84,4 +84,10 @@ func printAligned(left, right string) {
 func PrintVersion(version string) {
 	fmt.Printf("qemantra version: %s\n", version)
 }
-func HelpRemove() {}
+func HelpRemove() {
+	fmt.Println("Delete virtual machine.")
+	fmt.Println()
+	fmt.Println("USAGE")
+	fmt.Println("   qemantra delete")
+	fmt.Println()
+}
