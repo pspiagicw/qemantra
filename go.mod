@@ -10,6 +10,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/gosimple/slug v1.14.0
 	github.com/manifoldco/promptui v0.9.0
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pspiagicw/goreland v0.0.0-20231114040425-9e1a4343f6f4
 )
 
