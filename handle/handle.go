@@ -16,6 +16,9 @@ func HandleArgs(opts *argparse.Opts) {
 		"edit":   manage.EditVM,
 		"rename": manage.RenameVM,
 		"list":   manage.ListVM,
+		"version": func([]string) {
+			help.PrintVersion(opts.Version)
+		},
 	}
 
 	cmd := opts.Args[0]

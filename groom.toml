@@ -3,7 +3,7 @@ name = 'qemantra'
 [variables]
 binary = "qemantra"
 build-dir="build"
-version="0.2.1"
+version="0.2.3"
 main-file = "main.go"
 ldflags="-X main.VERSION='$version'"
 
