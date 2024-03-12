@@ -18,6 +18,7 @@ func HandleHelp(args []string, version string) {
 			"list":   HelpList,
 			"rename": HelpRename,
 			"edit":   HelpEdit,
+			"delete": HelpRemove,
 		}
 
 		handlerCmd, ok := handler[cmd]
@@ -56,6 +57,7 @@ list:
 run:
 rename:
 edit:
+delete:
 version:
 help:`
 	messages := `
@@ -65,6 +67,7 @@ List virtual machines
 Run virtual machines
 Rename virtual machines
 Edit virtual machines
+Delete a virtual machine
 Show version info
 Show help info`
 	printAligned(commands, messages)
@@ -81,3 +84,4 @@ func printAligned(left, right string) {
 func PrintVersion(version string) {
 	fmt.Printf("qemantra version: %s\n", version)
 }
+func HelpRemove() {}

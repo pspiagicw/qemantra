@@ -7,8 +7,8 @@ import (
 )
 
 type Conf struct {
-	ImageDir   string
-	MachineDir string
+	ImageDir   string `toml:"imageDir"`
+	MachineDir string `toml:"machineDir"`
 }
 
 func ImageDir() string {

@@ -11,6 +11,7 @@ Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed autoinstall script.
 
 ### Added
+- Added `delete` subcommand.
 - Help printers for each subcommand.
 - Added support for config files.
 
