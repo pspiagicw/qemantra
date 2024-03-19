@@ -1,9 +1,7 @@
 package help
 
 import (
-	"fmt"
-
-	"github.com/charmbracelet/lipgloss"
+	"github.com/pspiagicw/pelp"
 )
 
 func HandleHelp(args []string, version string) {
@@ -32,11 +30,8 @@ func HandleHelp(args []string, version string) {
 	}
 }
 func printHeader() {
-	fmt.Println("Manage QEMU/KVM virtual machines.")
-	fmt.Println()
-	fmt.Println("USAGE")
-	fmt.Println("   qemantra [command] [args]")
-	fmt.Println()
+	pelp.Print("Manage QEMU/KVM virtual machines.")
+	pelp.HeaderWithDescription("usage", []string{"qemantra [command] [args]"})
 }
 func HelpUsage(version string) {
 	PrintVersion(version)
@@ -45,49 +40,17 @@ func HelpUsage(version string) {
 	printFooter()
 }
 func printFooter() {
-	fmt.Println("MORE HELP")
-	fmt.Println("  Use 'qemantra help [command]' for more info about a command.")
+	pelp.HeaderWithDescription("more help", []string{"Use 'qemantra help [command]' for more info about a command."})
 }
 func printCommands() {
-	fmt.Println("COMMANDS")
-	commands := `
-check:
-create:
-list:
-run:
-rename:
-edit:
-delete:
-version:
-help:`
-	messages := `
-Check for dependencies
-Create virtual machines
-List virtual machines
-Run virtual machines
-Rename virtual machines
-Edit virtual machines
-Delete a virtual machine
-Show version info
-Show help info`
-	printAligned(commands, messages)
-	fmt.Println()
-}
-func printAligned(left, right string) {
-	leftCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(left).MarginLeft(2).String()
-	rightCol := lipgloss.NewStyle().Align(lipgloss.Left).SetString(right).MarginLeft(5).String()
-
-	fmt.Println(lipgloss.JoinHorizontal(lipgloss.Bottom, leftCol, rightCol))
-
-	fmt.Println()
+	commands := []string{"check:", "create:", "list:", "run:", "rename:", "edit:", "delete:", "version:", "help:"}
+	messages := []string{"Check for dependencies", "Create virtual machines", "List virtual machines", "Run virtual machines", "Rename virtual machines", "Edit virtual machines", "Delete a virtual machine", "Show version info", "Show help info"}
+	pelp.Aligned("commands", commands, messages)
 }
 func PrintVersion(version string) {
-	fmt.Printf("qemantra version: %s\n", version)
+	pelp.Version("qemantra", version)
 }
 func HelpRemove() {
-	fmt.Println("Delete virtual machine.")
-	fmt.Println()
-	fmt.Println("USAGE")
-	fmt.Println("   qemantra delete")
-	fmt.Println()
+	pelp.Print("Delete virtual machine.")
+	pelp.HeaderWithDescription("usage", []string{"qemantra delete"})
 }

@@ -1,17 +1,16 @@
 module github.com/pspiagicw/qemantra
 
-go 1.21.0
-
-toolchain go1.21.3
+go 1.21.4
 
 require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/adrg/xdg v0.4.0
-	github.com/charmbracelet/lipgloss v0.9.1
+	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/gosimple/slug v1.14.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pspiagicw/goreland v0.0.0-20231114040425-9e1a4343f6f4
+	github.com/pspiagicw/pelp v0.0.0-20240318161701-7448ea2e376e
 )
 
 require (
@@ -23,6 +22,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
-	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rivo/uniseg v0.4.7 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 )

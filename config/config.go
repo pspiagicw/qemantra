@@ -52,9 +52,19 @@ func readConf() *Conf {
 
 	conf := parseConf(path)
 
+	checkConf(conf)
+
 	sanitizeConf(conf)
 
 	return conf
+}
+func checkConf(conf *Conf) {
+	if conf.ImageDir == "" {
+		goreland.LogFatal("ImageDir is not set in config file")
+	}
+	if conf.MachineDir == "" {
+		goreland.LogFatal("MachineDir is not set in config file")
+	}
 }
 func sanitizeConf(conf *Conf) {
 	conf.ImageDir = expandPath(conf.ImageDir)

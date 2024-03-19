@@ -5,7 +5,7 @@ binary = "qemantra"
 build-dir="build"
 version="0.2.3"
 main-file = "main.go"
-ldflags="-X main.VERSION='$version'"
+ldflags="-X main.VERSION=$version"
 
 [task.build]
 description = "Build the project"
