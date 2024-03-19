@@ -3,7 +3,6 @@ package manage
 import (
 	"encoding/xml"
 	"flag"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -85,8 +84,6 @@ func runMachine(m *vm.VirtualMachine) {
 }
 func getMachineCommand(m *vm.VirtualMachine) *exec.Cmd {
 	args := getMachineArgs(m)
-
-	fmt.Println(args)
 
 	cmd := exec.Command(m.Architecture, args...)
 

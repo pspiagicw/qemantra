@@ -50,7 +50,7 @@ func PromptMachine(template *VirtualMachine) *VirtualMachine {
 
 	vm.Architecture = prompt.SelectionPrompt("Architecture", ARCHS)
 
-	if prompt.ConfirmPrompt("Do you want to attach a disk ? (Y/N)") {
+	if prompt.ConfirmPrompt("Do you want to attach a disk ?") {
 		vm.DiskName = prompt.QuestionPrompt("Disk Name", validators.NameValidator, template.DiskName)
 		vm.DiskSize = prompt.QuestionPrompt("Disk Size", validators.MemoryValidator, template.DiskSize)
 		vm.DiskFormat = prompt.SelectionPrompt("Disk Format", DTYPES)

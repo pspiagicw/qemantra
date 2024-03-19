@@ -5,6 +5,9 @@ Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [ Unreleased(v0.2.3) ]
 
+### Changed
+- Moved from 'promptui' to 'survey/v2' for prompting the user.
+
 ### Removed
 - Removed website, moved to single README.md file.
 - Removed unit tests.

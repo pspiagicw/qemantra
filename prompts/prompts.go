@@ -1,44 +1,63 @@
 package prompt
 
 import (
-	"github.com/manifoldco/promptui"
+	"fmt"
+
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/pspiagicw/goreland"
 )
 
 func QuestionPrompt(label string, validation func(string) error, defaultValue string) string {
 
-	if defaultValue != "" {
-		label = label + "(" + defaultValue + ") "
+	prompt := survey.Input{
+		Message: label,
+		Default: defaultValue,
 	}
 
-	prompt := promptui.Prompt{Label: label, Validate: validation}
+	var value string
 
-	value, err := prompt.Run()
+	validator := func(ans interface{}) error {
+		strValue, ok := ans.(string)
+		if !ok {
+			return fmt.Errorf("Can't convert to string")
+		}
 
-	if err != nil {
-		goreland.LogFatal("Something went wrong: %q", err)
+		return validation(strValue)
+	}
+
+	survey.AskOne(&prompt, &value, survey.WithValidator(validator), survey.WithValidator(survey.Required))
+	if value == "" {
+		goreland.LogFatal("Nothing was provided")
 	}
 
 	return value
 }
 
 func SelectionPrompt(label string, choices []string) string {
+	prompt := &survey.Select{
+		Message: label,
+		Options: choices,
+	}
 
-	prompt := promptui.Select{Label: label, Items: choices}
+	var value string
 
-	_, value, err := prompt.Run()
-
-	if err != nil {
-		goreland.LogFatal("Something went wrong: %q", err)
+	survey.AskOne(prompt, &value)
+	if value == "" {
+		goreland.LogFatal("Nothing was selected")
 	}
 
 	return value
 }
 func ConfirmPrompt(label string) bool {
-	answer := QuestionPrompt(label, func(string) error { return nil }, "")
 
-	if answer == "y" || answer == "Y" {
-		return true
+	var confirm bool
+
+	prompt := &survey.Confirm{
+		Message: label,
 	}
-	return false
+
+	survey.AskOne(prompt, &confirm)
+
+	return confirm
+
 }
