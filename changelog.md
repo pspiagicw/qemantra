@@ -3,13 +3,13 @@
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [ Unreleased(v0.2.3) ]
+## Unreleased(v0.2.3)
 
 ### Changed
 - Moved from 'promptui' to 'survey/v2' for prompting the user.
 
 ### Removed
-- Removed website, moved to single README.md file.
+- Removed mdboook website, moved to single README.md file.
 - Removed unit tests.
 - Removed autoinstall script.
 
@@ -18,7 +18,7 @@ Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Help printers for each subcommand.
 - Added support for config files.
 
-## [ v0.2.2 ]
+## v0.2.2
 
 ### Added
 - Auto documentation generation with `mdbook`.
@@ -26,7 +26,7 @@ Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - Moved from `make` to [`groom`](https://github.com/pspiagicw/groom)
 
-## [ v0.2.0 ]
+## v0.2.0
 ### Added
 - Added website with gifs and logo.
 - Added autoinstall script
@@ -34,7 +34,7 @@ Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 - Dependency on flaggy
 
-## [ v0.0.1 ] - 2022-06-29
+## v0.0.1
 ### Added
 - Supports `run` , `create-img` , `create-machine` , `list` , `check` , `rename` , `edit` subcommands.
 - "Added a changelog.md"
