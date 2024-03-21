@@ -2,6 +2,26 @@
 
 `qemantra` is a tool to manage QEMU/KVM virtual machines.
 
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [`qemantra`](#qemantra)
+   * [Features](#features)
+   * [Dependencies](#dependencies)
+   * [Installation](#installation)
+   * [Config](#config)
+   * [Usage](#usage)
+      + [`create`](#create)
+      + [`run`](#run)
+      + [Flags](#flags)
+      + [`list`](#list)
+      + [`rename`](#rename)
+      + [`edit`](#edit)
+   * [UEFI](#uefi)
+   * [Similar Projects](#similar-projects)
+   * [Contribution](#contribution)
+
+<!-- TOC end -->
+
 ## Features
 
 - Use QEMU without a graphical interface.
@@ -120,7 +140,7 @@ qemantra run [FLAGS]
 
 ### Flags
 
-#### `-boot`
+#### `--boot`
 
 This allows to select a different boot option.
 
@@ -128,21 +148,21 @@ The different boot options available are
 - `iso` This boots the ISO.
 - `menu` This enables the menu, interactively choose the disk to boot.
 
-#### `-external`
+#### `--external`
 
 Provide a external disk to attach. This would be attached in addition to the existing disk (if present).
 
-#### `-kvm`
+#### `--kvm`
 
 Enable or disable KVM. By default `kvm` is enabled. To disable use `-kvm false`.
 
 > Features such as SMP depend on KVM.**
 
-#### `-iso`
+#### `--iso`
 
 Provide ISO disk to attach.
 
-#### `-uefi`
+#### `--uefi`
 
 Provide a OVMF file to use as UEFI bios.
 
