@@ -12,7 +12,6 @@
    * [Usage](#usage)
       + [`create`](#create)
       + [`run`](#run)
-      + [Flags](#flags)
       + [`list`](#list)
       + [`rename`](#rename)
       + [`edit`](#edit)
