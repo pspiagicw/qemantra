@@ -122,10 +122,13 @@ You will need to enter
 
 Attaching a disk is optional. 
 
+![disk](./gifs/disk.gif)
+
 If a disk is requested, you will need to provide
   - A disk name
   - A disk format
   - A disk size
+
 
 ### `run`
 
@@ -164,8 +167,6 @@ Provide ISO disk to attach.
 #### `--uefi`
 
 Provide a OVMF file to use as UEFI bios.
-
-![run-iso](./gifs/run-iso.gif)
 
 ### `list`
 
@@ -208,8 +209,6 @@ qemantra [GLOBAL] edit [OPTIONS]
 - You will need to install `ovmf` package.
 - When running a virtual machine, point to the appropriate (.fd) file.
 - In most systems, this would be installed in `/usr/share/ovmf/OVMF.fd`
-
-![uefi](./gifs/run-uefi.gif)
 
 ## Similar Projects
 

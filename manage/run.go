@@ -80,6 +80,8 @@ func runMachine(m *vm.VirtualMachine) {
 
 	cmd := getMachineCommand(m)
 
+	goreland.LogExec(cmd.String())
+
 	executeCommand(cmd)
 }
 func getMachineCommand(m *vm.VirtualMachine) *exec.Cmd {
