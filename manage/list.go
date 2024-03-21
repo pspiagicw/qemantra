@@ -16,6 +16,10 @@ func ListVM(args []string) {
 
 	machines := getMachines()
 
+	if len(machines) == 0 {
+		goreland.LogFatal("No machines found")
+	}
+
 	headers := []string{"Name", "CPU", "RAM", "Disk"}
 
 	rows := [][]string{}

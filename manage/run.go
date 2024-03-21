@@ -117,7 +117,7 @@ func getMachines() map[string]*vm.VirtualMachine {
 	files, err := os.ReadDir(config.MachineDir())
 
 	if err != nil {
-		goreland.LogFatal("Error reading machines.")
+		goreland.LogFatal("Error reading machines.: %v", err)
 	}
 
 	machines := map[string]*vm.VirtualMachine{}

@@ -6,23 +6,20 @@
 
 - Use QEMU without a graphical interface.
 - Single static binary, no dependencies.
-- Blazingly fast.
-
-![carbon](./gifs/intro.gif)
+- No fuss, run VM's with a single command.
 
 ## Who is it for ?
 
-`qemantra` has a very simple usage.Provide a helpful CLI tool to manage VM's running on top of QEMU.
-But because of it's simplicity it is not for everyone.
+`qemantra` is a opionated tool.
 
 `qemantra` is 
 - A simple tool for simple uses. It is for the casual virtualizer.
 - Will probably never support highly complex features. 
 
-
 `qemantra` is not
 - A complex VM management tool.
-- A production/enterprise tool. Project is still under heavy development.Use it for personal use only!
+- A performant or efficient tool.
+- A production/enterprise tool. 
 
 ## Dependencies
 
@@ -30,7 +27,7 @@ But because of it's simplicity it is not for everyone.
 
 Mostly packaged with `qemu-full` (Arch/Debian).
 
-- `ovmf` (*Optional*): for UEFI. See [here].
+- `ovmf` (*Optional*): for UEFI. See [here](#uefi).
 
 ### Debian
 
@@ -57,9 +54,11 @@ sudo pacman -S qemu-full
 - You can download a binary from the releases section on [GitHub](https://github.com/pspiagicw/qemantra/releases).
 
 If you have the `Go` compiler installed, you can install using this command.
+
 ```sh
 go install github.com/pspiagicw/qemantra@latest
 ```
+
 If you use [`gox`](https://github.com/pspiagicw/gox), you can also run.
 
 If can also clone the repo and compile it manually.
@@ -73,38 +72,16 @@ go build .
 groom build
 ```
 
-![manual-install](./gifs/manual-install.gif)
+## Config
 
-## Getting Started
-
-Let's boot a ISO using `qemantra`. You will need to have the `qemu-system-x86` binary installed on your system. See [here](#dependencies) for more information.
-
-- You will need a config to get started. You can create a config at `/home/<username>/.config/qemantra/config.toml`
+- You will need a config to get started. 
+- You can create a config at `/home/<username>/.config/qemantra/config.toml`
 - It should have the following content, change it accordingly
 
 ```toml
 imageDir = "~/.local/share/qemantra/images"
 machineDir = "~/.local/share/qemantra/machines"
 ```
-- For this example let's make a `Linux Mint` VM with `4G` of RAM and dedicating `3 cores` to the machine.
-- We are not creating or attaching any disk to this VM, because we don't want to install it.
-
-Run
-```sh
-qemantra create
-```
-- Answer questions accordingly
-
-- `qemantra` should create a configuration file for your VM in  `machineDir`.
-- For running the virtual machien and attach the ISO, use 
-
-```sh
-qemantra run -iso <path-to-iso>
-```
-
-- It should run QEMU in SDL (GUI) mode, booting the Linux Mint ISO.
-
-![getting-started](./gifs/getting-started.gif)
 
 ## Usage
 
@@ -112,7 +89,7 @@ qemantra run -iso <path-to-iso>
 - You can create virtual machines using the `qemantra create` command.
   
 ```sh
-qemantra [GLOBAL] create [OPTIONS]
+qemantra create
 ```
 
 - This will start a interactive prompt to ask details about the VM.
@@ -124,12 +101,7 @@ You will need to enter
   - A valid CPU core Count
   - A valid RAM size
 
-
-- Attaching a disk is optional. 
-
-> Creating a VM without a disk is very useful when only trying out a ISO without the intention of installing it.
-
-![create-no-disk](./gifs/create-no-disk.gif)
+Attaching a disk is optional. 
 
 If a disk is requested, you will need to provide
   - A disk name
@@ -142,10 +114,11 @@ If a disk is requested, you will need to provide
 - Running the virtual machine uses QEMU to run the machine using the given details.
 
 ```sh
-qemantra [GLOBAL] run [OPTIONS]
+qemantra run [FLAGS]
 ```
 ![run](./gifs/run.gif)
 
+### Flags
 
 #### `-boot`
 
@@ -177,10 +150,10 @@ Provide a OVMF file to use as UEFI bios.
 
 ### `list`
 
-You can list previously created machines using `qemantra list`.
+You can list machines using `qemantra list`.
 
 ```sh
-qemantra [GLOBAL] list [OPTIONS]
+qemantra list 
 ```
 
 ![list](./gifs/list.gif)
@@ -190,13 +163,11 @@ qemantra [GLOBAL] list [OPTIONS]
 You can use the `qemantra rename` command to rename any previously created machine.
 
 ```sh
-qemantra [GLOBAL] rename [OPTIONS]
+qemantra rename 
 ```
 
 ![rename](./gifs/rename.gif)
 
-- You only need to choose a VM and provide a new name.
-- If a machine already exists, it would inform you.
 
 ### `edit`
 
@@ -204,30 +175,28 @@ qemantra [GLOBAL] rename [OPTIONS]
 - It would show prompts to change the details of any given VM.
 - Shows current settings in brackets.
 
->  Edit is different from `rename`. For changing the name, see rename.
+>  Edit is different from `rename`. For changing the name, see [rename](#rename).
 
 ```sh
 qemantra [GLOBAL] edit [OPTIONS]
 ```
+
 ![edit](./gifs/edit.gif)
 
-## `UEFI`
+## UEFI
 
-> UEFI support is not natively bundled with QEMU, you need to install a external package using your package manager.
-
-You will need to install `ovmf` package.
-
-Then when running a virtual machine, point to the appropriate (.fd) file.
-
-> In most systems, this would be installed in `/usr/share/ovmf/OVMF.fd`
+- UEFI support is not natively bundled with QEMU, you need to install a external package using your package manager.
+- You will need to install `ovmf` package.
+- When running a virtual machine, point to the appropriate (.fd) file.
+- In most systems, this would be installed in `/usr/share/ovmf/OVMF.fd`
 
 ![uefi](./gifs/run-uefi.gif)
 
 ## Similar Projects
 
-- libvirt (GUI and CLI)
-- VBoxManage (CLI for VirtualBox).
-- Quickemu (CLI, has automatic ISO downloads)
+- [libvirt](libvirt.org) (GUI and CLI)
+- [VBoxManage](https://docs.oracle.com/en/virtualization/virtualbox/7.0/user/vboxmanage.html#vboxmanage) (CLI for VirtualBox).
+- [Quickemu](https://github.com/quickemu-project/quickemu) (CLI, written in Bash)
 
 ## Contribution
 
