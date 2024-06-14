@@ -113,7 +113,7 @@ qemantra create
 
 - This will start a interactive prompt to ask details about the VM.
 
-![create](./gifs/create.gif)
+![create](gifs/create.gif)
 
 You will need to enter 
   - A valid name
@@ -123,7 +123,7 @@ You will need to enter
 > [!NOTE]
 > Attaching a disk is optional. 
 
-![disk](./gifs/disk.gif)
+![disk](gifs/disk.gif)
 
 If a disk is requested, you will need to provide
   - A disk name
@@ -139,7 +139,7 @@ If a disk is requested, you will need to provide
 ```sh
 qemantra run [FLAGS]
 ```
-![run](./gifs/run.gif)
+![run](gifs/run.gif)
 
 ### Flags
 
@@ -160,7 +160,7 @@ Provide a external disk to attach. This would be attached in addition to the exi
 Enable or disable KVM. By default `kvm` is enabled. To disable use `-kvm false`.
 
 > [!WARNING]
-> Features such as SMP depend on KVM.**
+> Features such as SMP depend on KVM.
 
 #### `--iso`
 
@@ -178,7 +178,7 @@ You can list machines using `qemantra list`.
 qemantra list 
 ```
 
-![list](./gifs/list.gif)
+![list](gifs/list.gif)
 
 ### `rename`
 
@@ -188,7 +188,7 @@ You can use the `qemantra rename` command to rename any previously created machi
 qemantra rename 
 ```
 
-![rename](./gifs/rename.gif)
+![rename](gifs/rename.gif)
 
 
 ### `edit`
@@ -204,7 +204,7 @@ qemantra rename
 qemantra [GLOBAL] edit [OPTIONS]
 ```
 
-![edit](./gifs/edit.gif)
+![edit](gifs/edit.gif)
 
 ## UEFI
 
