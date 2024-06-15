@@ -29,9 +29,8 @@
 
 # Who is it for ?
 
-`qemantra` is a opionated tool.
-
 `qemantra` is 
+- A opionated tool.
 - A simple tool for simple uses. It is for the casual virtualizer.
 - Will probably never support highly complex features. 
 
