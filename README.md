@@ -10,24 +10,24 @@
    * [Installation](#installation)
    * [Config](#config)
    * [Usage](#usage)
-      + [`create`](#create)
-      + [`run`](#run)
-      + [`list`](#list)
-      + [`rename`](#rename)
-      + [`edit`](#edit)
+      + [Create](#create)
+      + [Run](#run)
+      + [List](#list)
+      + [Rename](#rename)
+      + [Edit](#edit)
    * [UEFI](#uefi)
    * [Similar Projects](#similar-projects)
    * [Contribution](#contribution)
 
 <!-- TOC end -->
 
-## Features
+# Features
 
 - Use QEMU without a graphical interface.
 - Single static binary, no dependencies.
 - No fuss, run VM's with a single command.
 
-## Who is it for ?
+# Who is it for ?
 
 `qemantra` is a opionated tool.
 
@@ -40,49 +40,53 @@
 - A performant or efficient tool.
 - A production/enterprise tool. 
 
-## Dependencies
+# Dependencies
 
 - `qemu-system-*` binaries.
 
-Mostly packaged with `qemu-full` (Arch/Debian).
+Mostly packaged with `qemu-full` on Arch/Debian.
 
 - `ovmf` (*Optional*): for UEFI. See [here](#uefi).
 
-### Debian
+## Debian
 
-```sh
+```sh {linenos=false}
 sudo apt install qemu-system-x86 qemu-system-sparc qemu-system-ppc qemu-system-arm
 ```
 
-```sh
+```sh {linenos=false}
 sudo apt install qemu-full
 ```
 
-### Arch
+## Arch
 
-```sh
+```sh {linenos=false}
 sudo pacman -S qemu-system-x86 qemu-system-arm
 ```
 
-```sh
+```sh {linenos=false}
 sudo pacman -S qemu-full
 ```
 
-## Installation
+# Installation
 
 - You can download a binary from the releases section on [GitHub](https://github.com/pspiagicw/qemantra/releases).
 
 If you have the `Go` compiler installed, you can install using this command.
 
-```sh
+```sh {linenos=false}
 go install github.com/pspiagicw/qemantra@latest
 ```
 
 If you use [`gox`](https://github.com/pspiagicw/gox), you can also run.
 
+```sh {linenos=false}
+gox install github.com/pspiagicw/qemantra@latest
+```
+
 If can also clone the repo and compile it manually.
 
-```sh
+```sh {linenos=false}
 git clone https://github.com/pspiagicw/qemantra
 cd qemantra
 go build .
@@ -91,20 +95,20 @@ go build .
 groom build
 ```
 
-## Config
+# Config
 
 - You will need a config to get started. 
 - You can create a config at `/home/<username>/.config/qemantra/config.toml`
 - It should have the following content, change it accordingly
 
-```toml
+```toml {linenos=false}
 imageDir = "~/.local/share/qemantra/images"
 machineDir = "~/.local/share/qemantra/machines"
 ```
 
-## Usage
+# Usage
 
-###  `create`
+##  `create`
 - You can create virtual machines using the `qemantra create` command.
   
 ```sh
@@ -131,7 +135,7 @@ If a disk is requested, you will need to provide
   - A disk size
 
 
-### `run`
+## `run`
 
 - You can run machines using `qemantra run`
 - Running the virtual machine uses QEMU to run the machine using the given details.
@@ -141,9 +145,9 @@ qemantra run [FLAGS]
 ```
 ![run](./gifs/run.gif)
 
-### Flags
+## Flags
 
-#### `--boot`
+### `--boot`
 
 This allows to select a different boot option.
 
@@ -151,26 +155,26 @@ The different boot options available are
 - `iso` This boots the ISO.
 - `menu` This enables the menu, interactively choose the disk to boot.
 
-#### `--external`
+### `--external`
 
 Provide a external disk to attach. This would be attached in addition to the existing disk (if present).
 
-#### `--kvm`
+### `--kvm`
 
 Enable or disable KVM. By default `kvm` is enabled. To disable use `-kvm false`.
 
 > [!WARNING]
 > Features such as SMP depend on KVM.
 
-#### `--iso`
+### `--iso`
 
 Provide ISO disk to attach.
 
-#### `--uefi`
+### `--uefi`
 
 Provide a OVMF file to use as UEFI bios.
 
-### `list`
+## `list`
 
 You can list machines using `qemantra list`.
 
@@ -180,7 +184,7 @@ qemantra list
 
 ![list](./gifs/list.gif)
 
-### `rename`
+## `rename`
 
 You can use the `qemantra rename` command to rename any previously created machine.
 
@@ -191,7 +195,7 @@ qemantra rename
 ![rename](./gifs/rename.gif)
 
 
-### `edit`
+## `edit`
 
 - You can use the `qemantra edit` command to edit any previously created machine.
 - It would show prompts to change the details of any given VM.
@@ -206,20 +210,20 @@ qemantra [GLOBAL] edit [OPTIONS]
 
 ![edit](./gifs/edit.gif)
 
-## UEFI
+# UEFI
 
 - UEFI support is not natively bundled with QEMU, you need to install a external package using your package manager.
 - You will need to install `ovmf` package.
 - When running a virtual machine, point to the appropriate (.fd) file.
 - In most systems, this would be installed in `/usr/share/ovmf/OVMF.fd`
 
-## Similar Projects
+# Similar Projects
 
 - [libvirt](libvirt.org) (GUI and CLI)
 - [VBoxManage](https://docs.oracle.com/en/virtualization/virtualbox/7.0/user/vboxmanage.html#vboxmanage) (CLI for VirtualBox).
 - [Quickemu](https://github.com/quickemu-project/quickemu) (CLI, written in Bash)
 
-## Contribution
+# Contribution
 
 Star the project on [GitHub](https://github.com/pspiagicw/qemantra) if you like it!
 

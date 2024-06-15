@@ -10,6 +10,7 @@ Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Removed
 - Removed mdboook website, moved to single README.md file.
+- Removed GitHub pages website.
 - Removed unit tests.
 - Removed autoinstall script.
 
