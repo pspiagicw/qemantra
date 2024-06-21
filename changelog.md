@@ -3,6 +3,11 @@
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.2.4
+
+### Removed
+- Removed the 'check' subcommand from the 'help' docs.
+
 ## v0.2.3
 
 ### Changed

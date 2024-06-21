@@ -43,8 +43,8 @@ func printFooter() {
 	pelp.HeaderWithDescription("more help", []string{"Use 'qemantra help [command]' for more info about a command."})
 }
 func printCommands() {
-	commands := []string{"check:", "create:", "list:", "run:", "rename:", "edit:", "delete:", "version:", "help:"}
-	messages := []string{"Check for dependencies", "Create virtual machines", "List virtual machines", "Run virtual machines", "Rename virtual machines", "Edit virtual machines", "Delete a virtual machine", "Show version info", "Show help info"}
+	commands := []string{"create:", "list:", "run:", "rename:", "edit:", "delete:", "version:", "help:"}
+	messages := []string{"Create virtual machines", "List virtual machines", "Run virtual machines", "Rename virtual machines", "Edit virtual machines", "Delete a virtual machine", "Show version info", "Show help info"}
 	pelp.Aligned("commands", commands, messages)
 }
 func PrintVersion(version string) {
